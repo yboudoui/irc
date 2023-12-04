@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Queue.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/04 11:37:49 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/04 16:59:28 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Colors.hpp"
 #include "Queue.hpp"
 
 Queue::Queue(size_t max_events) : _max_events(max_events) {
@@ -43,19 +44,25 @@ bool	Queue::event_loop(void) {
 	{
 		listener = _m.find(_events_list[i].data.fd);
 		if (listener == _m.end())
-			continue ;	/* this should never happend */
-/*
-		if (_events_list[i].events & EV_EOF)
 		{
-			std::cout << "EOF" << std::endl;
-			unsubscribe(_events_list[i].ident);
-			continue ;
+			std::cout << "continue ..." << std::endl;
+			continue ;	/* this should never happend */
 		}
-*/
+
+
 		if (_events_list[i].events & EPOLLIN)
+		{
+			//std::cout << BLUE << "listener->second.read("<< _events_list[i].data.fd << ") "  << std::endl;
 			listener->second.read();
+			//std::cout << "listener->second.read();" << std::endl;
+		}
 		if (_events_list[i].events & EPOLLOUT)
+		{
+			//std::cout << GREEN << "listener->second.write("<< _events_list[i].data.fd << ") "  << std::endl;
 			listener->second.write();
+			//std::cout << "listener->second.write();" << std::endl;
+
+		}
 	}
 	return (true);
 }

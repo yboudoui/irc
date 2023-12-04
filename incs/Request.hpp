@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/09/22 12:51:59 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/04 14:21:39 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 # include <cstring>
 # include <map>
 
+/* 
+TODO Transformer s_request en msg IRC :
+http://abcdrfc.free.fr/rfc-vf/rfc1459.html#23
+*/
 typedef struct s_request {
 	struct s_header {
 		std::string							method, uri, version;
@@ -35,8 +39,6 @@ class Request {
 		t_request	*_request;
 
 		bool		getNextLine(std::string &line);
-		bool		parseHeader(std::string line);
-		void		parseOptionalHeader(std::string line);
 
 	public:
 		Request(int fd);

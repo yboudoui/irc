@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   SocketConnection.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/09/23 14:20:18 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/04 15:34:02 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class SocketConnection : public IQueueEventListener
 		struct sockaddr		_addr;
 		socklen_t			_addr_len;
 		IQueue				&_queue;
-		Request				*_request;
+		std::string			_read_cache;
 		std::string			_cache;
 
 	public:
