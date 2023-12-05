@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:08:10 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/04 15:23:03 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/05 14:12:56 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,36 @@ bool	Request::recv(t_request &request)
 	>> enregistrer le message (function REGEXP ) dans s_request
 	>> creer la reponse (dans SocketConnection::read())*/
 	return (true);
+}
+
+t_request	Request::parse_request(std::string str) {
+	t_request	output;
+
+	output.prefixe = parse_prefixe(&str);
+}
+
+static std::string	*extract_from(std::string &str, const char *delimiter) {
+	std::size_t	has_delimiter = str.find(delimiter);
+	if (has_delimiter == std::string::npos)
+		return (NULL);
+	std::string	*output = new std::string(str, has_delimiter);
+	str.erase(has_delimiter);
+}
+
+t_prefixe*	Request::parse_prefixe(std::string &str) {
+	if (str.size() < 2 || str[0] != ':')
+		return (NULL);
+	if (str[1] == ' ')
+		throw std::runtime_error("Bad prefix format");
+	std::size_t	end = str.find(" ", 1);
+	std::string substr(str, 1, end);
+	str.erase(0, end);
+	t_prefixe	*output = new t_prefixe;
+	output->host = extract_from(substr, "@");
+	output->user = extract_from(substr, "!");
+	if (output->host || output->user)
+		output->pseudo = extract_from(substr, " ");
+	else
+		output->server_name = extract_from(substr, " ");
+	return (output);
 }
