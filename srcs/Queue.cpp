@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/04 16:59:28 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/05 12:20:06 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,14 @@ void	Queue::subscribe(int fd, IQueueEventListener &listener) {
 	struct epoll_event ev;
 	ev.events	=	EPOLLIN | EPOLLOUT;
 	ev.data.fd	=	fd;
+	std::cout << YELLOW << "Queue::subscribe [" << fd << "]" << RESET << std::endl;
 	epoll_ctl(_epoll_instance, EPOLL_CTL_ADD, fd, &ev);
 	_m.insert(std::pair<int, IQueueEventListener&>(fd, listener));
 }
 
 void	Queue::unsubscribe(int fd) {
+	std::cout << YELLOW << "Queue::unsubscribe [" << fd << "]" << RESET << std::endl;
+
 	epoll_ctl(_epoll_instance, EPOLL_CTL_DEL, fd, NULL);
 	_m.erase(fd);
 }
@@ -52,22 +55,22 @@ bool	Queue::event_loop(void) {
 
 		if (_events_list[i].events & EPOLLIN)
 		{
-			//std::cout << BLUE << "listener->second.read("<< _events_list[i].data.fd << ") "  << std::endl;
+		//	std::cout << BLUE << "listener->second.read("<< _events_list[i].data.fd << ") "  << std::endl;
 			listener->second.read();
 			//std::cout << "listener->second.read();" << std::endl;
 		}
 		if (_events_list[i].events & EPOLLOUT)
 		{
-			//std::cout << GREEN << "listener->second.write("<< _events_list[i].data.fd << ") "  << std::endl;
+		//	std::cout << GREEN << "listener->second.write("<< _events_list[i].data.fd << ") "  << std::endl;
 			listener->second.write();
 			//std::cout << "listener->second.write();" << std::endl;
-
 		}
 	}
 	return (true);
 }
 
 Queue::~Queue() {
+	std::cout << YELLOW << "Queue::~Queue()" << RESET << std::endl;
 	close(_epoll_instance);
 	delete [] _events_list;
 }

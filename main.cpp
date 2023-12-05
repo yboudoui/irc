@@ -3,16 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/04 12:13:36 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/05 12:18:17 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <sstream>
 #include "SocketBind.hpp"
+
+/*
+nc 127.0.0.1 8080 
+ctrl+V ctrl+M  retrun (\r\n)
+*/
 
 int	main(int argc, char *argv[])
 {
@@ -29,7 +34,7 @@ int	main(int argc, char *argv[])
 	std::stringstream ss;
 	ss << argv[0];
 	ss >> port;
-
+	// TODO CHECK SS >> return ERROR std::cerr
 	password = argv[1];
 
 	Queue	queue = Queue();
