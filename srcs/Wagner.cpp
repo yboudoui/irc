@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/05 14:13:35 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:53:17 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,10 @@ Wagner::~Wagner()
 }
 
 
-void	Wagner::addRequest(t_request const & request)
+void 			Wagner::addUser(UserSocket *  user)
 {
-	(void)request;
-}
-void	Wagner::addResponse(t_response const & response)
-{
-	(void)response;
-}
-		
-t_response const * 	Wagner::getResponse(SocketConnection &socketConnection) const
-{
-	(void) socketConnection;
-	return NULL;
+	std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	_UserSockets.push_back(user);
 }
 
 t_response const * 	Wagner::treatRequest(t_request const & request)

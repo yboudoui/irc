@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   SocketBind.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/04 11:39:24 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:49:30 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 # define SOCKETBIND_HPP
 
 # include "Queue.hpp"
-# include "SocketConnection.hpp"
+# include "UserSocket.hpp"
+# include "Wagner.hpp"
 
 # include <vector>
 
@@ -23,10 +24,10 @@ class SocketBind : public IQueueEventListener {
 		int								_fd;
 		struct sockaddr_in				_sin;
 		IQueue							&_queue;
-		std::vector<SocketConnection*>	_v;
+		Wagner &_w;
 
 	public:
-		SocketBind(IQueue &queue, int port, int backlog = 5);
+		SocketBind(Wagner &w,IQueue &queue, int port, int backlog = 5);
 		~SocketBind();
 		void	read(void);
 		void	write(void);

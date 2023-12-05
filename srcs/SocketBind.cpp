@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   SocketBind.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/09/17 18:25:14 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:17:42 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SocketBind.hpp"
 
-SocketBind::SocketBind(IQueue &queue, int port, int backlog) : _queue(queue)
+SocketBind::SocketBind(Wagner &w, IQueue &queue, int port, int backlog) : _queue(queue), _w(w)
 {
 	_fd = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (_fd < 0)
@@ -35,8 +35,7 @@ SocketBind::~SocketBind()
 
 void	SocketBind::read(void)
 {
-	SocketConnection	*new_connection = new SocketConnection(_queue, _fd);
-	_v.push_back(new_connection);
+	_w.addUser(new UserSocket(_queue, _fd));
 }
 
 void	SocketBind::write(void) {}

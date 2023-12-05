@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/05 13:35:32 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:47:32 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	main(int argc, char *argv[])
 
 	Queue	queue = Queue();
 
-	SocketBind	sock(queue, port);
+	SocketBind	sock(_wagner, queue, port);
 
 	std::cout << "localhost:" << port << std::endl;
 	while (queue.event_loop());

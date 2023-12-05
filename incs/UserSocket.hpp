@@ -1,37 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   User.hpp                                           :+:      :+:    :+:   */
+/*   UserSocket.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/05 14:11:53 by sethomas         ###   ########.fr       */
+/*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
+/*   Updated: 2023/12/05 15:33:42 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef USER_HPP
-# define USER_HPP
+#ifndef USERSOCKET_HPP
+# define USERSOCKET_HPP
 
-# include <iostream>
-# include "SocketConnection.hpp"
+# include "Queue.hpp"
 # include "Request.hpp"
+# include "Response.hpp"
+# include <netinet/in.h>
+# include <vector>
 
-//<username> <hostname> <servername> <realname>
-
-class User {
+class UserSocket : public IQueueEventListener
+{
 	private:
+		int					_fd;
+		struct sockaddr		_addr;
+		socklen_t			_addr_len;
+		IQueue				&_queue;
+		std::string			_read_cache;
+		std::string			_cache;
+
+		std::vector<t_response*> _responses;
+	
 		std::string			_username;
 		std::string			_hostname;
 		std::string			_servername;
 		std::string			_realname;
 
 		std::string			_nickname;
-		SocketConnection&	_socketConnection;
+		//std::vector<Channel&>	_channels;
 
 	public:
-		User(t_request const & request);
-		~User();
+		UserSocket(IQueue &queue, int fd_socketBind);
+		~UserSocket();
+
+		void	read(void);
+		void	write(void);
+		
+		std::string const &	getResponse() const;
 };
 
 #endif

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   SocketConnection.cpp                               :+:      :+:    :+:   */
+/*   UserSocket.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 
 #include "Colors.hpp"
-#include "SocketConnection.hpp"
+#include "UserSocket.hpp"
 #include <iostream>
 
-SocketConnection::SocketConnection(IQueue &queue, int fd_socketBind) : _queue(queue)
+UserSocket::UserSocket(IQueue &queue, int fd_socketBind) : _queue(queue)
 {
 	_addr = (struct sockaddr){};
 	_addr_len = sizeof(_addr);
@@ -24,13 +24,13 @@ SocketConnection::SocketConnection(IQueue &queue, int fd_socketBind) : _queue(qu
 	_queue.subscribe(_fd, *this);
 }
 
-SocketConnection::~SocketConnection()
+UserSocket::~UserSocket()
 {
 	_queue.unsubscribe(_fd);
 	close(_fd);
 }
 
-void	SocketConnection::read(void)
+void	UserSocket::read(void)
 {
 	/* concat received mssg */
 	size_t				bytes_read = 0;
@@ -48,7 +48,7 @@ void	SocketConnection::read(void)
 		<<  RESET << std::endl;
 }
 
-void	SocketConnection::write(void)
+void	UserSocket::write(void)
 {
 	if (_cache.empty())
 	{
@@ -93,10 +93,10 @@ void	SocketConnection::write(void)
 	//_cache = ":localhost 001 sethomas :Yeah !\r\n"; // response
 
 
-	/* message complet */
-	/* on conserve l eventuel message suivant dans _cache */
-
-
+	/* 
+		std::vector<t_response*> _responses;
+		std::string const &	getResponse() const;
+	*/
 	int	bytes_send = send(_fd, _cache.c_str(), _cache.size(), 0);
 	_cache.erase(0, bytes_send);
 }
