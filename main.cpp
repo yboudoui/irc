@@ -6,13 +6,14 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/05 12:18:17 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/05 13:35:32 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <sstream>
 #include "SocketBind.hpp"
+#include "Wagner.hpp"
 
 /*
 nc 127.0.0.1 8080 
@@ -23,6 +24,8 @@ int	main(int argc, char *argv[])
 {
 	int			port;
 	std::string	password;
+
+	Wagner		_wagner;
 
 	argc -= 1;
 	argv += 1;

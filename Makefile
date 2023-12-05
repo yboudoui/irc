@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: obouhlel <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/04 11:36:22 by yboudoui         ###   ########.fr        #
+#    Updated: 2023/12/05 13:32:50 by sethomas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ NAME				=	webserve
 #-----------------------------------------------------------------------------#
 
 SRCS				=	main.cpp\
+						srcs/Wagner.cpp \
 						srcs/Queue.cpp \
 						srcs/SocketBind.cpp \
 						srcs/SocketConnection.cpp \
