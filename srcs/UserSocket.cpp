@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 12:39:25 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:58:01 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,10 @@ void	UserSocket::write(void)
 
 void	UserSocket::pong(void)
 {
-	_response.append("PONG localhots\r\n");
+	_write_cache.append("PONG localhots\r\n");
 }
 
 void	UserSocket::whois(void)
 {
-	_response.append("sethomas sethomas localhost :Selen THOMAS\r\n");
+	_write_cache.append("sethomas sethomas localhost :Selen THOMAS\r\n");
 }
