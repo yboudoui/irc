@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   UserSocket.cpp                                     :+:      :+:    :+:   */
+/*   SocketConnection.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,10 +11,11 @@
 /* ************************************************************************** */
 
 #include "Colors.hpp"
-#include "UserSocket.hpp"
+#include "SocketConnection.hpp"
+#include "Wagner.hpp"
 #include <iostream>
 
-UserSocket::UserSocket(IQueue &queue, int fd_socketBind) : _queue(queue), _requestParser(_fd)
+SocketConnection::SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind) : _queue(queue), _requestParser(_fd), _w(w)
 {
 	_addr = (struct sockaddr){};
 	_addr_len = sizeof(_addr);
@@ -24,31 +25,35 @@ UserSocket::UserSocket(IQueue &queue, int fd_socketBind) : _queue(queue), _reque
 	_queue.subscribe(_fd, *this);
 }
 
-UserSocket::~UserSocket()
+SocketConnection::~SocketConnection()
 {
 	_queue.unsubscribe(_fd);
 	close(_fd);
 }
 
-void	UserSocket::read(void)
+void	SocketConnection::read(void)
 {
 	t_request_queue	tmp = _requestParser.get_requests();
 	_requests.insert(_requests.end(), tmp.begin(), tmp.end());
+
+	_w.treatRequest(*this, _requests);
 }
 
-void	UserSocket::write(void)
+void	SocketConnection::write(void)
 {
 	std::map<std::string, std::string>	responses;
 
-	responses["PRIVMSG"] = "";
-	responses["JOIN"] = "";
-	responses["QUIT"] = "";
+	responses["PRIVMSG"] = "privmsg";
+	responses["JOIN"] = "joined";
+	responses["QUIT"] = "quit";
 	responses["WHOIS"] = "sethomas sethomas localhost * :Selen Thomas";
 	responses["PING"] = "PONG localhost";
 	responses["USER"] = ":localhost 001 sethomas :Yeah !";
-	responses["CAP"] = "";
-	responses["NICK"] = "";
+	responses["CAP"] = "cap";
+	responses["NICK"] = "nick";
+	responses["MODE"] = "mode";
 
+	// Attention : effacer la requete meme si la reponse est vide :)
 	if (_write_cache.empty())
 	{
 		for (size_t idx = 0; idx < _requests.size(); idx += 1)
@@ -66,14 +71,4 @@ void	UserSocket::write(void)
 	}
 	int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
 	_write_cache.erase(0, bytes_send);
-}
-
-void	UserSocket::pong(void)
-{
-	_write_cache.append("PONG localhots\r\n");
-}
-
-void	UserSocket::whois(void)
-{
-	_write_cache.append("sethomas sethomas localhost :Selen THOMAS\r\n");
 }

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 12:25:29 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:28:40 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <vector>
 # include <map>
-# include "UserSocket.hpp"
+# include "SocketConnection.hpp"
 
 /*
 the channel ceases to exist when the last client leaves it
@@ -71,13 +71,13 @@ class Channel {
 		std::string					_name;
 		//std::string					_topic;
 		//std::string					_key;
-		//UserSocket&					_operator;
+		//SocketConnection&					_operator;
 
 		//int							_userLimit;
 		//int							_mode;
 		
-		//std::map<UserSocket&, int>	_Users; // int -> rights (operator)
-		//std::vector<UserSocket&>	_UsersInvited;
+		//std::map<SocketConnection&, int>	_Users; // int -> rights (operator)
+		//std::vector<SocketConnection&>	_UsersInvited;
 
 	public:
 		Channel();

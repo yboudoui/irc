@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 12:38:08 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:17:24 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct	s_request {
 	t_prefixe	*prefixe;
 	t_command	command;
 	t_params	params;
-//	UserSocket	&ref;
+//	SocketConnection	&ref;
 }	t_request;
 
 std::ostream& operator<< (std::ostream& stream, const t_prefixe& prefixe);

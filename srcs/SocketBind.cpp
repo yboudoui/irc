@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/05 16:17:42 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:42:31 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ SocketBind::~SocketBind()
 
 void	SocketBind::read(void)
 {
-	_w.addUser(new UserSocket(_queue, _fd));
+	_w.addUser(new SocketConnection(_w, _queue, _fd));
 }
 
 void	SocketBind::write(void) {}

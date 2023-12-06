@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/06 12:56:19 by sethomas         ###   ########.fr        #
+#    Updated: 2023/12/06 13:18:17 by sethomas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ SRCS				=	main.cpp\
 						srcs/Channel.cpp \
 						srcs/Queue.cpp \
 						srcs/SocketBind.cpp \
-						srcs/UserSocket.cpp \
+						srcs/SocketConnection.cpp \
 						srcs/Request.cpp\
 						srcs/Response.cpp \
 						srcs/extractor.cpp

@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   SocketBind.hpp                                     :+:      :+:    :+:   */
+/*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 13:40:04 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:30:13 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SOCKETBIND_HPP
-# define SOCKETBIND_HPP
+#ifndef User_HPP
+# define User_HPP
 
-# include "Queue.hpp"
-# include "SocketConnection.hpp"
-# include "Wagner.hpp"
+# include <iostream>
 
-# include <vector>
-
-class SocketBind : public IQueueEventListener {
+class User {
 	private:
-		int								_fd;
-		struct sockaddr_in				_sin;
-		IQueue							&_queue;
-		Wagner &_w;
+		std::string			_username;
+		std::string			_hostname;
+		std::string			_servername;
+		std::string			_realname;
+		std::string			_nickname;
 
 	public:
-		SocketBind(Wagner &w,IQueue &queue, int port, int backlog = 5);
-		~SocketBind();
-		void	read(void);
-		void	write(void);
+		User();
+		~User();
 };
 
 #endif

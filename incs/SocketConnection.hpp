@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   UserSocket.hpp                                     :+:      :+:    :+:   */
+/*   SocketConnection.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,16 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef USERSOCKET_HPP
-# define USERSOCKET_HPP
+#ifndef SocketConnection_HPP
+# define SocketConnection_HPP
 
 # include "Queue.hpp"
 # include "Request.hpp"
 # include "Response.hpp"
+# include "Wagner.hpp"
 # include <netinet/in.h>
 # include <vector>
 
-class UserSocket : public IQueueEventListener
+class Wagner;
+class SocketConnection : public IQueueEventListener
 {
 	private:
 		int						_fd;
@@ -33,26 +35,17 @@ class UserSocket : public IQueueEventListener
 
 		std::vector<t_response*> _responses;
 	
-		std::string			_username;
-		std::string			_hostname;
-		std::string			_servername;
-		std::string			_realname;
+		Wagner &_w;
 
-		std::string			_nickname;
-		//std::vector<Channel&>	_channels;
 
 	public:
-		UserSocket();
-		UserSocket(IQueue &queue, int fd_socketBind);
-		~UserSocket();
+		SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind);
+		~SocketConnection();
 
 		void	read(void);
 		void	write(void);
 		
 		std::string const &	getResponse() const;
-
-		void	pong(void);
-		void	whois(void);
 };
 
 #endif
