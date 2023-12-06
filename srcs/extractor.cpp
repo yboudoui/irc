@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:44:25 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 12:35:35 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:47:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ Extractor	*Extractor::extract_from(std::string delimiter, bool or_end)
 	else
 	{
 		output = new Extractor(*this, has_delimiter);
-		this->erase(has_delimiter + delimiter.size());
+		this->erase(has_delimiter - delimiter.size());
 	}
 	return (output);
 }

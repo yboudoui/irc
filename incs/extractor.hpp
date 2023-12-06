@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:43:12 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 12:27:45 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:40:43 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Extractor : public std::string
 		Extractor(const std::string& other);
 		Extractor(const std::string& str, size_t pos, size_t len = std::string::npos);
 		Extractor	*extract_to(std::string delimiter, bool or_end = false);
-		Extractor	*extract_from(const char *delimiter, bool or_end = false);
+		Extractor	*extract_from(std::string delimiter, bool or_end = false);
 
 		template <typename T>
 		T	to(void)

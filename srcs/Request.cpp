@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:08:10 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 12:34:21 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:47:50 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,9 @@ t_params	Request::parse_params(Extractor &str)
 	Extractor*	substr = str.extract_from(":", true);
 	output = str.split();
 	if (substr)
+	{
 		output.push_back(std::string(*substr));
+	}
 	delete substr;
 	return (output);
 }
