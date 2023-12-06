@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/05 12:20:06 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/05 21:00:48 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ bool	Queue::event_loop(void) {
 
 	num_events = epoll_wait(_epoll_instance, _events_list, _max_events, 0);
 	if (num_events < 0)
+	{
+		std::cout << "Big error.." << std::endl;
 		return (false);
+	}
 	for (int i = 0; i < num_events; i++)
 	{
 		listener = _m.find(_events_list[i].data.fd);
@@ -54,17 +57,9 @@ bool	Queue::event_loop(void) {
 
 
 		if (_events_list[i].events & EPOLLIN)
-		{
-		//	std::cout << BLUE << "listener->second.read("<< _events_list[i].data.fd << ") "  << std::endl;
 			listener->second.read();
-			//std::cout << "listener->second.read();" << std::endl;
-		}
 		if (_events_list[i].events & EPOLLOUT)
-		{
-		//	std::cout << GREEN << "listener->second.write("<< _events_list[i].data.fd << ") "  << std::endl;
 			listener->second.write();
-			//std::cout << "listener->second.write();" << std::endl;
-		}
 	}
 	return (true);
 }

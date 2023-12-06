@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   UserSocket.hpp                               :+:      :+:    :+:   */
+/*   UserSocket.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/05 15:33:42 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:38:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,14 @@
 class UserSocket : public IQueueEventListener
 {
 	private:
-		int					_fd;
-		struct sockaddr		_addr;
-		socklen_t			_addr_len;
-		IQueue				&_queue;
-		std::string			_read_cache;
-		std::string			_cache;
+		int						_fd;
+		struct sockaddr			_addr;
+		socklen_t				_addr_len;
+		IQueue					&_queue;
+		std::string				_read_cache;
+		std::string				_write_cache;
+		Request					_requestParser;
+		t_request_queue			_requests;
 
 		std::vector<t_response*> _responses;
 	

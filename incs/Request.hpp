@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/05 14:16:15 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:38:08 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,23 @@
 # include <string>
 # include <cstring>
 # include <map>
+# include <deque>
+# include "extractor.hpp"
+# include "Colors.hpp"
 
-/* 
-TODO Transformer s_request en msg IRC :
-http://abcdrfc.free.fr/rfc-vf/rfc1459.html#23
-*/
+typedef enum e_command {
+	__NONE__,
+	PRIVMSG,
+	JOIN,
+	QUIT,
+	WHOIS,
+	PING,
+	USER,
+	CAP,
+	NICK
+}	t_e_command;
 
-/* <params> ::= <espace> [ ':' <fin> | <milieu> <params> ] */
-typedef struct	s_params {
-
-}	t_params;
+typedef std::deque<std::string>	t_params;
 
 /* <command> ::= <lettre> { <lettre> } | <nombre> <nombre> <nombre> */
 typedef struct	s_command {
@@ -47,23 +54,29 @@ typedef struct	s_request {
 	t_prefixe	*prefixe;
 	t_command	command;
 	t_params	params;
+//	UserSocket	&ref;
 }	t_request;
 
+std::ostream& operator<< (std::ostream& stream, const t_prefixe& prefixe);
+std::ostream& operator<< (std::ostream& stream, const t_command& command);
+std::ostream& operator<< (std::ostream& stream, const t_params& params);
 std::ostream& operator<< (std::ostream& stream, const t_request& request);
+
+typedef std::deque<t_request> t_request_queue;
 
 class Request {
 	private:
-		int			_fd;
-		std::string	_cache;
-		t_request	*_request;
+		int			&_fd;
+		Extractor	_cache;
 
-		bool		getNextLine(std::string &line);
+		t_prefixe*	parse_prefixe(Extractor &str);
+		t_command	parse_command(Extractor &str);
+		t_params	parse_params(Extractor &str);
 
 	public:
-		Request(int fd);
+		Request(int &fd);
 		~Request(void);
 
-		bool		recv(t_request &request);
-		t_request	parse_request(std::string str);
+		t_request_queue	get_requests(void);
 };
 #endif

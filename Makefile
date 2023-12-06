@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/05 15:43:16 by sethomas         ###   ########.fr        #
+#    Updated: 2023/12/06 12:37:49 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ SRCS				=	main.cpp\
 						srcs/SocketBind.cpp \
 						srcs/UserSocket.cpp \
 						srcs/Request.cpp\
-						srcs/Response.cpp
+						srcs/Response.cpp \
+						srcs/extractor.cpp
 
 INCS				=	./incs \
 
@@ -34,7 +35,7 @@ DEPS				:=	$(OBJS:%.o=%.d)
 
 CXX					=	clang++
 
-CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3
+CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG #-fsanitize=address
 
 RM					=	rm -f
 
