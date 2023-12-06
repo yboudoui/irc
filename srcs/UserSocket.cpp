@@ -67,3 +67,13 @@ void	UserSocket::write(void)
 	int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
 	_write_cache.erase(0, bytes_send);
 }
+
+void	UserSocket::pong(void)
+{
+	_response.append("PONG localhots\r\n");
+}
+
+void	UserSocket::whois(void)
+{
+	_response.append("sethomas sethomas localhost :Selen THOMAS\r\n");
+}

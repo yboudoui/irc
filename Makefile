@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/06 12:37:49 by yboudoui         ###   ########.fr        #
+#    Updated: 2023/12/06 12:56:19 by sethomas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ NAME				=	webserve
 
 SRCS				=	main.cpp\
 						srcs/Wagner.cpp \
+						srcs/Channel.cpp \
 						srcs/Queue.cpp \
 						srcs/SocketBind.cpp \
 						srcs/UserSocket.cpp \

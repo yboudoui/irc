@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 12:38:27 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:55:53 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class UserSocket : public IQueueEventListener
 		//std::vector<Channel&>	_channels;
 
 	public:
+		UserSocket();
 		UserSocket(IQueue &queue, int fd_socketBind);
 		~UserSocket();
 
@@ -49,6 +50,9 @@ class UserSocket : public IQueueEventListener
 		void	write(void);
 		
 		std::string const &	getResponse() const;
+
+		void	pong(void);
+		void	whois(void);
 };
 
 #endif
