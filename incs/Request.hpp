@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 13:17:24 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:46:05 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,16 @@
 # define REQUEST_HPP
 
 # include <sys/socket.h>
-# include <string>
-# include <cstring>
-# include <map>
 # include <deque>
 # include "extractor.hpp"
-# include "Colors.hpp"
-
-typedef enum e_command {
-	__NONE__,
-	PRIVMSG,
-	JOIN,
-	QUIT,
-	WHOIS,
-	PING,
-	USER,
-	CAP,
-	NICK
-}	t_e_command;
 
 typedef std::deque<std::string>	t_params;
 
-/* <command> ::= <lettre> { <lettre> } | <nombre> <nombre> <nombre> */
 typedef struct	s_command {
-	std::string	command;
-	int			code;
+	std::string	name;
+	std::string	code;
 }	t_command;
 
-/* <préfixe> ::= <nom de serveur> | <pseudo> [ '!' <utilisateur> ] [ '@' <hôte> ] */
 typedef struct	s_prefix {
 	std::string	*server_name;
 	std::string	*pseudo;
@@ -49,20 +31,20 @@ typedef struct	s_prefix {
 	std::string	*host;
 }	t_prefixe;
 
-/* <message> ::= [':' <préfixe> <espace> ] <command> <params> <crlf> */
-typedef struct	s_request {
+typedef struct	s_message {
+	bool		valide;
 	t_prefixe	*prefixe;
 	t_command	command;
 	t_params	params;
-//	SocketConnection	&ref;
-}	t_request;
+}	t_message;
+
+typedef std::deque<t_message> t_message_queue;
 
 std::ostream& operator<< (std::ostream& stream, const t_prefixe& prefixe);
 std::ostream& operator<< (std::ostream& stream, const t_command& command);
 std::ostream& operator<< (std::ostream& stream, const t_params& params);
-std::ostream& operator<< (std::ostream& stream, const t_request& request);
+std::ostream& operator<< (std::ostream& stream, const t_message& request);
 
-typedef std::deque<t_request> t_request_queue;
 
 class Request {
 	private:
@@ -77,6 +59,6 @@ class Request {
 		Request(int &fd);
 		~Request(void);
 
-		t_request_queue	get_requests(void);
+		t_message_queue	get_messages(void);
 };
 #endif

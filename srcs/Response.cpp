@@ -6,11 +6,12 @@
 /*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 11:33:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/09/23 14:08:09 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/06 17:53:57 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
+#include "Colors.hpp"
 #include <sstream>
 
 Response::Response(void)
@@ -64,15 +65,10 @@ std::ostream& operator<<(std::ostream& stream, const Response &r)
 	return (stream);
 }
 
-# define BLUE "\033[1;34m"
-# define GREEN "\033[1;32m"
-# define PURPLE "\033[1;35m"
-# define RESET "\033[0m"
-
 std::ostream& operator<< (std::ostream& stream, const t_response &response)
 {
 	stream << "\t" << GREEN << HTTP_VERSION;
-	stream << "\t" << PURPLE << response.header.status_code;
+	stream << "\t" << MAGENTA << response.header.status_code;
 	stream << "\t" << RESET << _status_message_map[response.header.status_code] << std::endl;
 
 	std::map<std::string, std::string>::const_iterator it;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   SocketConnection.hpp                                     :+:      :+:    :+:   */
+/*   SocketConnection.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 12:55:53 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:47:29 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,9 @@ class SocketConnection : public IQueueEventListener
 		std::string				_read_cache;
 		std::string				_write_cache;
 		Request					_requestParser;
-		t_request_queue			_requests;
-
-		std::vector<t_response*> _responses;
-	
+		t_message_queue			_requests;
+		t_message_queue			_responses;
 		Wagner &_w;
-
 
 	public:
 		SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind);
@@ -44,8 +41,6 @@ class SocketConnection : public IQueueEventListener
 
 		void	read(void);
 		void	write(void);
-		
-		std::string const &	getResponse() const;
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 14:35:01 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:46:24 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,37 +41,35 @@ io_map["BSCall"]=&BSCall::Factory;
 Option* option = io_map["BSCall"](std::cin);
 
 */
-typedef bool (*(pfonc))(SocketConnection & user, t_request const &);
+typedef t_message (*(pfonc))(SocketConnection & user, t_message const &);
 
 class Wagner {
-	private:	
+	private:
 	//	std::vector<Channel*>	_Channels;
 		std::vector<SocketConnection*>			_SocketConnections;
-		
+	
 		std::map<std::string,pfonc>	_cmd;
-		
 
 	public:
 		Wagner();
 		~Wagner();
-		
-		
-		void 			addUser(SocketConnection *  socket);
-		
-		void 	treatRequest(SocketConnection & socket, t_request_queue const & _requests);
-	
-		static bool	cmd_cap(SocketConnection & socket, t_request const &);
-		static bool	cmd_nick(SocketConnection & socket, t_request const &);
-		static bool	cmd_user(SocketConnection & socket, t_request const &);
-		static bool	cmd_ping(SocketConnection & socket, t_request const &);
-		static bool	cmd_quit(SocketConnection & socket, t_request const &);
-		static bool	cmd_whois(SocketConnection & socket, t_request const &);
-		static bool	cmd_mode(SocketConnection & socket, t_request const &);
-		static bool	cmd_join(SocketConnection & socket, t_request const &);
-		static bool	cmd_privmsg(SocketConnection & socket, t_request const &);
-		static bool	cmd_kick(SocketConnection & socket, t_request const &);
-		static bool	cmd_invite(SocketConnection & socket, t_request const &);
-		static bool	cmd_topic(SocketConnection & socket, t_request const &);
+
+		void			addUser(SocketConnection *  socket);
+
+		t_message_queue	treatRequest(SocketConnection & socket, t_message_queue& requests);
+
+		static t_message	cmd_cap(SocketConnection & socket, t_message const &);
+		static t_message	cmd_nick(SocketConnection & socket, t_message const &);
+		static t_message	cmd_user(SocketConnection & socket, t_message const &);
+		static t_message	cmd_ping(SocketConnection & socket, t_message const &);
+		static t_message	cmd_quit(SocketConnection & socket, t_message const &);
+		static t_message	cmd_whois(SocketConnection & socket, t_message const &);
+		static t_message	cmd_mode(SocketConnection & socket, t_message const &);
+		static t_message	cmd_join(SocketConnection & socket, t_message const &);
+		static t_message	cmd_privmsg(SocketConnection & socket, t_message const &);
+		static t_message	cmd_kick(SocketConnection & socket, t_message const &);
+		static t_message	cmd_invite(SocketConnection & socket, t_message const &);
+		static t_message	cmd_topic(SocketConnection & socket, t_message const &);
 };
 
 #endif

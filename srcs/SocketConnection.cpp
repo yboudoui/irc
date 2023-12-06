@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   SocketConnection.cpp                                     :+:      :+:    :+:   */
+/*   SocketConnection.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 12:58:01 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:46:54 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 #include "Wagner.hpp"
 #include <iostream>
 
-SocketConnection::SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind) : _queue(queue), _requestParser(_fd), _w(w)
+SocketConnection::SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind)
+	: _queue(queue)
+	, _requestParser(_fd)
+	, _w(w)
 {
 	_addr = (struct sockaddr){};
 	_addr_len = sizeof(_addr);
@@ -33,41 +36,28 @@ SocketConnection::~SocketConnection()
 
 void	SocketConnection::read(void)
 {
-	t_request_queue	tmp = _requestParser.get_requests();
-	_requests.insert(_requests.end(), tmp.begin(), tmp.end());
+	t_message_queue	tmp;
 
-	_w.treatRequest(*this, _requests);
+	tmp = _requestParser.get_messages();
+	_requests.insert(_requests.end(), tmp.begin(), tmp.end());
 }
 
 void	SocketConnection::write(void)
 {
-	std::map<std::string, std::string>	responses;
+	std::stringstream	stream;
+	t_message_queue		tmp;
 
-	responses["PRIVMSG"] = "privmsg";
-	responses["JOIN"] = "joined";
-	responses["QUIT"] = "quit";
-	responses["WHOIS"] = "sethomas sethomas localhost * :Selen Thomas";
-	responses["PING"] = "PONG localhost";
-	responses["USER"] = ":localhost 001 sethomas :Yeah !";
-	responses["CAP"] = "cap";
-	responses["NICK"] = "nick";
-	responses["MODE"] = "mode";
+	tmp = _w.treatRequest(*this, _requests);
+	_responses.insert(_responses.end(), tmp.begin(), tmp.end());
 
-	// Attention : effacer la requete meme si la reponse est vide :)
 	if (_write_cache.empty())
 	{
-		for (size_t idx = 0; idx < _requests.size(); idx += 1)
+		while (!_responses.empty())
 		{
-			_write_cache = responses[_requests[idx].command.command];
-			if (_write_cache.empty())
-				continue ;
-	#ifdef DEBUG
-			std::cout << GREEN << ">> [" << _fd << "] " << _requests[idx] << RESET << std::endl;
-			std::cout << BLUE << "<< [" << _fd << "] " << _write_cache << RESET << std::endl;
-	#endif
-			_requests.erase(_requests.begin() + idx);
-			_write_cache += "\r\n";
+			stream << _responses.front() << "\r\n";
+			_responses.pop_front();
 		}
+		_write_cache = stream.str();
 	}
 	int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
 	_write_cache.erase(0, bytes_send);

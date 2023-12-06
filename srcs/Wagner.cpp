@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 14:34:39 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:52:18 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 # include "Wagner.hpp"
 # include "SocketConnection.hpp"
 
+# define DEBUG_CALL_WAGNER PRINT_DEBUG_CALL(MAGENTA, Wagner)
 Wagner::Wagner()
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner constructor called" << RESET << std::endl;
+	DEBUG_CALL_WAGNER
 	_cmd.insert(std::make_pair("CAP", cmd_cap));
 	_cmd.insert(std::make_pair("NICK", cmd_nick));
 	_cmd.insert(std::make_pair("USER", cmd_user));
@@ -34,43 +34,46 @@ Wagner::Wagner()
 
 Wagner::~Wagner()
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner destructor called" << RESET << std::endl;
+	DEBUG_CALL_WAGNER
 	// delete [] _events_list;
 }
 
-
 void 			Wagner::addUser(SocketConnection *  user)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
 	_SocketConnections.push_back(user);
 }
 
-void 	Wagner::treatRequest(SocketConnection & socket, t_request_queue const & _requests)
+t_message_queue	Wagner::treatRequest(SocketConnection & socket, t_message_queue& requests)
 {
+	t_message_queue	responses;
+	t_message		curr_req;
 	(void)socket;
-	(void)_requests;
-	
+
 	std::map<std::string,pfonc>::iterator it;
 	std::map<std::string,pfonc>::iterator ite = _cmd.end();
-	
-	for (size_t idx = 0; idx < _requests.size(); idx += 1)
+
+	while (requests.size())
 	{
-		it = _cmd.find(_requests[idx].command.command);
+		curr_req = requests.front();
+		requests.pop_front();
+		it = _cmd.find(curr_req.command.name);
 		if (it != ite)
-			(it->second)(socket, _requests[idx]);
-		else
 		{
-			if (DEBUG)
-				std::cout << MAGENTA << "Wagner::cmd not found [" << _requests[idx].command.command << "]" <<  std::endl;
-			// cmd not found >> socket
+			t_message	response = (it->second)(socket, curr_req);
+			PRINT_DEBUG_MESSAGE(BLUE,	"[" << curr_req << "]")
+			PRINT_DEBUG_MESSAGE(GREEN,	"[" << response << "]")
+			responses.push_back(response);
+		}
+		else {
+			PRINT_DEBUG_MESSAGE(
+			MAGENTA, "Wagner::cmd not found [" << curr_req.command.name << "]")
 		}
 	}
 
 	// Analyse la CMD
 	// traite la CMD (appel de fct membre)
-		// NICK -> addUser( new User(t_request const & request ))
+		// NICK -> addUser( new User(t_message const & request ))
 		// USER -> upd(user)
 	// (! check si pb de traitement, verifier les erreurs de retour )
 
@@ -78,113 +81,128 @@ void 	Wagner::treatRequest(SocketConnection & socket, t_request_queue const & _r
 		// get &SocketConnection from request in _SocketConnections
 		// user->upddate(request)
 	// "NICK" => NickMethod(request);
+	return (responses);
 }
 
-
-
-bool	Wagner::cmd_nick(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_nick(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = false };
+
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
 
-bool	Wagner::cmd_user(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_user(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = false };
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
 
-bool	Wagner::cmd_ping(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_ping(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = true };
 	(void)request;
 	(void)user;
-	return (true);
+
+	output.command.name = "PONG";
+	output.params.push_back("localhost");
+	return (output);
 }
 
-bool	Wagner::cmd_quit(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_quit(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = false };
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
 
-bool	Wagner::cmd_whois(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_whois(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = true };
 	(void)request;
 	(void)user;
-	return (true);
+
+	output.command.code = "311";
+	output.command.name = "RPL_WHOISUSER";
+	output.params.push_back("the_user_pseudo");
+	output.params.push_back("the_user_name");
+	output.params.push_back("the_user_host");
+	output.params.push_back(": Techno king");
+	return (output);
 }
 
-bool	Wagner::cmd_mode(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_mode(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = false };
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
 
-bool	Wagner::cmd_join(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_join(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = false };
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
 
-bool	Wagner::cmd_privmsg(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_privmsg(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = false };
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
 
-bool	Wagner::cmd_kick(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_kick(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = false };
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
 
-bool	Wagner::cmd_invite(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_invite(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = false };
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
 
-bool	Wagner::cmd_topic(SocketConnection & user, t_request const &request)
+t_message	Wagner::cmd_topic(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = false };
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
-bool	Wagner::cmd_cap(SocketConnection & user, t_request const &request)
+
+t_message	Wagner::cmd_cap(SocketConnection & user, t_message const &request)
 {
-	if (DEBUG)
-		std::cout << MAGENTA << "Wagner::" <<__FUNCTION__ << RESET << std::endl;
+	DEBUG_CALL_WAGNER
+	t_message	output = {.valide = true };
+
+	output.command.code = "001";
+	output.params.push_back("the_user");
+	output.params.push_back(":Welcome to the Internet Relay Network dan");
 	(void)request;
 	(void)user;
-	return (true);
+	return (output);
 }
