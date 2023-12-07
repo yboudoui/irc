@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:08:10 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 18:38:50 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/07 16:02:25 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,8 @@ std::ostream& operator<< (std::ostream& stream, const t_message& request)
 		return (stream);
 	if (request.prefixe)
 		stream << (*request.prefixe) << " ";
-	stream << request.command << " ";
+	if (request.command.name.size() || request.command.code.size())
+		stream << request.command << " ";
 	stream << request.params;
 	return (stream);
 }

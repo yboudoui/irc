@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 18:46:54 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:09:42 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,23 +42,40 @@ void	SocketConnection::read(void)
 	_requests.insert(_requests.end(), tmp.begin(), tmp.end());
 }
 
+int const &	SocketConnection::getFd() const
+{
+	return(_fd);
+}
+
+void	SocketConnection::insertResponse(t_message message)
+{
+	_responses.push_back(message);
+}
+
 void	SocketConnection::write(void)
 {
 	std::stringstream	stream;
 	t_message_queue		tmp;
 
-	tmp = _w.treatRequest(*this, _requests);
-	_responses.insert(_responses.end(), tmp.begin(), tmp.end());
-
-	if (_write_cache.empty())
+	try
 	{
-		while (!_responses.empty())
+		tmp = _w.treatRequest(this, _requests);
+		_responses.insert(_responses.end(), tmp.begin(), tmp.end());
+
+		if (_write_cache.empty())
 		{
-			stream << _responses.front() << "\r\n";
-			_responses.pop_front();
+			while (!_responses.empty())
+			{
+				stream << _responses.front() << "\r\n";
+				_responses.pop_front();
+			}
+			_write_cache = stream.str();
 		}
-		_write_cache = stream.str();
+		int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
+		_write_cache.erase(0, bytes_send);
 	}
-	int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
-	_write_cache.erase(0, bytes_send);
+	catch(const std::exception& e)
+	{
+		// std::cerr << e.what() << '\n';
+	}
 }

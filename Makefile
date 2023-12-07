@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/06 18:45:58 by yboudoui         ###   ########.fr        #
+#    Updated: 2023/12/07 12:18:32 by sethomas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,13 +15,13 @@ NAME				=	webserve
 #-----------------------------------------------------------------------------#
 
 SRCS				=	main.cpp\
+						srcs/User.cpp \
 						srcs/Wagner.cpp \
 						srcs/Channel.cpp \
 						srcs/Queue.cpp \
 						srcs/SocketBind.cpp \
 						srcs/SocketConnection.cpp \
 						srcs/Request.cpp\
-						srcs/Response.cpp \
 						srcs/extractor.cpp
 
 INCS				=	./incs \
