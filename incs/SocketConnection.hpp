@@ -6,22 +6,20 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 18:47:29 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/07 10:57:34 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SocketConnection_HPP
-# define SocketConnection_HPP
+#ifndef USERSOCKET_HPP
+# define USERSOCKET_HPP
 
 # include "Queue.hpp"
 # include "Request.hpp"
 # include "Response.hpp"
-# include "Wagner.hpp"
 # include <netinet/in.h>
 # include <vector>
 
-class Wagner;
-class SocketConnection : public IQueueEventListener
+class UserSocket : public IQueueEventListener
 {
 	private:
 		int						_fd;
@@ -31,16 +29,30 @@ class SocketConnection : public IQueueEventListener
 		std::string				_read_cache;
 		std::string				_write_cache;
 		Request					_requestParser;
-		t_message_queue			_requests;
-		t_message_queue			_responses;
-		Wagner &_w;
+		t_request_queue			_requests;
+
+		std::vector<t_response*> _responses;
+	
+		std::string			_username;
+		std::string			_hostname;
+		std::string			_servername;
+		std::string			_realname;
+
+		std::string			_nickname;
+		//std::vector<Channel&>	_channels;
 
 	public:
-		SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind);
-		~SocketConnection();
+		UserSocket();
+		UserSocket(IQueue &queue, int fd_socketBind);
+		~UserSocket();
 
 		void	read(void);
 		void	write(void);
+		
+		std::string const &	getResponse() const;
+
+		void	pong(void);
+		void	whois(void);
 };
 
 #endif
