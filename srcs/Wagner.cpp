@@ -3,22 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Wagner.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 17:06:18 by sethomas         ###   ########.fr       */
+/*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
+/*   Updated: 2023/12/08 18:10:22 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Wagner.hpp"
-# include "User.hpp"
-#include <stdlib.h>
-# include "SocketConnection.hpp"
-
-class USer;
-# define DEBUG_CALL_WAGNER PRINT_DEBUG_CALL(MAGENTA, Wagner)
-
-
 
 Wagner::Wagner(std::string host, int port, std::string pass)  : _hostname(host), _port(port), _pass(pass)
 {
@@ -67,7 +59,6 @@ t_message_reponse_queue	Wagner::treatRequest(SocketConnection* socket, t_message
 	Message			&curr_req = requests.front();
 	while (!requests.empty())
 	{
-		//std::cout << ">>s ----------" << std::endl;
 		curr_req = requests.front();
 		requests.pop_front();
 	
@@ -130,20 +121,13 @@ MessageResponse	Wagner::cmd_pass(SocketConnection* socket, Message const &reques
 {
 	(void)_port;
 	DEBUG_CALL_WAGNER
-	PRINT_DEBUG_MESSAGE(MAGENTA, request.params)
 
 	MessageResponse	output;
 	output.valide = true;
 	
 	std::string _inpass = request.params.front();
 	if (_inpass != _pass)
-	{
-		//output.command.code = "001";
-		//output.params.push_back(":connection refused");
-//		delete socket;
 		socket->is_alive(false);
-		throw std::runtime_error("Socket Connection refused");
-	}
 	return (output);
 }
 
@@ -151,7 +135,6 @@ MessageResponse	Wagner::cmd_pass(SocketConnection* socket, Message const &reques
 MessageResponse	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	PRINT_DEBUG_MESSAGE(MAGENTA, request.params)
 
 	MessageResponse	output;
 	output.valide = true;
@@ -206,7 +189,6 @@ MessageResponse	Wagner::cmd_nick(SocketConnection* socket, Message const &reques
 MessageResponse	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	PRINT_DEBUG_MESSAGE(MAGENTA, request.params)
 	
 	MessageResponse	output;
 	output.valide = true;
@@ -260,12 +242,12 @@ MessageResponse	Wagner::cmd_ping(SocketConnection* socket, Message const &reques
 MessageResponse	Wagner::cmd_quit(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	PRINT_DEBUG_MESSAGE(MAGENTA, request.params)
 
 	MessageResponse	output;
 	output.valide = true;
 	(void)request;
 	(void)socket;
+	socket->is_alive(false);
 	//delete socket;
 	User* _user = (_clients.find(socket))->second;
 	throw std::runtime_error(_user->getNickname() + " has quit the server !");	

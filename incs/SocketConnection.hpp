@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 17:02:29 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 18:08:56 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,10 @@ class SocketConnection : public IQueueEventListener
 		socklen_t				_addr_len;
 
 		IQueue					&_queue;
-
-		std::string				_read_cache;
-		std::string				_write_cache;
-
 		Request					_requestParser;
-		t_message_queue			_requests;
 
-		t_message_reponse_queue			_responses;
-	
-		std::string			_username;
-		std::string			_hostname;
-		std::string			_servername;
-		std::string			_realname;
-
-		std::string			_nickname;
+		std::string				_read_cache, _write_cache;
+		t_message_queue			_requests, _responses;
 
 		Wagner &			_w;
 		~SocketConnection();
