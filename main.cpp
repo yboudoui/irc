@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 16:43:23 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 17:00:24 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ https://www.alien.net.au/irc/irc2numerics.html
 https://modern.ircdocs.horse/
 
 QUESTIONS :
-Pourquoi request.prefixe sont des  pointeurs sur std::string.
-NB : je lis aue ==que les reponses sont toujours prefixees du nom du serveur 
+NB : les reponses sont toujours prefixees du nom du serveur 
 	info a retrouver sur :
 	http://chi.cs.uchicago.edu/chirc/irc.html#message-format
 */

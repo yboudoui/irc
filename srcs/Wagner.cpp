@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 16:32:17 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 17:00:31 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,16 +153,15 @@ t_message	Wagner::cmd_nick(SocketConnection* socket, t_message const &request)
 	/*****/
 
 
-	/* ANNOUNCE ARRIVAL 
+	/* ANNOUNCE ARRIVAL */
 	SocketConnection*		_clientSocket;
 	User*					_clientUser;
 	t_message	_clientOutput = {.valide = true };
 	
-	
-	output.params.push_back(_user->getNickname());
-	output.params.push_back(":A new user arrived");	
+	_clientOutput.command.name = "PRIVMSG"; //433 ERR_NICKNAMEINUSE
 
-	std::map<SocketConnection*,	User*>::iterator	it;
+
+	std::map<SocketConnection*,	User*>::iterator	it = _clients.begin();
 	std::map<SocketConnection*,	User*>::iterator	ite = _clients.end();
 
 
@@ -170,9 +169,13 @@ t_message	Wagner::cmd_nick(SocketConnection* socket, t_message const &request)
 	{
 		_clientSocket = it->first;
 		_clientUser = it->second;
-		std::cout << _clientUser->getNickname() << std::endl;
+
+		_clientOutput.params.push_back(_clientUser->getNickname());
+		_clientOutput.params.push_back(": A new user arrived on the server, say hello to " +_user->getNickname()+ "");	
+		_clientSocket->insertResponse(_clientOutput);
+		std::cout << ":A new user arrived : " << _clientUser->getNickname() << std::endl;
 	}
-	*/
+	
 
 	return (output);
 }
@@ -279,6 +282,9 @@ t_message	Wagner::cmd_join(SocketConnection* socket, t_message const &request)
 t_message	Wagner::cmd_privmsg(SocketConnection* socket, t_message const &request)
 {
 	DEBUG_CALL_WAGNER
+	PRINT_DEBUG_MESSAGE(MAGENTA, request.prefixe)
+	PRINT_DEBUG_MESSAGE(MAGENTA, request.params)
+
 	t_message	output = {.valide = false };
 	(void)request;
 	(void)socket;

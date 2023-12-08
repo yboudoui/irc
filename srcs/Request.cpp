@@ -6,10 +6,11 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:08:10 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 13:26:39 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 13:34:09 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Colors.hpp"
 #include "Request.hpp"
 
 Request::Request(int &fd): _fd(fd) {}
@@ -28,6 +29,7 @@ t_message_queue	Request::get_messages(void)
 	_cache.append(buff, bytes_read);
 
 	Extractor	*line = _cache.extract_to("\r\n");
+	std::cout << GREEN << "l. " << *line << RESET << std::endl;
 	while (line != NULL)
 	{
 		new_request.valide = true;

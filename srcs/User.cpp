@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 13:40:29 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 17:00:49 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ User::~User()
 {
 	DEBUG_CALL_USER
 }
-
 
 void	User::setUsername		(std::string name){	_username = name; }
 void	User::setHostname		(std::string name){	_hostname = name; }

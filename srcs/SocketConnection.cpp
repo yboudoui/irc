@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 16:52:27 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 17:00:00 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int const &	SocketConnection::getFd() const
 {
 	return(_fd);
 }
+
 
 void	SocketConnection::insertResponse(t_message message)
 {
