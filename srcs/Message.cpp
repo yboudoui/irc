@@ -6,28 +6,92 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 16:18:12 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:02:52 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Colors.hpp"
 #include "Message.hpp"
 
-# define DEBUG_CALL_MESSAGE PRINT_DEBUG_CALL(YELLOW, Message)
-
 Message::Message()
 {
-	//DEBUG_CALL_MESSAGE
-		std::cout << YELLOW<< "Message::Message()" << RESET << std::endl;
+	DEBUG_CALL_MESSAGE
 
 	this->prefixe = NULL;
+}
+
+Message::Message(Extractor &str)
+{
+	valide = true;
+	prefixe = parse_prefixe(str);
+	command = parse_command(str);
+	params = parse_params(str);
+}
+
+Message::Message(Message const& other)
+	: valide(other.valide)
+	, prefixe(other.prefixe)
+	, command(other.command)
+	, params(other.params)
+{
+	DEBUG_CALL_MESSAGE
 }
 
 Message::~Message()
 {
 	if (this->command.code.size() || this->command.name.size())
 		std::cout << this->command.code << " " << this->command.name << std::endl;
-	std::cout << YELLOW<< "Message::~Message()" << RESET << std::endl;
+	DEBUG_CALL_MESSAGE
+}
+
+void Message::operator << (std::string & str)
+{
+	Extractor stry(str);
+	valide = true;
+	prefixe = parse_prefixe(stry);
+	command = parse_command(stry);
+	params = parse_params(stry);
+}
+
+t_prefixe*	Message::parse_prefixe(Extractor &str)
+{
+	if (str.size() < 2 || str[0] != ':')
+		return (NULL);
+	if (str[1] == ' ')
+		throw std::runtime_error("Bad prefix format");
+	str.erase(0, 1);
+	Extractor *substr = str.extract_to(" ");
+	t_prefixe	*output = new t_prefixe;
+	output->host = substr->extract_from("@");
+	output->user = substr->extract_from("!");
+	output->pseudo = (output->host || output->user) ? substr : NULL;
+	output->server_name = (output->pseudo == NULL) ? substr : NULL;
+	return (output);
+}
+
+t_command	Message::parse_command(Extractor &str)
+{
+	t_command	output = {};
+	Extractor*	substr;
+	substr = str.extract_to(" ", true);
+
+	output.code = (substr->is_digits(3)) ? substr->to<std::string>() : "";
+	output.name = (output.code.empty()) ? substr->to<std::string>() : "";
+	delete substr;
+	return (output);
+}
+
+t_params	Message::parse_params(Extractor &str)
+{
+	t_params	output;
+	Extractor*	substr;
+
+	substr = str.extract_from(":", true);
+	output = str.split();
+	if (substr)
+		output.push_back(std::string(*substr));
+	delete substr;
+	return (output);
 }
 
 std::ostream& operator<< (std::ostream& stream, const t_prefixe& prefixe)
@@ -75,3 +139,34 @@ std::ostream& operator<< (std::ostream& stream, const Message& message)
 	stream << message.params;
 	return (stream);
 }
+
+std::ostream& operator<< (std::ostream& stream, const Message* message)
+{
+	if (message != NULL)
+		stream << *message;
+	return (stream);
+}
+
+std::ostream& operator<< (std::ostream& stream, const t_message_queue queue)
+{
+	for (size_t i = 0; i < queue.size(); i++)
+		stream << queue[i] << std::endl;
+	return (stream);
+}
+
+t_message_queue& operator >> (t_message_queue& queue, std::string &str)
+{
+	Extractor		*line;
+
+	Extractor extractor(str);
+	line = extractor.extract_to("\r\n");
+	while (line != NULL)
+	{
+		queue.push_back(new Message(*line));
+		line = extractor.extract_to("\r\n");
+	}
+	str = extractor;
+	return (queue);
+}
+
+

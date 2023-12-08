@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 18:08:56 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 19:16:29 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include "Colors.hpp"
 # include "Queue.hpp"
 # include "Message.hpp"
-# include "Request.hpp"
 # include "Wagner.hpp"
 # include "User.hpp"
 # include <netinet/in.h>
@@ -32,7 +31,6 @@ class SocketConnection : public IQueueEventListener
 		socklen_t				_addr_len;
 
 		IQueue					&_queue;
-		Request					_requestParser;
 
 		std::string				_read_cache, _write_cache;
 		t_message_queue			_requests, _responses;
@@ -48,7 +46,7 @@ class SocketConnection : public IQueueEventListener
 
 		int const &	getFd() const;
 
-		void	insertResponse(MessageResponse message);
+		void	insertResponse(Message message);
 };
 
 #endif

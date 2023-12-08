@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 17:07:04 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 19:50:02 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 SocketConnection::SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind)
 	: _queue(queue)
-	, _requestParser(_fd)
 	, _w(w)
 {
 	_addr = (struct sockaddr){};
@@ -33,10 +32,14 @@ SocketConnection::~SocketConnection()
 
 void	SocketConnection::read(void)
 {
-	t_message_queue	tmp;
+	size_t					bytes_read = 0;
+	const unsigned int		buff_len = 512;
+	char					buff[buff_len] = {0};
 
-	tmp = _requestParser.get_messages();
-	_requests.insert(_requests.end(), tmp.begin(), tmp.end());
+	bytes_read = ::recv(_fd, buff, buff_len, 0);
+	_read_cache.append(buff, bytes_read);
+
+	_requests >> _read_cache;
 }
 
 int const &	SocketConnection::getFd() const
@@ -44,16 +47,15 @@ int const &	SocketConnection::getFd() const
 	return(_fd);
 }
 
-
-void	SocketConnection::insertResponse(MessageResponse message)
+void	SocketConnection::insertResponse(Message message)
 {
-	_responses.push_back(message);
+	_responses.push_back(new Message(message));
 }
 
 void	SocketConnection::write(void)
 {
 	std::stringstream	stream;
-	t_message_reponse_queue		tmp;
+	t_message_queue		tmp;
 
 	try
 	{

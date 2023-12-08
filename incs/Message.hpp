@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 16:51:01 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:02:49 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,51 +31,39 @@ typedef struct	s_prefix {
 	std::string	*host;
 }	t_prefixe;
 
-/*
-typedef struct	s_message {
-	bool		valide;
-	t_prefixe	*prefixe;
-	t_command	command;
-	t_params	params;
-}	Message;
-*/
+# define DEBUG_CALL_MESSAGE PRINT_DEBUG_CALL(YELLOW, Message)
 
-class Message {
+class Message;
+typedef std::deque<Message*> t_message_queue;
+
+class Message
+{
 	private:
+		t_prefixe*	parse_prefixe(Extractor &str);
+		t_command	parse_command(Extractor &str);
+		t_params	parse_params(Extractor &str);
 
 	public:
 		bool		valide;
 		t_prefixe	*prefixe;
 		t_command	command;
 		t_params	params;
-	
+
 		Message();
+		Message(Message const& other);
+		void operator << (std::string & str);
+		Message(Extractor &str);
 		~Message();
 };
-
-
-class MessageResponse {
-	private:
-
-	public:
-		bool		valide;
-		t_prefixe	*prefixe;
-		t_command	command;
-		t_params	params;
-	
-		MessageResponse();
-		~MessageResponse();
-};
-
-
-typedef std::deque<Message> t_message_queue;
-typedef std::deque<MessageResponse> t_message_reponse_queue;
 
 std::ostream& operator<< (std::ostream& stream, const t_prefixe& prefixe);
 std::ostream& operator<< (std::ostream& stream, const t_command& command);
 std::ostream& operator<< (std::ostream& stream, const t_params& params);
+std::ostream& operator<< (std::ostream& stream, const t_message_queue queue);
 std::ostream& operator<< (std::ostream& stream, const Message& message);
-std::ostream& operator<< (std::ostream& stream, const MessageResponse& message);
+std::ostream& operator<< (std::ostream& stream, const Message* message);
+
+t_message_queue& operator >> (t_message_queue& queue, std::string &str);
 
 
 #endif

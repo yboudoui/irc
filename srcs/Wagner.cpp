@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 18:10:22 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:01:37 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 Wagner::Wagner(std::string host, int port, std::string pass)  : _hostname(host), _port(port), _pass(pass)
 {
 	DEBUG_CALL_WAGNER
-	(void)port;
 	_cmd.insert(std::make_pair("PASS",		&Wagner::cmd_pass));
 	_cmd.insert(std::make_pair("CAP",		&Wagner::cmd_cap));
 	_cmd.insert(std::make_pair("NICK",		&Wagner::cmd_nick));
@@ -45,9 +44,10 @@ void 			Wagner::addClient(SocketConnection*  socket)
 	_clients.insert(std::make_pair(socket, new User()));
 }
 
-t_message_reponse_queue	Wagner::treatRequest(SocketConnection* socket, t_message_queue& requests)
+t_message_queue	Wagner::treatRequest(SocketConnection* socket, t_message_queue& requests)
 {
-	t_message_reponse_queue	responses;
+	Message			*curr_req;
+	t_message_queue	responses;
 
 	(void)socket;
 
@@ -56,19 +56,18 @@ t_message_reponse_queue	Wagner::treatRequest(SocketConnection* socket, t_message
 
 	if (!requests.empty())
 		PRINT_DEBUG_MESSAGE(MAGENTA,	"treatRequest[" << socket->getFd() << "]")
-	Message			&curr_req = requests.front();
 	while (!requests.empty())
 	{
 		curr_req = requests.front();
 		requests.pop_front();
 	
-		it = _cmd.find(curr_req.command.name);
+		it = _cmd.find(curr_req->command.name);
 		if (it != ite)
 		{
 			pfonc	function = (it->second);
 			try
 			{
-				MessageResponse	response = (this->*function)(socket, curr_req);
+				Message	*response = new Message((this->*function)(socket, *curr_req));
 				PRINT_DEBUG_MESSAGE(BLUE,	"\t[" << curr_req << "]")
 
 				responses.push_back(response);
@@ -80,16 +79,13 @@ t_message_reponse_queue	Wagner::treatRequest(SocketConnection* socket, t_message
 
 				return (responses);
 			}
-			
-			
 
 		}
 		else {
 				// TODO envoyer PRIVMSG au socket
 			PRINT_DEBUG_MESSAGE(
-			MAGENTA, "Wagner::cmd not found [" << curr_req.command.name << "]")
+			MAGENTA, "Wagner::cmd not found [" << curr_req->command.name << "]")
 		}
-		//std::cout << ">>e ----------" << std::endl;
 	}
 
 	// Analyse la CMD
@@ -105,10 +101,10 @@ t_message_reponse_queue	Wagner::treatRequest(SocketConnection* socket, t_message
 	return (responses);
 }
 
-MessageResponse	Wagner::cmd_cap(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_cap(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	MessageResponse	output;
+	Message	output;
 	output.valide = true;
 
 	(void)request;
@@ -117,12 +113,12 @@ MessageResponse	Wagner::cmd_cap(SocketConnection* socket, Message const &request
 }
 
 
-MessageResponse	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 {
 	(void)_port;
 	DEBUG_CALL_WAGNER
 
-	MessageResponse	output;
+	Message	output;
 	output.valide = true;
 	
 	std::string _inpass = request.params.front();
@@ -132,11 +128,11 @@ MessageResponse	Wagner::cmd_pass(SocketConnection* socket, Message const &reques
 }
 
 
-MessageResponse	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 
-	MessageResponse	output;
+	Message	output;
 	output.valide = true;
 	std::string _inNick = request.params.front();
 
@@ -158,7 +154,7 @@ MessageResponse	Wagner::cmd_nick(SocketConnection* socket, Message const &reques
 	SocketConnection*		_clientSocket;
 	User*					_clientUser;
 
-	MessageResponse	_clientOutput;
+	Message	_clientOutput;
 	_clientOutput.valide = true;
 	
 	_clientOutput.command.name = "PRIVMSG"; //433 ERR_NICKNAMEINUSE
@@ -186,11 +182,11 @@ MessageResponse	Wagner::cmd_nick(SocketConnection* socket, Message const &reques
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_user(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	
-	MessageResponse	output;
+	Message	output;
 	output.valide = true;
 
 	if (request.params.empty())
@@ -226,24 +222,25 @@ MessageResponse	Wagner::cmd_user(SocketConnection* socket, Message const &reques
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_ping(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_ping(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	MessageResponse	output;
+	Message	output;
 	output.valide = true;
+	output << "PONG " << _hostname;
 	(void)request;
 	(void)socket;
 
-	output.command.name = "PONG";
-	output.params.push_back(_hostname);
+//	output.command.name = "PONG";
+//	output.params.push_back(_hostname);
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_quit(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_quit(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 
-	MessageResponse	output;
+	Message	output;
 	output.valide = true;
 	(void)request;
 	(void)socket;
@@ -254,10 +251,10 @@ MessageResponse	Wagner::cmd_quit(SocketConnection* socket, Message const &reques
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_whois(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_whois(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	MessageResponse	output;
+	Message	output;
 	output.valide = true;
 	(void)request;
 
@@ -274,64 +271,62 @@ MessageResponse	Wagner::cmd_whois(SocketConnection* socket, Message const &reque
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_mode(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_mode(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	MessageResponse	output;
-	output.valide = true;
+	Message	output;
+	output.valide = false;
 	(void)request;
 	(void)socket;
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_join(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_join(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	MessageResponse	output;
-	output.valide = true;
+	Message	output;
+	output.valide = false;
 	(void)request;
 	(void)socket;
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_privmsg(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_privmsg(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	PRINT_DEBUG_MESSAGE(MAGENTA, request.prefixe)
-	PRINT_DEBUG_MESSAGE(MAGENTA, request.params)
 
-	MessageResponse	output;
-	output.valide = true;
+	Message	output;
+	output.valide = false;
 	(void)request;
 	(void)socket;
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_kick(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_kick(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	MessageResponse	output;
-	output.valide = true;
+	Message	output;
+	output.valide = false;
 	(void)request;
 	(void)socket;
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_invite(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_invite(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	MessageResponse	output;
-	output.valide = true;
+	Message	output;
+	output.valide = false;
 	(void)request;
 	(void)socket;
 	return (output);
 }
 
-MessageResponse	Wagner::cmd_topic(SocketConnection* socket, Message const &request)
+Message	Wagner::cmd_topic(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	MessageResponse	output;
-	output.valide = true;
+	Message	output;
+	output.valide = false;
 	(void)request;
 	(void)socket;
 	return (output);
