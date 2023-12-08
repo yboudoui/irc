@@ -6,13 +6,11 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:08:10 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/07 16:02:25 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 13:26:39 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
-
-#include <iostream>
 
 Request::Request(int &fd): _fd(fd) {}
 
@@ -36,6 +34,7 @@ t_message_queue	Request::get_messages(void)
 		new_request.prefixe = parse_prefixe(*line);
 		new_request.command = parse_command(*line);
 		new_request.params = parse_params(*line);
+
 		output.push_back(new_request);
 		line = _cache.extract_to("\r\n");
 	}
@@ -61,7 +60,9 @@ t_prefixe*	Request::parse_prefixe(Extractor &str)
 t_command	Request::parse_command(Extractor &str)
 {
 	t_command	output = {};
-	Extractor*	substr = str.extract_to(" ", true);
+	Extractor*	substr;
+	substr = str.extract_to(" ", true);
+
 	output.code = (substr->is_digits(3)) ? substr->to<std::string>() : "";
 	output.name = (output.code.empty()) ? substr->to<std::string>() : "";
 	delete substr;
@@ -71,13 +72,12 @@ t_command	Request::parse_command(Extractor &str)
 t_params	Request::parse_params(Extractor &str)
 {
 	t_params	output;
+	Extractor*	substr;
 
-	Extractor*	substr = str.extract_from(":", true);
+	substr = str.extract_from(":", true);
 	output = str.split();
 	if (substr)
-	{
 		output.push_back(std::string(*substr));
-	}
 	delete substr;
 	return (output);
 }

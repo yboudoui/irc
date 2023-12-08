@@ -6,11 +6,13 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:44:25 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 16:08:59 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 13:29:46 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "extractor.hpp"
+
+#include "Colors.hpp"
 
 Extractor::Extractor() : std::string() { }
 
@@ -47,11 +49,12 @@ Extractor	*Extractor::extract_from(std::string delimiter, bool or_end)
 			return (NULL);
 		output = new Extractor(*this);
 		this->erase();
+
 	}
 	else
 	{
 		output = new Extractor(*this, has_delimiter);
-		this->erase(has_delimiter - delimiter.size());
+		this->erase(has_delimiter);
 	}
 	return (output);
 }
@@ -76,10 +79,10 @@ std::deque<std::string>	Extractor::split(std::string delimiter)
 	pos = this->find(delimiter);
 	while (pos != std::string::npos)
 	{
-		pos = this->find(delimiter);
 		token = this->substr(0, pos);
 		output.push_back(token);
 		this->erase(0, pos + delimiter.length());
+		pos = this->find(delimiter);
 	}
 	return (output);
 }

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/07 17:10:18 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 12:11:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,11 @@ Wagner::~Wagner()
 	// delete [] _events_list;
 }
 
-void 			Wagner::addClient(SocketConnection *  socket)
+void 			Wagner::addClient(SocketConnection*  socket)
 {
 	DEBUG_CALL_WAGNER
+	if (socket == NULL)
+		return ;
 	_clients.insert(std::make_pair(socket, new User()));
 }
 
@@ -132,11 +134,7 @@ t_message	Wagner::cmd_pass(SocketConnection* socket, t_message const &request)
 		//output.command.code = "001";
 		//output.params.push_back(":connection refused");
 		delete socket;
-		throw std::runtime_error("Socket Connection refused");	
-	}
-	else
-	{
-		output.valide = true;
+		throw std::runtime_error("Socket Connection refused");
 	}
 	return (output);
 }
