@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 17:08:54 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 17:10:46 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 class SocketConnection;
 //# include "Channel.hpp"
 
-typedef MessageResponse (Wagner::*pfonc)(SocketConnection*, Message const &);
 
 class Wagner {
 	private:
