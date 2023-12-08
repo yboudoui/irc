@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 13:28:40 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 13:45:20 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 
 # include <vector>
 # include <map>
+# include "Colors.hpp"
 # include "SocketConnection.hpp"
 
+# define DEBUG_CALL_CHANNEL PRINT_DEBUG_CALL(RED, Channel)
 /*
 the channel ceases to exist when the last client leaves it
 
@@ -26,7 +28,6 @@ the channel ceases to exist when the last client leaves it
         MODE    - Change the channel's mode
         INVITE  - Invite a client to an invite-only channel (mode +i)
         TOPIC   - Change the channel topic in a mode +t channel
-		
 
 a channel operator is identified by the '@' symbol next to their
    nickname whenever it is associated with a channel (ie replies to the
@@ -61,9 +62,6 @@ l ->
 	Takes a positive integer parameter.
 	Limits the number of users who can 
 	be in the channel at the same time.
-*/
-/*
-
 */
 
 class Channel {

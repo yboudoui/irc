@@ -6,18 +6,12 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 12:11:27 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 16:32:17 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Colors.hpp"
 # include "Wagner.hpp"
-# include "User.hpp"
-#include <stdlib.h>
-# include "SocketConnection.hpp"
 
-class USer;
-# define DEBUG_CALL_WAGNER PRINT_DEBUG_CALL(MAGENTA, Wagner)
 Wagner::Wagner(std::string host, int port, std::string pass)  : _hostname(host), _port(port), _pass(pass)
 {
 	DEBUG_CALL_WAGNER
@@ -62,7 +56,7 @@ t_message_queue	Wagner::treatRequest(SocketConnection* socket, t_message_queue& 
 
 	if (!requests.empty())
 		PRINT_DEBUG_MESSAGE(MAGENTA,	"treatRequest[" << socket->getFd() << "]")
-	
+
 	while (!requests.empty())
 	{
 		curr_req = requests.front();
@@ -82,12 +76,8 @@ t_message_queue	Wagner::treatRequest(SocketConnection* socket, t_message_queue& 
 			{
 				std::cerr << RED << e.what() << "\n" << RESET;
 				throw std::runtime_error(e.what());	
-
 				return (responses);
 			}
-			
-			
-
 		}
 		else {
 			PRINT_DEBUG_MESSAGE(
@@ -133,7 +123,8 @@ t_message	Wagner::cmd_pass(SocketConnection* socket, t_message const &request)
 	{
 		//output.command.code = "001";
 		//output.params.push_back(":connection refused");
-		delete socket;
+//		delete socket;
+		socket->is_alive(false);
 		throw std::runtime_error("Socket Connection refused");
 	}
 	return (output);

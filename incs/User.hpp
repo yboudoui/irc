@@ -6,14 +6,17 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/07 16:10:34 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 13:47:48 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef User_HPP
 # define User_HPP
 
-# include <iostream>
+# include "Colors.hpp"
+# include <string>
+
+# define DEBUG_CALL_USER PRINT_DEBUG_CALL(YELLOW, User)
 
 class User {
 	private:

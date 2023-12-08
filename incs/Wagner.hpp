@@ -6,29 +6,28 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/07 15:25:56 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 13:40:42 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WAGNER_HPP
 # define WAGNER_HPP
-# define DEBUG 1
 
 # include <vector>
 # include <map>
-//# include "Request.hpp"
-//# include "Response.hpp"
+# include "Colors.hpp"
 # include "SocketConnection.hpp"
 # include "User.hpp"
 
 class SocketConnection;
-class Wagner;
 //# include "Channel.hpp"
 
-typedef t_message (Wagner::*pfonc)(SocketConnection*, t_message const &);
+
+# define DEBUG_CALL_WAGNER PRINT_DEBUG_CALL(MAGENTA, Wagner)
 
 class Wagner {
 	private:
+		typedef t_message (Wagner::*pfonc)(SocketConnection*, t_message const &);
 	//	std::vector<Channel*>	_Channels;
 		std::map<std::string, pfonc>			_cmd;
 		std::map<SocketConnection*,	User*>		_clients;

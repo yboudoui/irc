@@ -6,14 +6,11 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/07 17:09:42 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 16:52:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Colors.hpp"
 #include "SocketConnection.hpp"
-#include "Wagner.hpp"
-#include <iostream>
 
 SocketConnection::SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind)
 	: _queue(queue)
@@ -25,7 +22,7 @@ SocketConnection::SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind)
 	_fd = accept(fd_socketBind, &_addr, &_addr_len);
 	if (_fd < 0)
 		throw std::runtime_error("Fatal error when accepting a new connection");
-	_queue.subscribe(_fd, *this);
+	_queue.subscribe(_fd, this);
 }
 
 SocketConnection::~SocketConnection()

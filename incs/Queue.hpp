@@ -6,7 +6,7 @@
 /*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:07:28 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/04 11:11:40 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 16:51:03 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,29 @@ extern "C" {
 
 # include <map>
 # include <stdexcept>
-#include <iostream>
+# include "Colors.hpp"
 
 # define MAX_EVENTS 32
 
+# define DEBUG_CALL_QUEUE PRINT_DEBUG_CALL(YELLOW, Queue)
 
-class IQueueEventListener {
+class IQueueEventListener
+{
 	public:
+		IQueueEventListener(void);
+		bool			is_alive(bool alive = true);
 		virtual void	read(void)	= 0;
 		virtual void	write(void)	= 0;
+		static void free(IQueueEventListener* p) { delete p; };
+	protected:
+		virtual	~IQueueEventListener(void) = 0;
+	private:
+		bool	_alive;
 };
 
 class IQueue {
 	public:
-		virtual void	subscribe(int fd, IQueueEventListener &event)	= 0;
+		virtual void	subscribe(int fd, IQueueEventListener* event)	= 0;
 		virtual void	unsubscribe(int fd)	= 0;
 };
 
@@ -44,14 +53,11 @@ class Queue : public IQueue {
 		struct epoll_event	*_events_list;
 		size_t				_max_events;
 
-		typedef	std::map <int, IQueueEventListener&>	t_listener_map;
-		t_listener_map	_m;
-
 	public:
 		Queue(size_t nevents = MAX_EVENTS);
 		~Queue();
 
-		void	subscribe(int fd, IQueueEventListener &listener);
+		void	subscribe(int fd, IQueueEventListener* listener);
 		void	unsubscribe(int fd);
 		bool	event_loop(void);
 };

@@ -6,13 +6,11 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:44:25 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 13:31:41 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 13:32:49 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "extractor.hpp"
-
-#include "Colors.hpp"
 
 Extractor::Extractor() : std::string() { }
 

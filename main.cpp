@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/07 17:00:03 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 16:43:23 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ int	main(int argc, char *argv[])
 	int			port;
 	std::string	password;
 
-	
-
 	argc -= 1;
 	argv += 1;
 	if (argc != 2) {
@@ -60,9 +58,10 @@ int	main(int argc, char *argv[])
 	
 	Queue	queue = Queue();
 
-	SocketBind	sock(_wagner, queue, port);
+	SocketBind*	sock = new SocketBind(_wagner, queue, port);
 
 	std::cout << "localhost:" << port << std::endl;
 	while (queue.event_loop());
+	IQueueEventListener::free(sock);
 	return (0);
 }

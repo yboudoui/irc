@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/06 13:40:04 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 16:48:07 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ class SocketBind : public IQueueEventListener {
 		struct sockaddr_in				_sin;
 		IQueue							&_queue;
 		Wagner &_w;
+		~SocketBind();
 
 	public:
 		SocketBind(Wagner &w,IQueue &queue, int port, int backlog = 5);
-		~SocketBind();
 		void	read(void);
 		void	write(void);
 };
