@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extractor.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:43:12 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 13:41:46 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 17:01:53 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Extractor : public std::string
 			ss >> output;
 			return (output);
 		};
+		
 		bool						is_digits(size_t len = 0);
 		std::deque<std::string>		split(std::string delimiter = " ");
 };

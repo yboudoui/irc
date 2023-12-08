@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 16:48:46 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/08 17:02:29 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 
 # include "Colors.hpp"
 # include "Queue.hpp"
+# include "Message.hpp"
 # include "Request.hpp"
 # include "Wagner.hpp"
 # include "User.hpp"
 # include <netinet/in.h>
 
 class Wagner;
+class Request;
 
 class SocketConnection : public IQueueEventListener
 {
@@ -35,8 +37,16 @@ class SocketConnection : public IQueueEventListener
 		std::string				_write_cache;
 
 		Request					_requestParser;
+		t_message_queue			_requests;
 
-		t_message_queue			_requests, _responses;
+		t_message_reponse_queue			_responses;
+	
+		std::string			_username;
+		std::string			_hostname;
+		std::string			_servername;
+		std::string			_realname;
+
+		std::string			_nickname;
 
 		Wagner &			_w;
 		~SocketConnection();
@@ -48,7 +58,8 @@ class SocketConnection : public IQueueEventListener
 		void	write(void);
 
 		int const &	getFd() const;
-		void	insertResponse(t_message message);
+
+		void	insertResponse(MessageResponse message);
 };
 
 #endif

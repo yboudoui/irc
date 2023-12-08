@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 17:00:00 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/08 17:07:04 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int const &	SocketConnection::getFd() const
 }
 
 
-void	SocketConnection::insertResponse(t_message message)
+void	SocketConnection::insertResponse(MessageResponse message)
 {
 	_responses.push_back(message);
 }
@@ -53,7 +53,7 @@ void	SocketConnection::insertResponse(t_message message)
 void	SocketConnection::write(void)
 {
 	std::stringstream	stream;
-	t_message_queue		tmp;
+	t_message_reponse_queue		tmp;
 
 	try
 	{
@@ -74,6 +74,6 @@ void	SocketConnection::write(void)
 	}
 	catch(const std::exception& e)
 	{
-		// std::cerr << e.what() << '\n';
+		std::cerr << e.what() << '\n';
 	}
 }
