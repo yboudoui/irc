@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 17:00:24 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/11 16:53:39 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	main(int argc, char *argv[])
 {
 	int			port;
 	std::string	password;
+	std::string	hostname = "localhost";
 
 	argc -= 1;
 	argv += 1;
@@ -53,7 +54,7 @@ int	main(int argc, char *argv[])
 	// https://www.alien.net.au/irc/irc2numerics.html
 	password = argv[1];
 
-	Wagner		_wagner("localhost", port, password);
+	Wagner		_wagner(hostname, port, password);
 	
 	Queue	queue = Queue();
 

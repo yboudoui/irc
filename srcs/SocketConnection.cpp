@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 19:50:02 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:15:01 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,17 @@ void	SocketConnection::write(void)
 
 	try
 	{
-		tmp = _w.treatRequest(this, _requests);
-		_responses.insert(_responses.end(), tmp.begin(), tmp.end());
 
-		if (_write_cache.empty())
-		{
+		if (_write_cache.empty() && !_requests.empty())
+		{		
+			tmp = _w.treatRequest(this, _requests);
+			_responses.insert(_responses.end(), tmp.begin(), tmp.end());
+
 			while (!_responses.empty())
 			{
+				
 				stream << _responses.front() << "\r\n";
+				PRINT_DEBUG_MESSAGE(GREEN,	"\t[" << _responses.front() << "]")
 				_responses.pop_front();
 			}
 			_write_cache = stream.str();

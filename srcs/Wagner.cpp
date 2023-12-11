@@ -6,12 +6,12 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 16:00:51 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:35:20 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Wagner.hpp"
-
+# include <cstdlib>
 Wagner::Wagner(std::string host, int port, std::string pass)
 	: _hostname(host)
 	, _port(port)
@@ -82,18 +82,26 @@ t_message_queue	Wagner::treatRequest(SocketConnection* socket, t_message_queue& 
 			
 			Message	*response = new Message((this->*function)(socket, *curr_req));
 			PRINT_DEBUG_MESSAGE(BLUE,	"\t[" << curr_req << "]")
-			responses.push_back(response);
-			PRINT_DEBUG_MESSAGE(GREEN,	"\t[" << response << "]")
+			if (response->valide)
+				responses.push_back(response);
 		}
-		else {
+		else
+		{
+			Message			output;
+			std::string		params;
+			
+			output.valide = true;
+			params = ":" + _hostname + " " + "263" + " " + curr_req->command.name + ": Unknown command: " + curr_req->command.name;
+			output >> params;
+			responses.push_back(new Message(output));	
 			/*
 			TODO =>
 			RPL_TRYAGAIN (263) <command> :<info> 
 			When a server drops a command without processing it,it MUST use this reply.
 			*/
-			PRINT_DEBUG_MESSAGE(MAGENTA, "Wagner::cmd not found [" << curr_req->command.name << "]")
 		}
 	}
+	PRINT_DEBUG_MESSAGE(MAGENTA, "Wagner::treatRequest end()")
 	return (responses);
 }
 
@@ -115,27 +123,34 @@ Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 	DEBUG_CALL_WAGNER
 
 	Message	output;
-	output.valide = true;
+	std::string params;
+	output.valide = false;
 	
 	std::string clientPass = request.params.front();
 
 	if (request.params.empty() || clientPass == "")
 	{
-		socket->is_alive(false);
+
 		/*
 		TODO => ??? verifier que le pass n'est pas une chaine vide
 		ERR_NEEDMOREPARAMS (461) <command> :<reason> ""
 		Returned by the server by any command which requires more parameters than the number of parameters given
 		*/
+		output.valide = true;
+		params = ":" + _hostname + " " + "461" + " PASS : command requires more parameters";
+		output >> params;
+		socket->is_alive(false);
 	}
 	else if (clientPass != _pass)
 	{
-		socket->is_alive(false);
 		/*
-		TODO =>
 		ERR_PASSWDMISMATCH (464) :<reason> 
 		Returned by the PASS command to indicate the given password was required and was either not given or was incorrect
 		*/
+		output.valide = true;
+		params = ":" + _hostname + " " + "464" + " : A Password is requiered to connect to " + _hostname;
+		output >> params;
+		socket->is_alive(false);
 	}
 	else
 	{
@@ -153,13 +168,14 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 	Message		output;
 	User* 		_user;
 	
-	output.valide = true;
+	output.valide = false;
 	
 	std::string UserNickname = request.params.front();
+	std::cout << "UserNickname : " <<  UserNickname << std::endl;
 	/* STEP #1 : check if the new nickname is already in use || */
 	if (request.params.empty())
 	{
-		socket->is_alive(false);
+		// del socket->is_alive(false);
 		/*
 		TODO => 
 		ERR_NONICKNAMEGIVEN (431) :<reason> 
@@ -169,7 +185,7 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 	else if (UserNickname == "anonymous"
 		||  UserNickname.find_first_of("!%#@ ") != std::string::npos)
 	{
-		socket->is_alive(false);
+		// del socket->is_alive(false);
 		/*
 		TODO => 
 		ERR_ERRONEUSNICKNAME (432) <nick> :<reason> 
@@ -186,16 +202,20 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 		{
 			if (clientIt->second->getUsername() == UserNickname)
 			{
-				socket->is_alive(false);
 				/*
+				socket->is_alive(false);
 				TODO => 
 				ERR_NICKNAMEINUSE (433) <nick> :<reason> 
 				Returned by the NICK command when the given nickname is already in use
 				*/
-				//break ;
-				//return output;
+				break ;
+				return output;
+				
 			}
+			clientIt++;
 		}
+		std::cout << "setNickname()" << std::endl;
+
 		_user = (_clients.find(socket))->second;
 		_user->setNickname(UserNickname);
 		_user->connectionStep();
@@ -207,11 +227,12 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	
-	Message		output;
-	size_t		size = request.params.size();
-	User*		_user = (_clients.find(socket))->second;
+	Message			output;
+	size_t			size = request.params.size();
+	User*			_user = (_clients.find(socket))->second;
+	std::string		params;
 
-	output.valide = true;
+	output.valide = false;
 
 	if (request.params.empty() || request.params.size() < 4)
 	{
@@ -241,6 +262,34 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 
 	if (_user->isConnected())
 	{
+		Message	greeting_001, greeting_002, greeting_003, greeting_004, greeting_005;
+
+		greeting_001.valide = true;
+		params = ":" + _hostname + " " + "001" + " : Welcome to the Internet Relay Network <nick>!<user>@<host>";
+		greeting_001 >> params;
+		socket->insertResponse(greeting_001);
+	
+		greeting_002.valide = true;
+		params = ":" + _hostname + " " + "002" + " : Your host is <servername>, running version <version>";
+		greeting_002 >> params;
+		std::cout << greeting_002.prefixe->server_name;
+		socket->insertResponse(greeting_002);
+		
+		greeting_003.valide = true;
+		params = ":" + _hostname + " " + "003" + " : This server was created <date>";
+		greeting_003 >> params;
+		socket->insertResponse(greeting_003);
+
+		greeting_004.valide = true;
+		params = ":" + _hostname + " " + "004" + " : <server_name> <version> <user_modes> <chan_modes>";
+		greeting_004 >> params;
+		socket->insertResponse(greeting_004);
+	
+		greeting_005.valide = true;
+		params = ":" + _hostname + " " + "005";
+		greeting_005 >> params;
+
+		return (greeting_005);
 		/* post-registration greeting
 
 		Upon successful completion of the registration process,
@@ -277,6 +326,9 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 	}
 	else
 	{
+		output.valide = true;
+		params = ":" + _hostname + " " + "464" + " : A Password is requiered to connect to " + _hostname;
+		output >> params;		
 		socket->is_alive(false);
 		/* la seule possibilite est qu'il manque le pass 
 		TODO =>
@@ -286,7 +338,7 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 	}
 
 	
-	/* ANNOUNCE ARRIVAL */
+	/* ANNOUNCE ARRIVAL 
 	SocketConnection*		_clientSocket;
 	User*					_clientUser;
 
@@ -294,10 +346,8 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 	_clientOutput.valide = true;
 	
 	_clientOutput.command.name = "PRIVMSG"; //433 ERR_NICKNAMEINUSE
-
 	std::map<SocketConnection*,	User*>::iterator	it = _clients.begin();
 	std::map<SocketConnection*,	User*>::iterator	ite = _clients.end();
-
 
 	for ( ; it != ite ; it++)
 	{
@@ -313,7 +363,7 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 		std::cout << ":A new user arrived : " << _clientUser->getNickname() << std::endl;
 		}
 	}
-
+	*/
 
 	return (output);
 }
@@ -321,14 +371,16 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 Message	Wagner::cmd_ping(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	Message	output;
-	output.valide = true;
-	std::string u;
-	u = "PONG" + _hostname;
-	output >> u;
+	Message			output;
+	std::string		params;
+
 	(void)request;
 	(void)socket;
 
+	output.valide = true;
+	params = ":" + _hostname + " " + "PONG " + _hostname;
+	output >> params;
+	//output >> ":" >> nickname >> "!" >> username >> "@" >> userhost;
 	return (output);
 }
 
@@ -341,28 +393,31 @@ Message	Wagner::cmd_quit(SocketConnection* socket, Message const &request)
 	(void)request;
 	(void)socket;
 	socket->is_alive(false);
-	//delete socket;
+
 	User* _user = (_clients.find(socket))->second;
+	
 	throw std::runtime_error(_user->getNickname() + " has quit the server !");	
+
 	return (output);
 }
 
 Message	Wagner::cmd_whois(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
-	Message	output;
-	output.valide = true;
-	(void)request;
+	Message			output;
+	std::string		params;
 
-	output.command.code = "311";
-//	output.command.name = "RPL_WHOISUSER";
-//	<nick> <user> <host> * :<real_name>
+	(void)request;
+	output.valide = true;
+
+//	"RPL_WHOISUSER";
+	params = ":" + _hostname + " " + "311";
+	output >> params;
 	User*	_user = (_clients.find(socket))->second;
 	
 	output.params.push_back(_user->getNickname());
 	output.params.push_back(_user->getUsername());
 	output.params.push_back(_user->getHostname());
-//	output.params.push_back("*");
 	output.params.push_back(_user->getRealname());
 	return (output);
 }

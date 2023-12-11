@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 15:58:16 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:18:15 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 Message::Message()
 {
-	DEBUG_CALL_MESSAGE
+	//DEBUG_CALL_MESSAGE
 
 	this->prefixe = NULL;
 }
@@ -35,12 +35,12 @@ Message::Message(Message const& other)
 	, command(other.command)
 	, params(other.params)
 {
-	DEBUG_CALL_MESSAGE
+	//DEBUG_CALL_MESSAGE
 }
 
 Message::~Message()
 {
-	DEBUG_CALL_MESSAGE
+	//DEBUG_CALL_MESSAGE
 }
 
 Message&	Message::operator>>(std::string &str)
@@ -100,10 +100,10 @@ t_params	Message::parse_params(Extractor &str)
 std::ostream& operator<< (std::ostream& stream, const t_prefixe& prefixe)
 {
 	if (prefixe.server_name)
-		stream << (*prefixe.server_name);
+		stream << ":" << (*prefixe.server_name);
 	else if (prefixe.pseudo)
 	{
-		stream << (*prefixe.pseudo);
+		stream << ":" << (*prefixe.pseudo);
 		if (prefixe.user)
 			stream << (*prefixe.user);
 		if (prefixe.host)
