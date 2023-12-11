@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:44:25 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 15:52:25 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:24:00 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,40 +23,43 @@ Extractor::Extractor(const std::string& str, size_t pos, size_t len)
 	: _data(str, pos, len)
 {}
 
-std::string*	Extractor::extract_to(std::string delimiter, bool or_end)
+t_available_string	Extractor::extract_to(std::string delimiter, bool or_end)
 {
-	std::string	*output;
-	std::size_t	has_delimiter = _data.find(delimiter);
+	t_available_string	output;
+	std::size_t			has_delimiter;
+
+	has_delimiter = _data.find(delimiter);
 	if (has_delimiter == std::string::npos)
 	{
 		if (!or_end)
-			return (NULL);
-		output = new std::string(_data);
+			return (output);
+		output(_data);
 		_data.erase();
 	}
 	else
 	{
-		output = new std::string(_data, 0, has_delimiter);
+		output(std::string(_data, 0, has_delimiter));
 		_data.erase(0, has_delimiter + delimiter.size());
 	}
 	return (output);
 }
 
-std::string*	Extractor::extract_from(std::string delimiter, bool or_end)
+t_available_string	Extractor::extract_from(std::string delimiter, bool or_end)
 {
-	std::string*	output;
-	std::size_t	has_delimiter = _data.find(delimiter);
+	t_available_string	output;
+	std::size_t			has_delimiter;
+
+	has_delimiter = _data.find(delimiter);
 	if (has_delimiter == std::string::npos)
 	{
 		if (!or_end)
-			return (NULL);
-		output = new std::string(_data);
+			return (output);
+		output(_data);
 		_data.erase();
-
 	}
 	else
 	{
-		output = new std::string(_data, has_delimiter);
+		output(std::string(_data, has_delimiter));
 		_data.erase(has_delimiter);
 	}
 	return (output);
@@ -128,3 +131,4 @@ std::ostream& operator<< (std::ostream& stream, Extractor& e)
 	stream << e._data;
 	return (stream);
 }
+

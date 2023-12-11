@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 17:15:01 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:38:13 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	SocketConnection::read(void)
 
 	bytes_read = ::recv(_fd, buff, buff_len, 0);
 	_read_cache.append(buff, bytes_read);
-
 	_requests >> _read_cache;
 }
 
@@ -54,26 +53,9 @@ void	SocketConnection::insertResponse(Message message)
 
 void	SocketConnection::write(void)
 {
-	std::stringstream	stream;
-	t_message_queue		tmp;
-
 	try
 	{
-
-		if (_write_cache.empty() && !_requests.empty())
-		{		
-			tmp = _w.treatRequest(this, _requests);
-			_responses.insert(_responses.end(), tmp.begin(), tmp.end());
-
-			while (!_responses.empty())
-			{
-				
-				stream << _responses.front() << "\r\n";
-				PRINT_DEBUG_MESSAGE(GREEN,	"\t[" << _responses.front() << "]")
-				_responses.pop_front();
-			}
-			_write_cache = stream.str();
-		}
+		_write_cache << _responses << _w.treatRequest(this, _requests);
 		int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
 		_write_cache.erase(0, bytes_send);
 	}

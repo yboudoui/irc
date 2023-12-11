@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:35:20 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:42:21 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ Message	Wagner::cmd_cap(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	Message	output;
-	output.valide = false;
 
 	(void)request;
 	(void)socket;
@@ -119,24 +118,19 @@ Message	Wagner::cmd_cap(SocketConnection* socket, Message const &request)
 
 Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 {
-	(void)_port;
 	DEBUG_CALL_WAGNER
 
-	Message	output;
-	std::string params;
-	output.valide = false;
-	
-	std::string clientPass = request.params.front();
+	Message		output;
+	std::string	params;
+	std::string	clientPass = request.params.front();
 
 	if (request.params.empty() || clientPass == "")
 	{
-
 		/*
 		TODO => ??? verifier que le pass n'est pas une chaine vide
 		ERR_NEEDMOREPARAMS (461) <command> :<reason> ""
 		Returned by the server by any command which requires more parameters than the number of parameters given
 		*/
-		output.valide = true;
 		params = ":" + _hostname + " " + "461" + " PASS : command requires more parameters";
 		output >> params;
 		socket->is_alive(false);
@@ -147,7 +141,6 @@ Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 		ERR_PASSWDMISMATCH (464) :<reason> 
 		Returned by the PASS command to indicate the given password was required and was either not given or was incorrect
 		*/
-		output.valide = true;
 		params = ":" + _hostname + " " + "464" + " : A Password is requiered to connect to " + _hostname;
 		output >> params;
 		socket->is_alive(false);
@@ -166,10 +159,9 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 	DEBUG_CALL_WAGNER
 
 	Message		output;
-	User* 		_user;
-	
-	output.valide = false;
-	
+	std::string	_inNick = request.params.front();
+	User*		_user = (_clients.find(socket))->second;
+
 	std::string UserNickname = request.params.front();
 	std::cout << "UserNickname : " <<  UserNickname << std::endl;
 	/* STEP #1 : check if the new nickname is already in use || */
@@ -343,7 +335,6 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 	User*					_clientUser;
 
 	Message	_clientOutput;
-	_clientOutput.valide = true;
 	
 	_clientOutput.command.name = "PRIVMSG"; //433 ERR_NICKNAMEINUSE
 	std::map<SocketConnection*,	User*>::iterator	it = _clients.begin();
@@ -368,16 +359,53 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 	return (output);
 }
 
+Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
+{
+	DEBUG_CALL_WAGNER
+
+	Message	output;
+
+	if (request.params.empty())
+	{
+		// error throw ???
+	}
+	else
+	{
+		User*	_user = (_clients.find(socket))->second;
+		size_t	size = request.params.size();
+		if (size != 4)
+		{
+			// error throw ???
+		}
+		else
+		{
+			for (size_t idx = 0; idx < size; idx++)
+			{
+				switch (idx)
+				{
+					case 0 : _user->setUsername(request.params[idx]); 	break;
+					case 1 : _user->setHostname(request.params[idx]); 	break;
+					case 2 : _user->setServername(request.params[idx]);	break;
+					case 3 : _user->setRealname(request.params[idx]);	break;
+					default: break;
+				}
+			}
+		}
+
+
+		/* check if*/
+	}
+	return (output);
+}
+
 Message	Wagner::cmd_ping(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	Message			output;
 	std::string		params;
-
 	(void)request;
 	(void)socket;
 
-	output.valide = true;
 	params = ":" + _hostname + " " + "PONG " + _hostname;
 	output >> params;
 	//output >> ":" >> nickname >> "!" >> username >> "@" >> userhost;
@@ -389,7 +417,7 @@ Message	Wagner::cmd_quit(SocketConnection* socket, Message const &request)
 	DEBUG_CALL_WAGNER
 
 	Message	output;
-	output.valide = true;
+	
 	(void)request;
 	(void)socket;
 	socket->is_alive(false);
@@ -408,7 +436,6 @@ Message	Wagner::cmd_whois(SocketConnection* socket, Message const &request)
 	std::string		params;
 
 	(void)request;
-	output.valide = true;
 
 //	"RPL_WHOISUSER";
 	params = ":" + _hostname + " " + "311";
@@ -426,7 +453,7 @@ Message	Wagner::cmd_mode(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	Message	output;
-	output.valide = false;
+	
 	(void)request;
 	(void)socket;
 	return (output);
@@ -436,7 +463,7 @@ Message	Wagner::cmd_join(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	Message	output;
-	output.valide = false;
+	
 	(void)request;
 	(void)socket;
 	return (output);
@@ -447,7 +474,7 @@ Message	Wagner::cmd_privmsg(SocketConnection* socket, Message const &request)
 	DEBUG_CALL_WAGNER
 
 	Message	output;
-	output.valide = false;
+	
 	(void)request;
 	(void)socket;
 	return (output);
@@ -457,7 +484,7 @@ Message	Wagner::cmd_kick(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	Message	output;
-	output.valide = false;
+	
 	(void)request;
 	(void)socket;
 	return (output);
@@ -467,7 +494,7 @@ Message	Wagner::cmd_invite(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	Message	output;
-	output.valide = false;
+	
 	(void)request;
 	(void)socket;
 	return (output);
@@ -477,7 +504,7 @@ Message	Wagner::cmd_topic(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	Message	output;
-	output.valide = false;
+	
 	(void)request;
 	(void)socket;
 	return (output);
