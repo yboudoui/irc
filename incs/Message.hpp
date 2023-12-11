@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:14:01 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:44:15 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class Message
 		t_params	parse_params(Extractor &str);
 
 	public:
+		bool		valide;
 		t_prefixe	prefixe;
 		t_command	command;
 		t_params	params;

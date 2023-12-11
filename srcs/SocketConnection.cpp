@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:38:13 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:56:50 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,18 @@ void	SocketConnection::insertResponse(Message message)
 
 void	SocketConnection::write(void)
 {
+	t_message_queue	tmp;
 	try
 	{
-		_write_cache << _responses << _w.treatRequest(this, _requests);
-		int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
-		_write_cache.erase(0, bytes_send);
+		if (!_requests.empty())
+		{
+			PRINT_DEBUG_MESSAGE(BLUE, _requests)
+			tmp = _w.treatRequest(this, _requests);
+			PRINT_DEBUG_MESSAGE(GREEN, tmp)
+			_write_cache << _responses << tmp;
+			int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
+			_write_cache.erase(0, bytes_send);
+		}
 	}
 	catch(const std::exception& e)
 	{

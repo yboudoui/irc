@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:37:47 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:50:44 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 
 
 Message::Message()
+	: valide(false)
 {
 	DEBUG_CALL_MESSAGE
 }
 
 Message::Message(Message const& other)
-	: prefixe(other.prefixe)
+	: valide(false)
+	, prefixe(other.prefixe)
 	, command(other.command)
 	, params(other.params)
 {

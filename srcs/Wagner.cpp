@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:42:21 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:46:06 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,7 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 		greeting_002.valide = true;
 		params = ":" + _hostname + " " + "002" + " : Your host is <servername>, running version <version>";
 		greeting_002 >> params;
-		std::cout << greeting_002.prefixe->server_name;
+		std::cout << greeting_002.prefixe.value.server_name.value;
 		socket->insertResponse(greeting_002);
 		
 		greeting_003.valide = true;
@@ -356,45 +356,6 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 	}
 	*/
 
-	return (output);
-}
-
-Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
-{
-	DEBUG_CALL_WAGNER
-
-	Message	output;
-
-	if (request.params.empty())
-	{
-		// error throw ???
-	}
-	else
-	{
-		User*	_user = (_clients.find(socket))->second;
-		size_t	size = request.params.size();
-		if (size != 4)
-		{
-			// error throw ???
-		}
-		else
-		{
-			for (size_t idx = 0; idx < size; idx++)
-			{
-				switch (idx)
-				{
-					case 0 : _user->setUsername(request.params[idx]); 	break;
-					case 1 : _user->setHostname(request.params[idx]); 	break;
-					case 2 : _user->setServername(request.params[idx]);	break;
-					case 3 : _user->setRealname(request.params[idx]);	break;
-					default: break;
-				}
-			}
-		}
-
-
-		/* check if*/
-	}
 	return (output);
 }
 
