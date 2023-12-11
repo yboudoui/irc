@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 11:13:02 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 15:54:52 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,12 +230,12 @@ Message	Wagner::cmd_ping(SocketConnection* socket, Message const &request)
 	DEBUG_CALL_WAGNER
 	Message	output;
 	output.valide = true;
-	output << "PONG " << _hostname << Message::EOF;
+	std::string u;
+	u = "PONG" + _hostname;
+	output >> u;
 	(void)request;
 	(void)socket;
 
-//	output.command.name = "PONG";
-//	output.params.push_back(_hostname);
 	return (output);
 }
 

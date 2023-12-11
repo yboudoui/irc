@@ -6,14 +6,13 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 12:39:44 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 15:58:16 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Colors.hpp"
 #include "Message.hpp"
 
-const Message::t_EOF Message::EOF = (Message::t_EOF)"\r\n";
 
 Message::Message()
 {
@@ -21,7 +20,7 @@ Message::Message()
 
 	this->prefixe = NULL;
 }
-
+/*
 Message::Message(Extractor &str)
 {
 	valide = true;
@@ -29,7 +28,7 @@ Message::Message(Extractor &str)
 	command = parse_command(str);
 	params = parse_params(str);
 }
-
+*/
 Message::Message(Message const& other)
 	: valide(other.valide)
 	, prefixe(other.prefixe)
@@ -41,47 +40,17 @@ Message::Message(Message const& other)
 
 Message::~Message()
 {
-	if (this->command.code.size() || this->command.name.size())
-		std::cout << this->command.code << " " << this->command.name << std::endl;
 	DEBUG_CALL_MESSAGE
 }
 
-Message& Message::operator << (std::string & str)
+Message&	Message::operator>>(std::string &str)
 {
-	_cache += " ";
-	_cache += str;
-/*
-	Extractor stry(str);
-	valide = true;
-	prefixe = parse_prefixe(stry);
-	command = parse_command(stry);
-	params = parse_params(stry);
-*/
+	Extractor	_cache(str);
+	valide	= true;
+	prefixe	= parse_prefixe(	_cache);
+	command	= parse_command(	_cache);
+	params	= parse_params(		_cache);
 	return (*this);
-}
-
-Message& Message::operator << (const char * str)
-{
-	_cache += " ";
-	_cache += str;
-/*
-	Extractor stry(str);
-	valide = true;
-	prefixe = parse_prefixe(stry);
-	command = parse_command(stry);
-	params = parse_params(stry);
-*/
-	return (*this);
-}
-
-void Message::operator << (t_EOF eof)
-{
-	_cache += eof;
-	valide = true;
-	prefixe = parse_prefixe(_cache);
-	command = parse_command(_cache);
-	params = parse_params(_cache);
-//	return (*this);
 }
 
 t_prefixe*	Message::parse_prefixe(Extractor &str)
@@ -198,7 +167,7 @@ t_message_queue& operator >> (t_message_queue& queue, std::string &str)
 	while (line != NULL)
 	{
 		new_message = new Message();
-		(*new_message) << (*line) << Message::EOF;
+		(*new_message) >> (*line);
 		queue.push_back(new_message);
 		line = extractor.extract_to("\r\n");
 	}

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:43:12 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 12:26:07 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 15:52:08 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ class Extractor
 		void	erase(const char *str);
 		Extractor& erase (size_t pos = 0, size_t len = std::string::npos);
 		std::string operator = (const Extractor &);
+		friend std::ostream& operator<< (std::ostream& stream, Extractor& e);
 	private:
 		std::string	_data;
 };

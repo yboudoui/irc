@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:44:25 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 12:42:44 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 15:52:25 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,4 +121,10 @@ Extractor& Extractor::operator+= (const std::string &str)
 std::string Extractor::operator = (const Extractor &)
 {
 	return (_data);
+}
+
+std::ostream& operator<< (std::ostream& stream, Extractor& e)
+{
+	stream << e._data;
+	return (stream);
 }
