@@ -6,53 +6,58 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:44:25 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 13:32:49 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 12:42:44 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "extractor.hpp"
 
-Extractor::Extractor() : std::string() { }
+Extractor::Extractor()
+{}
 
-Extractor::Extractor(const std::string& other) : std::string(other) { }
+Extractor::Extractor(const std::string& other)
+	: _data(other)
+{}
 
-Extractor::Extractor(const std::string& str, size_t pos, size_t len): std::string(str, pos, len) {}
+Extractor::Extractor(const std::string& str, size_t pos, size_t len)
+	: _data(str, pos, len)
+{}
 
-Extractor	*Extractor::extract_to(std::string delimiter, bool or_end)
+std::string*	Extractor::extract_to(std::string delimiter, bool or_end)
 {
-	Extractor	*output;
-	std::size_t	has_delimiter = this->find(delimiter);
+	std::string	*output;
+	std::size_t	has_delimiter = _data.find(delimiter);
 	if (has_delimiter == std::string::npos)
 	{
 		if (!or_end)
 			return (NULL);
-		output = new Extractor(*this);
-		this->erase();
+		output = new std::string(_data);
+		_data.erase();
 	}
 	else
 	{
-		output = new Extractor(*this, 0, has_delimiter);
-		this->erase(0, has_delimiter + delimiter.size());
+		output = new std::string(_data, 0, has_delimiter);
+		_data.erase(0, has_delimiter + delimiter.size());
 	}
 	return (output);
 }
 
-Extractor	*Extractor::extract_from(std::string delimiter, bool or_end)
+std::string*	Extractor::extract_from(std::string delimiter, bool or_end)
 {
-	Extractor	*output;
-	std::size_t	has_delimiter = this->find(delimiter);
+	std::string*	output;
+	std::size_t	has_delimiter = _data.find(delimiter);
 	if (has_delimiter == std::string::npos)
 	{
 		if (!or_end)
 			return (NULL);
-		output = new Extractor(*this);
-		this->erase();
+		output = new std::string(_data);
+		_data.erase();
 
 	}
 	else
 	{
-		output = new Extractor(*this, has_delimiter);
-		this->erase(has_delimiter);
+		output = new std::string(_data, has_delimiter);
+		_data.erase(has_delimiter);
 	}
 	return (output);
 }
@@ -60,12 +65,12 @@ Extractor	*Extractor::extract_from(std::string delimiter, bool or_end)
 bool	Extractor::is_digits(size_t len)
 {
 	std::string::iterator	end;
-	if (len >= this->size())
+	if (len >= _data.size())
 		return (false);
-	end = this->end();
+	end = _data.end();
 	if (len != 0)
-		end = this->begin() + len;
-	return (all_of(this->begin(), end, ::isdigit));
+		end = _data.begin() + len;
+	return (all_of(_data.begin(), end, ::isdigit));
 }
 
 std::deque<std::string>	Extractor::split(std::string delimiter)
@@ -74,13 +79,46 @@ std::deque<std::string>	Extractor::split(std::string delimiter)
 	size_t		pos;
 	std::string	token;
 
-	pos = this->find(delimiter);
+	pos = _data.find(delimiter);
 	while (pos != std::string::npos)
 	{
-		token = this->substr(0, pos);
+		token = _data.substr(0, pos);
 		output.push_back(token);
-		this->erase(0, pos + delimiter.length());
-		pos = this->find(delimiter);
+		_data.erase(0, pos + delimiter.length());
+		pos = _data.find(delimiter);
 	}
 	return (output);
+}
+
+size_t	Extractor::size(void) const
+{
+	return (_data.size());
+}
+
+void	Extractor::erase(const char *str)
+{
+	size_t	pos = _data.find(str);
+	_data.erase(pos);
+}
+
+Extractor& Extractor::erase(size_t pos, size_t len)
+{
+	_data.erase(pos, len);
+	return (*this);
+}
+
+char Extractor::operator[] (size_t index)
+{
+	return (_data[index]);
+}
+
+Extractor& Extractor::operator+= (const std::string &str)
+{
+	_data += str;
+	return (*this);
+}
+
+std::string Extractor::operator = (const Extractor &)
+{
+	return (_data);
 }

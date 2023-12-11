@@ -6,13 +6,16 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 20:01:37 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 11:13:02 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Wagner.hpp"
 
-Wagner::Wagner(std::string host, int port, std::string pass)  : _hostname(host), _port(port), _pass(pass)
+Wagner::Wagner(std::string host, int port, std::string pass)
+	: _hostname(host)
+	, _port(port)
+	, _pass(pass)
 {
 	DEBUG_CALL_WAGNER
 	_cmd.insert(std::make_pair("PASS",		&Wagner::cmd_pass));
@@ -227,7 +230,7 @@ Message	Wagner::cmd_ping(SocketConnection* socket, Message const &request)
 	DEBUG_CALL_WAGNER
 	Message	output;
 	output.valide = true;
-	output << "PONG " << _hostname;
+	output << "PONG " << _hostname << Message::EOF;
 	(void)request;
 	(void)socket;
 

@@ -6,12 +6,14 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 20:02:52 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 12:39:44 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Colors.hpp"
 #include "Message.hpp"
+
+const Message::t_EOF Message::EOF = (Message::t_EOF)"\r\n";
 
 Message::Message()
 {
@@ -44,13 +46,42 @@ Message::~Message()
 	DEBUG_CALL_MESSAGE
 }
 
-void Message::operator << (std::string & str)
+Message& Message::operator << (std::string & str)
 {
+	_cache += " ";
+	_cache += str;
+/*
 	Extractor stry(str);
 	valide = true;
 	prefixe = parse_prefixe(stry);
 	command = parse_command(stry);
 	params = parse_params(stry);
+*/
+	return (*this);
+}
+
+Message& Message::operator << (const char * str)
+{
+	_cache += " ";
+	_cache += str;
+/*
+	Extractor stry(str);
+	valide = true;
+	prefixe = parse_prefixe(stry);
+	command = parse_command(stry);
+	params = parse_params(stry);
+*/
+	return (*this);
+}
+
+void Message::operator << (t_EOF eof)
+{
+	_cache += eof;
+	valide = true;
+	prefixe = parse_prefixe(_cache);
+	command = parse_command(_cache);
+	params = parse_params(_cache);
+//	return (*this);
 }
 
 t_prefixe*	Message::parse_prefixe(Extractor &str)
@@ -60,37 +91,40 @@ t_prefixe*	Message::parse_prefixe(Extractor &str)
 	if (str[1] == ' ')
 		throw std::runtime_error("Bad prefix format");
 	str.erase(0, 1);
-	Extractor *substr = str.extract_to(" ");
+	std::string *_substr = str.extract_to(" ");
+	if (_substr == NULL)
+		return (NULL);
+	Extractor substr(*_substr);
 	t_prefixe	*output = new t_prefixe;
-	output->host = substr->extract_from("@");
-	output->user = substr->extract_from("!");
-	output->pseudo = (output->host || output->user) ? substr : NULL;
-	output->server_name = (output->pseudo == NULL) ? substr : NULL;
+	output->host = substr.extract_from("@");
+	output->user = substr.extract_from("!");
+	output->pseudo = (output->host || output->user) ? new std::string(substr.to<std::string>()) : NULL;
+	output->server_name = (output->pseudo == NULL) ? new std::string(substr.to<std::string>()) : NULL;
 	return (output);
 }
 
 t_command	Message::parse_command(Extractor &str)
 {
 	t_command	output = {};
-	Extractor*	substr;
-	substr = str.extract_to(" ", true);
+	std::string*	_substr = str.extract_to(" ", true);
+	if (_substr == NULL)
+		return (output);
+	Extractor substr(*_substr);
 
-	output.code = (substr->is_digits(3)) ? substr->to<std::string>() : "";
-	output.name = (output.code.empty()) ? substr->to<std::string>() : "";
-	delete substr;
+	output.code = (substr.is_digits(3)) ? substr.to<std::string>() : "";
+	output.name = (output.code.empty()) ? substr.to<std::string>() : "";
+	delete _substr;
 	return (output);
 }
 
 t_params	Message::parse_params(Extractor &str)
 {
 	t_params	output;
-	Extractor*	substr;
-
-	substr = str.extract_from(":", true);
+	std::string*	_substr = str.extract_from(":", true);
 	output = str.split();
-	if (substr)
-		output.push_back(std::string(*substr));
-	delete substr;
+	if (_substr)
+		output.push_back(std::string(*_substr));
+	delete _substr;
 	return (output);
 }
 
@@ -156,16 +190,19 @@ std::ostream& operator<< (std::ostream& stream, const t_message_queue queue)
 
 t_message_queue& operator >> (t_message_queue& queue, std::string &str)
 {
-	Extractor		*line;
+	Message			*new_message;
+	std::string		*line;
 
 	Extractor extractor(str);
 	line = extractor.extract_to("\r\n");
 	while (line != NULL)
 	{
-		queue.push_back(new Message(*line));
+		new_message = new Message();
+		(*new_message) << (*line) << Message::EOF;
+		queue.push_back(new_message);
 		line = extractor.extract_to("\r\n");
 	}
-	str = extractor;
+	str = extractor.to<std::string>();
 	return (queue);
 }
 

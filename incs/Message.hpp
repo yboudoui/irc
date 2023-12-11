@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 20:02:49 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/11 12:38:49 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,15 @@ class Message
 		t_command	command;
 		t_params	params;
 
+		Extractor	_cache;
+		typedef char* t_EOF;
+		const static t_EOF EOF;
 		Message();
 		Message(Message const& other);
-		void operator << (std::string & str);
 		Message(Extractor &str);
+		Message& operator << (std::string & str);
+		Message& operator << (const char* str);
+		void operator << (t_EOF eof);
 		~Message();
 };
 
