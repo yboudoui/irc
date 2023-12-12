@@ -6,11 +6,10 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:50:44 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/12 12:57:59 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Colors.hpp"
 #include "Message.hpp"
 
 
@@ -37,6 +36,7 @@ Message::~Message()
 Message&	Message::operator>>(std::string &str)
 {
 	Extractor	_cache(str);
+	valide = true;
 	prefixe	= parse_prefixe(_cache);
 	command	= parse_command(_cache);
 	params	= parse_params(_cache);
@@ -57,28 +57,28 @@ t_prefixe	Message::parse_prefixe(Extractor &str)
 	_substr = str.extract_to(" ");
 	if (!_substr)
 		return (output);
-	Extractor substr(_substr.value);
-	output.value.host = substr.extract_from("@");
-	output.value.user = substr.extract_from("!");
-	if (output.value.host || output.value.user)
-		output.value.pseudo(substr);
-	if (output.value.pseudo)
-		output.value.server_name(substr);
+	Extractor substr(_substr());
+	output().host = substr.extract_from("@");
+	output().user = substr.extract_from("!");
+	if (output().host || output().user)
+		output().pseudo(substr.str());
+	if (output().pseudo)
+		output().server_name(substr.str());
 	return (output);
 }
 
 t_command	Message::parse_command(Extractor &str)
 {
-	t_command			output = {};
+	t_command			output;
 	t_available_string	_substr;
 
 	_substr = str.extract_to(" ", true);
 	if (!_substr)
 		return (output);
 
-	Extractor substr(_substr.value);
-	output.code = (substr.is_digits(3)) ? substr.to<std::string>() : "";
-	output.name = (output.code.empty()) ? substr.to<std::string>() : "";
+	Extractor substr(_substr());
+	output.code = (substr.is_digits(3)) ? substr.str() : "";
+	output.name = (output.code.empty()) ? substr.str() : "";
 	return (output);
 }
 
@@ -98,10 +98,10 @@ std::ostream& operator<< (std::ostream& stream, const t_prefixe& prefixe)
 {
 	if (!prefixe)
 		return (stream);
-	stream << prefixe.value.server_name;
-	stream << prefixe.value.pseudo;
-	stream << prefixe.value.user;
-	stream << prefixe.value.host;
+	stream << prefixe().server_name();
+	stream << prefixe().pseudo();
+	stream << prefixe().user();
+	stream << prefixe().host();
 	return (stream);
 }
 
@@ -126,7 +126,8 @@ std::ostream& operator<< (std::ostream& stream, const t_params& params)
 
 std::ostream& operator<< (std::ostream& stream, const Message& message)
 {
-	stream << message.prefixe << " ";
+	if (message.prefixe)
+		stream << message.prefixe << " ";
 	if (message.command.name.size() || message.command.code.size())
 		stream << message.command << " ";
 	stream << message.params;
@@ -168,7 +169,7 @@ t_message_queue&	operator<< (t_message_queue& dest, t_message_queue src)
 t_message_queue& operator >> (t_message_queue& queue, std::string &str)
 {
 	Message			*new_message;
-	Extractor extractor(str);
+	Extractor		extractor(str);
 	t_available_string	line;
 
 	line = extractor.extract_to("\r\n");
@@ -179,8 +180,6 @@ t_message_queue& operator >> (t_message_queue& queue, std::string &str)
 		queue.push_back(new_message);
 		line = extractor.extract_to("\r\n");
 	}
-	str = extractor.to<std::string>();
+	str = extractor.str();
 	return (queue);
 }
-
-

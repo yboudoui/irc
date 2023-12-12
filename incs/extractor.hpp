@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:43:12 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:24:43 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/12 12:58:25 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define EXTRACTOR_HPP
 
 # include <string>
+#include "Colors.hpp"
 # include <sstream>
 # include <deque>
 
@@ -39,6 +40,10 @@ class available
 		ok = true;
 	}
 
+	Type operator ()(void) const{
+		return (value);
+	}
+
 	std::ostream& operator<< (std::ostream& stream) const {
 		if (ok)
 			stream << value;
@@ -59,7 +64,7 @@ class Extractor
 		t_available_string	extract_to(std::string delimiter, bool or_end = false);
 		t_available_string	extract_from(std::string delimiter, bool or_end = false);
 
-		operator std::string() const { return _data; }
+		std::string	str(void) const {return (_data);}
 
 		template <typename T>
 		T	to(void)

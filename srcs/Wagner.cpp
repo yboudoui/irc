@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:46:06 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/12 12:31:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ t_message_queue	Wagner::treatRequest(SocketConnection* socket, t_message_queue& 
 
 	(void)socket;
 
-	std::map<std::string,pfonc>::iterator it;
 	std::map<std::string,pfonc>::iterator ite = _cmd.end();
+	std::map<std::string,pfonc>::iterator it = ite;
 
 	if (!requests.empty())
 		PRINT_DEBUG_MESSAGE(MAGENTA,	"treatRequest[" << socket->getFd() << "]")
@@ -74,8 +74,8 @@ t_message_queue	Wagner::treatRequest(SocketConnection* socket, t_message_queue& 
 	{
 		curr_req = requests.front();
 		requests.pop_front();
-	
-		it = _cmd.find(curr_req->command.name);
+		if (curr_req != NULL)
+			it = _cmd.find(curr_req->command.name);
 		if (it != ite)
 		{
 			pfonc	function = (it->second);

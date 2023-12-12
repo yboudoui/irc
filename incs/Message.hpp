@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:44:15 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/12 13:01:52 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <sys/socket.h>
 # include <deque>
 # include "extractor.hpp"
-
 
 typedef std::deque<std::string>	t_params;
 
@@ -56,8 +55,9 @@ class Message
 };
 
 typedef std::deque<Message*> t_message_queue;
-std::string&		operator<< (std::string& str, t_message_queue queue);
-t_message_queue&	operator<< (t_message_queue& dest, t_message_queue src);
+std::string&		operator << (std::string& str, t_message_queue queue);
+t_message_queue&	operator << (t_message_queue& dest, t_message_queue src);
+t_message_queue&	operator >> (t_message_queue& queue, std::string &str);
 
 std::ostream& operator<< (std::ostream& stream, const t_prefixe& prefixe);
 std::ostream& operator<< (std::ostream& stream, const t_command& command);
@@ -65,8 +65,6 @@ std::ostream& operator<< (std::ostream& stream, const t_params& params);
 std::ostream& operator<< (std::ostream& stream, const t_message_queue queue);
 std::ostream& operator<< (std::ostream& stream, const Message& message);
 std::ostream& operator<< (std::ostream& stream, const Message* message);
-
-t_message_queue& operator >> (t_message_queue& queue, std::string &str);
 
 
 #endif
