@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Queue.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:07:28 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 16:51:03 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/12 10:57:31 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ class IQueueEventListener
 {
 	public:
 		IQueueEventListener(void);
-		bool			is_alive(bool alive = true);
+		bool			is_alive(bool alive);
+		bool			is_alive();
 		virtual void	read(void)	= 0;
 		virtual void	write(void)	= 0;
 		static void free(IQueueEventListener* p) { delete p; };

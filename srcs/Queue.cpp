@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 19:41:48 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/12 12:09:55 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ bool	IQueueEventListener::is_alive(bool alive)
 {
 	if (alive == false)
 		_alive = false;
+	return (_alive);
+}
+
+bool	IQueueEventListener::is_alive()
+{
 	return (_alive);
 }
 

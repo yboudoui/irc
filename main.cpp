@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 16:53:39 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/12 12:23:08 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ NB : les reponses sont toujours prefixees du nom du serveur
 	info a retrouver sur :
 	http://chi.cs.uchicago.edu/chirc/irc.html#message-format
 */
+// 
+// output >> ":" >> nickname >> "!" >> username >> "@" >> userhost;
 
 int	main(int argc, char *argv[])
 {
