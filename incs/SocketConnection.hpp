@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 16:35:48 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/12 16:29:21 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class SocketConnection : public IQueueEventListener
 
 		std::string				_read_cache, _write_cache;
 		t_message_queue			_requests, _responses;
+		bool	t;
 
 		Wagner &			_w;
 		~SocketConnection();

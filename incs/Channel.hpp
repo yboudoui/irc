@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 13:45:20 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 15:55:17 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 
 # include <vector>
 # include <map>
+# include <utility>
 # include "Colors.hpp"
-# include "SocketConnection.hpp"
+# include "extractor.hpp"
+# include "User.hpp"
 
 # define DEBUG_CALL_CHANNEL PRINT_DEBUG_CALL(RED, Channel)
 /*
@@ -64,22 +66,41 @@ l ->
 	be in the channel at the same time.
 */
 
-class Channel {
+
+typedef	std::string										t_channel_name;
+typedef	available<std::string>							t_channel_password;
+typedef	std::pair<t_channel_name, t_channel_password>	t_channel_name_password;
+
+typedef enum e_user_right {
+	NONE,
+}	t_user_right;
+
+class Channel
+{
 	private:
-		std::string					_name;
+		t_channel_name					_name;
+		t_channel_password				_password;
 		//std::string					_topic;
 		//std::string					_key;
-		//SocketConnection&					_operator;
+		//SocketConnection&				_operator;
 
 		//int							_userLimit;
 		//int							_mode;
-		
-		//std::map<SocketConnection&, int>	_Users; // int -> rights (operator)
-		//std::vector<SocketConnection&>	_UsersInvited;
+
+		typedef	std::map<t_user_name, std::pair<User*, t_user_right> >	t_users_map;
+
+		t_users_map	_users_map;
+//		std::vector<SocketConnection&>	_UsersInvited;
 
 	public:
 		Channel();
+		Channel(t_channel_name name);
 		~Channel();
+
+		Channel& operator = (const Channel &other);
+		void	join(User* user);
 };
+
+typedef	std::map<t_channel_name, Channel*>				t_channel_map;
 
 #endif

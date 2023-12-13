@@ -6,12 +6,13 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 18:56:50 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 15:32:28 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SocketConnection.hpp"
 
+# include <cerrno>
 SocketConnection::SocketConnection(Wagner &w, IQueue &queue, int fd_socketBind)
 	: _queue(queue)
 	, _w(w)
@@ -32,13 +33,24 @@ SocketConnection::~SocketConnection()
 
 void	SocketConnection::read(void)
 {
-	size_t					bytes_read = 0;
+	ssize_t					bytes_read = 0;
 	const unsigned int		buff_len = 512;
 	char					buff[buff_len] = {0};
 
-	bytes_read = ::recv(_fd, buff, buff_len, 0);
-	_read_cache.append(buff, bytes_read);
+	while (1)
+	{
+		bytes_read = ::recv(_fd, buff, buff_len, MSG_DONTWAIT);
+		if (bytes_read < 0)
+		{
+			if (errno == EAGAIN || errno == EWOULDBLOCK)
+				break ;
+		}
+		_read_cache.append(buff, bytes_read);
+	}
+	t = true;
 	_requests >> _read_cache;
+	_read_cache.clear();
+	PRINT_DEBUG_MESSAGE(BLUE,	_requests)
 }
 
 int const &	SocketConnection::getFd() const
@@ -48,26 +60,18 @@ int const &	SocketConnection::getFd() const
 
 void	SocketConnection::insertResponse(Message message)
 {
-	_responses.push_back(new Message(message));
+	_responses.push_back(message);
 }
 
 void	SocketConnection::write(void)
 {
-	t_message_queue	tmp;
-	try
-	{
-		if (!_requests.empty())
-		{
-			PRINT_DEBUG_MESSAGE(BLUE, _requests)
-			tmp = _w.treatRequest(this, _requests);
-			PRINT_DEBUG_MESSAGE(GREEN, tmp)
-			_write_cache << _responses << tmp;
-			int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
-			_write_cache.erase(0, bytes_send);
-		}
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
-	}
+	if (t == false)
+		return;
+	t = false;
+	_w.treatRequest(this, _requests, _responses);
+	PRINT_DEBUG_MESSAGE(GREEN,	_responses)
+	_write_cache << _responses;
+	_responses.clear();
+	int	bytes_send = send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
+	_write_cache.erase(0, bytes_send);
 }

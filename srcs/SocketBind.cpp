@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 16:52:17 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 14:46:45 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ SocketBind::SocketBind(Wagner &w, IQueue &queue, int port, int backlog)
 	: _queue(queue)
 	, _w(w)
 {
-	_fd = ::socket(AF_INET, SOCK_STREAM, 0);
+	_fd = ::socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
 	if (_fd < 0)
 		throw std::runtime_error("Fatal error when creating a new socket");
 	_sin.sin_family			= AF_INET;

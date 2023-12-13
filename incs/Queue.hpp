@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:07:28 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/12 10:57:31 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/12 16:58:05 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ class IQueueEventListener
 {
 	public:
 		IQueueEventListener(void);
-		bool			is_alive(bool alive);
-		bool			is_alive();
+		bool			is_alive(bool alive = true);
 		virtual void	read(void)	= 0;
 		virtual void	write(void)	= 0;
 		static void free(IQueueEventListener* p) { delete p; };

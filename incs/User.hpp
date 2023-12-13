@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/11 13:41:49 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/12 15:53:36 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 
 # define DEBUG_CALL_USER PRINT_DEBUG_CALL(YELLOW, User)
 
-class User {
+typedef std::string	t_user_name;
+class User
+{
 	private:
 		int					_connection_complete;
 		std::string			_username;

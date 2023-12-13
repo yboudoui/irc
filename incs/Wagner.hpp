@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/08 18:43:29 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 14:14:13 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@
 # include "SocketConnection.hpp"
 # include "User.hpp"
 
+
 class SocketConnection;
-//# include "Channel.hpp"
+# include "Channel.hpp"
 
 # define DEBUG_CALL_WAGNER PRINT_DEBUG_CALL(YELLOW, Wagner)
 
@@ -35,6 +36,7 @@ class Wagner
 		std::string 							_hostname;
 		int										_port;
 		std::string 							_pass;
+		t_channel_map							_channel_map;
 
 	public:
 		Wagner(std::string host, int port, std::string pass);
@@ -42,7 +44,7 @@ class Wagner
 
 		void			addClient(SocketConnection *  socket);
 		void			popRequest(t_message_queue& requests);
-		t_message_queue	treatRequest(SocketConnection* socket, t_message_queue& requests);
+		void			treatRequest(SocketConnection* socket, t_message_queue& requests, t_message_queue& responses);
 
 		Message	cmd_pass	(SocketConnection* socket, Message const &);
 		Message	cmd_cap		(SocketConnection* socket, Message const &);

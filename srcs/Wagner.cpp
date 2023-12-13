@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/12 13:24:56 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/13 15:56:31 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ Wagner::Wagner(std::string host, int port, std::string pass)
 	_cmd.insert(std::make_pair("PING",		&Wagner::cmd_ping));
 	_cmd.insert(std::make_pair("QUIT",		&Wagner::cmd_quit));
 	_cmd.insert(std::make_pair("WHOIS",		&Wagner::cmd_whois));
-	_cmd.insert(std::make_pair("MODE",		&Wagner::cmd_mode));
+//	_cmd.insert(std::make_pair("MODE",		&Wagner::cmd_mode));
 	_cmd.insert(std::make_pair("JOIN",		&Wagner::cmd_join));
 	_cmd.insert(std::make_pair("PRIVMSG",	&Wagner::cmd_privmsg));
 	_cmd.insert(std::make_pair("KICK",		&Wagner::cmd_kick));
@@ -59,31 +59,23 @@ void 			Wagner::addClient(SocketConnection*  socket)
 	_clients.insert(std::make_pair(socket, new User()));
 }
 
-t_message_queue	Wagner::treatRequest(SocketConnection* socket, t_message_queue& requests)
+void	Wagner::treatRequest(SocketConnection* socket, t_message_queue& requests, t_message_queue& responses)
 {
-	Message			*curr_req;
-	t_message_queue	responses;
-
 	(void)socket;
 
 	std::map<std::string,pfonc>::iterator ite = _cmd.end();
 	std::map<std::string,pfonc>::iterator it = ite;
 
-	if (!requests.empty())
-		PRINT_DEBUG_MESSAGE(MAGENTA,	"treatRequest[" << socket->getFd() << "]")
 	while (!requests.empty() && socket->is_alive())
 	{
-		curr_req = requests.front();
+		Message curr_req = requests.front();
 		requests.pop_front();
-		if (curr_req != NULL)
-			it = _cmd.find(curr_req->command.name);
+		it = _cmd.find(curr_req.command.name);
 		if (it != ite)
 		{
 			pfonc	function = (it->second);
-			
-			Message	*response = new Message((this->*function)(socket, *curr_req));
-			PRINT_DEBUG_MESSAGE(BLUE,	"\t[" << curr_req << "]")
-			if (response->valide)
+			Message response = (this->*function)(socket, curr_req);
+			if (response.valide)
 				responses.push_back(response);
 		}
 		else
@@ -93,15 +85,13 @@ t_message_queue	Wagner::treatRequest(SocketConnection* socket, t_message_queue& 
 			/*
 			RPL_TRYAGAIN (263) <command> :<info> 
 			When a server drops a command without processing it,it MUST use this reply.
-			*/			
+			*/
 			output.valide = true;
-			params = ":" + _hostname + " " + "263" + " " + curr_req->command.name + ": Unknown command: " + curr_req->command.name;
+			params = ":" + _hostname + " " + "263" + " " + curr_req.command.name + ": Unknown command: " + curr_req.command.name;
 			output >> params;
-			responses.push_back(new Message(output));	
+			responses.push_back(output);
 		}
 	}
-	PRINT_DEBUG_MESSAGE(MAGENTA, "Wagner::treatRequest end()")
-	return (responses);
 }
 
 Message	Wagner::cmd_ping(SocketConnection* socket, Message const &request)
@@ -165,9 +155,43 @@ Message	Wagner::cmd_join(SocketConnection* socket, Message const &request)
 {
 	DEBUG_CALL_WAGNER
 	Message	output;
-	
-	(void)request;
-	(void)socket;
+
+/*
+	if (request.pair.empty())
+		ERR_NEEDMOREPARAMS
+*/
+
+	std::vector<t_channel_name_password>	m;
+	t_channel_name_password					new_pair;
+	t_channel_name							name;
+	t_channel_password						password;
+	size_t									index;
+
+	for (index = 0; index < request.params.size(); index++)
+	{
+		name = request.params[index];
+		if (name[0] != '#' && name[0] != '&')
+			break ;
+		new_pair.first = name.substr(1);
+		m.push_back(new_pair);
+	}
+
+	for (size_t i = 0; i < m.size() && index < request.params.size(); i++)
+		m[i].second(request.params[index++]);
+
+/*
+	if (index < request.params.size())
+		There is still some parameters.. error
+*/
+
+	for (size_t i = 0; i < m.size(); i++)
+	{
+		name = m[i].first;
+		t_channel_map::iterator it = _channel_map.find(name);
+		if (it == _channel_map.end())
+			_channel_map.insert(std::make_pair(name, new Channel(name)));
+		_channel_map.find(name)->second->join(_clients[socket]);
+	}
 	return (output);
 }
 

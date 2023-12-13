@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/12 12:09:55 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/13 16:29:17 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,6 @@ bool	IQueueEventListener::is_alive(bool alive)
 {
 	if (alive == false)
 		_alive = false;
-	return (_alive);
-}
-
-bool	IQueueEventListener::is_alive()
-{
 	return (_alive);
 }
 
@@ -45,7 +40,7 @@ void	Queue::subscribe(int fd, IQueueEventListener* listener)
 
 	struct epoll_event ev;
 
-	ev.events	=	EPOLLIN | EPOLLOUT;
+	ev.events	=	EPOLLIN | EPOLLOUT | EPOLLET;
 	ev.data.ptr	=	listener;
 	epoll_ctl(_epoll_instance, EPOLL_CTL_ADD, fd, &ev);
 }

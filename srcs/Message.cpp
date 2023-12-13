@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/12 12:57:59 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 13:53:13 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 Message::Message()
 	: valide(false)
 {
-	DEBUG_CALL_MESSAGE
+	//DEBUG_CALL_MESSAGE
 }
 
 Message::Message(Message const& other)
@@ -50,8 +50,8 @@ t_prefixe	Message::parse_prefixe(Extractor &str)
 
 	if (str.size() < 2 || str[0] != ':')
 		return (output);
-	if (str[1] == ' ')
-		throw std::runtime_error("Bad prefix format");
+//	if (str[1] == ' ')
+//		throw std::runtime_error("Bad prefix format");
 	str.erase(0, 1);
 
 	_substr = str.extract_to(" ");
@@ -133,14 +133,14 @@ std::ostream& operator<< (std::ostream& stream, const Message& message)
 	stream << message.params;
 	return (stream);
 }
-
+/*
 std::ostream& operator<< (std::ostream& stream, const Message* message)
 {
 	if (message != NULL)
 		stream << *message;
 	return (stream);
 }
-
+*/
 std::ostream& operator<< (std::ostream& stream, const t_message_queue queue)
 {
 	for (size_t i = 0; i < queue.size(); i++)
@@ -168,15 +168,14 @@ t_message_queue&	operator<< (t_message_queue& dest, t_message_queue src)
 
 t_message_queue& operator >> (t_message_queue& queue, std::string &str)
 {
-	Message			*new_message;
-	Extractor		extractor(str);
+	Message				new_message;
+	Extractor			extractor(str);
 	t_available_string	line;
 
 	line = extractor.extract_to("\r\n");
 	while (line)
 	{
-		new_message = new Message();
-		(*new_message) >> line.value;
+		new_message >> line.value;
 		queue.push_back(new_message);
 		line = extractor.extract_to("\r\n");
 	}

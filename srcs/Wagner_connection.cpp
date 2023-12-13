@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/12 12:28:15 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/13 14:33:06 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ Message	Wagner::cmd_cap(SocketConnection* socket, Message const &request)
 	DEBUG_CALL_WAGNER
 	Message			output;
 
-	output.valide = false;
 	(void)request;
 	(void)socket;
 	return (output);
@@ -32,7 +31,6 @@ Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 	std::string		params;
 	std::string		clientPass = request.params.front();
 
-	output.valide = false;
 	if (request.params.empty() || clientPass == "")
 	{
 		if (socket->is_alive())
@@ -41,7 +39,6 @@ Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 			ERR_NEEDMOREPARAMS (461) <command> :<reason> ""
 			Returned by the server by any command which requires more parameters than the number of parameters given
 			*/
-			output.valide = true;
 			params = ":" + _hostname + " " + "461" + " PASS : command requires more parameters";
 			output >> params;
 			socket->is_alive(false);
@@ -53,7 +50,6 @@ Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 		ERR_PASSWDMISMATCH (464) :<reason> 
 		Returned by the PASS command to indicate the given password was required and was either not given or was incorrect
 		*/
-		output.valide = true;
 		params = ":" + _hostname + " " + "464" + " : A Password is requiered to connect to " + _hostname;
 		output >> params;
 		socket->is_alive(false);
@@ -74,10 +70,9 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 	Message		output;
 	User* 		_user;
 	std::string		params;
-	output.valide = false;
 	
 	std::string UserNickname = request.params.front();
-	std::cout << "UserNickname : " <<  UserNickname << std::endl;
+//	std::cout << "UserNickname : " <<  UserNickname << std::endl;
 	/* STEP #1 : check if the new nickname is already in use || */
 	if (request.params.empty())
 	{
@@ -135,7 +130,7 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 			}
 			clientIt++;
 		}
-		std::cout << "setNickname()" << std::endl;
+//		std::cout << "setNickname()" << std::endl;
 
 		_user = (_clients.find(socket))->second;
 		_user->setNickname(UserNickname);
@@ -152,8 +147,6 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 	size_t			size = request.params.size();
 	User*			_user = (_clients.find(socket))->second;
 	std::string		params;
-
-	output.valide = false;
 
 	if (request.params.empty() || request.params.size() < 4)
 	{
@@ -201,7 +194,7 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 		greeting_002.valide = true;
 		params = ":" + _hostname + " " + "002" + " : Your host is <servername>, running version <version>";
 		greeting_002 >> params;
-		std::cout << greeting_002.prefixe->server_name;
+//		std::cout << greeting_002.prefixe().server_name;
 		socket->insertResponse(greeting_002);
 		
 		greeting_003.valide = true;
