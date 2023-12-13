@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 15:55:17 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 18:40:53 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include <vector>
 # include <map>
 # include <utility>
-# include "Colors.hpp"
-# include "extractor.hpp"
+# include "Message.hpp"
 # include "User.hpp"
 
+class User;
 # define DEBUG_CALL_CHANNEL PRINT_DEBUG_CALL(RED, Channel)
 /*
 the channel ceases to exist when the last client leaves it
@@ -66,11 +66,6 @@ l ->
 	be in the channel at the same time.
 */
 
-
-typedef	std::string										t_channel_name;
-typedef	available<std::string>							t_channel_password;
-typedef	std::pair<t_channel_name, t_channel_password>	t_channel_name_password;
-
 typedef enum e_user_right {
 	NONE,
 }	t_user_right;
@@ -78,8 +73,8 @@ typedef enum e_user_right {
 class Channel
 {
 	private:
-		t_channel_name					_name;
-		t_channel_password				_password;
+		std::string					_name;
+		available<std::string>		_password;
 		//std::string					_topic;
 		//std::string					_key;
 		//SocketConnection&				_operator;
@@ -87,20 +82,18 @@ class Channel
 		//int							_userLimit;
 		//int							_mode;
 
-		typedef	std::map<t_user_name, std::pair<User*, t_user_right> >	t_users_map;
+		typedef	std::map<User*, t_user_right>	t_users_map;
 
 		t_users_map	_users_map;
 //		std::vector<SocketConnection&>	_UsersInvited;
 
 	public:
-		Channel();
-		Channel(t_channel_name name);
+		Channel(std::string name);
 		~Channel();
 
 		Channel& operator = (const Channel &other);
 		void	join(User* user);
+		void	send(User* user, std::string message);
 };
-
-typedef	std::map<t_channel_name, Channel*>				t_channel_map;
 
 #endif

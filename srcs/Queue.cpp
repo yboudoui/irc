@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 16:29:17 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 19:18:58 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	Queue::subscribe(int fd, IQueueEventListener* listener)
 
 	struct epoll_event ev;
 
-	ev.events	=	EPOLLIN | EPOLLOUT | EPOLLET;
+	ev.events	=	EPOLLIN | EPOLLOUT;// | EPOLLET;
 	ev.data.ptr	=	listener;
 	epoll_ctl(_epoll_instance, EPOLL_CTL_ADD, fd, &ev);
 }
@@ -54,7 +54,7 @@ void	Queue::unsubscribe(int fd)
 
 bool	Queue::event_loop(void)
 {
-	int							num_events;
+	int	num_events;
 
 	num_events = epoll_wait(_epoll_instance, _events_list, _max_events, 0);
 	if (num_events < 0)

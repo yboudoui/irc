@@ -6,22 +6,21 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/12 16:29:21 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 19:20:34 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SOCKETCONNECTION_HPP
 # define SOCKETCONNECTION_HPP
 
-# include "Colors.hpp"
 # include "Queue.hpp"
 # include "Message.hpp"
 # include "Wagner.hpp"
-# include "User.hpp"
+
 # include <netinet/in.h>
+# include <cerrno>
 
 class Wagner;
-class Request;
 
 class SocketConnection : public IQueueEventListener
 {
@@ -34,7 +33,6 @@ class SocketConnection : public IQueueEventListener
 
 		std::string				_read_cache, _write_cache;
 		t_message_queue			_requests, _responses;
-		bool	t;
 
 		Wagner &			_w;
 		~SocketConnection();
@@ -45,9 +43,7 @@ class SocketConnection : public IQueueEventListener
 		void	read(void);
 		void	write(void);
 
-		int const &	getFd() const;
-
-		void	insertResponse(Message message);
+		void	insertResponse(Message *message);
 };
 
 #endif

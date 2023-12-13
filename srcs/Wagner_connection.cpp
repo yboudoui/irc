@@ -6,32 +6,30 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 14:33:06 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 18:41:31 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Wagner.hpp"
-# include <cstdlib>
+//# include <cstdlib>
 
-Message	Wagner::cmd_cap(SocketConnection* socket, Message const &request)
+Message*	Wagner::cmd_cap(SocketConnection* socket, Message* request)
 {
 	DEBUG_CALL_WAGNER
-	Message			output;
-
 	(void)request;
 	(void)socket;
-	return (output);
+	return (NULL);
 }
 
-Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
+Message*	Wagner::cmd_pass(SocketConnection* socket, Message* request)
 {
 	DEBUG_CALL_WAGNER
 
-	Message			output;
+	Message*		output = NULL;
 	std::string		params;
-	std::string		clientPass = request.params.front();
+	std::string		clientPass = request->params.front();
 
-	if (request.params.empty() || clientPass == "")
+	if (request->params.empty() || clientPass == "")
 	{
 		if (socket->is_alive())
 		{
@@ -40,7 +38,7 @@ Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 			Returned by the server by any command which requires more parameters than the number of parameters given
 			*/
 			params = ":" + _hostname + " " + "461" + " PASS : command requires more parameters";
-			output >> params;
+			output = new Message(params);
 			socket->is_alive(false);
 		}
 	}
@@ -51,7 +49,7 @@ Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 		Returned by the PASS command to indicate the given password was required and was either not given or was incorrect
 		*/
 		params = ":" + _hostname + " " + "464" + " : A Password is requiered to connect to " + _hostname;
-		output >> params;
+		output = new Message(params);
 		socket->is_alive(false);
 	}
 	else
@@ -62,19 +60,18 @@ Message	Wagner::cmd_pass(SocketConnection* socket, Message const &request)
 	return (output);
 }
 
-
-Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
+Message*	Wagner::cmd_nick(SocketConnection* socket, Message* request)
 {
 	DEBUG_CALL_WAGNER
 
-	Message		output;
-	User* 		_user;
+	Message*		output = NULL;
+	User*			_user;
 	std::string		params;
-	
-	std::string UserNickname = request.params.front();
+
+	std::string UserNickname = request->params.front();
 //	std::cout << "UserNickname : " <<  UserNickname << std::endl;
 	/* STEP #1 : check if the new nickname is already in use || */
-	if (request.params.empty())
+	if (request->params.empty())
 	{
 		if (socket->is_alive())
 		{
@@ -82,9 +79,8 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 			ERR_NONICKNAMEGIVEN (431) :<reason> 
 			Returned when a nickname parameter expected for a command isn't found
 			*/
-			output.valide = true;
 			params = ":" + _hostname + " " + "431" + " : a nickname parameter is expected";
-			output >> params;
+			output = new Message(params);
 			socket->is_alive(false);
 		}
 	}
@@ -98,9 +94,8 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 			Returned after receiving a NICK message which contains a nickname which is considered invalid
 			such as it's reserved ('anonymous') or contains characters considered invalid for nicknames.
 			*/
-			output.valide = true;
 			params = ":" + _hostname + " " + "432" + " " + UserNickname + " : invalid nickname";
-			output >> params;
+			output = new Message(params);
 			socket->is_alive(false);
 		}
 	}
@@ -120,18 +115,14 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 					Returned after receiving a NICK message which contains a nickname which is considered invalid
 					such as it's reserved ('anonymous') or contains characters considered invalid for nicknames.
 					*/
-					output.valide = true;
 					params = ":" + _hostname + " " + "432" + " " + UserNickname + " :nickname alreasy in use";
-					output >> params;
+					output = new Message(params);
 					socket->is_alive(false);
 				}
-				break ;
-				return output;
+				return (output);
 			}
 			clientIt++;
 		}
-//		std::cout << "setNickname()" << std::endl;
-
 		_user = (_clients.find(socket))->second;
 		_user->setNickname(UserNickname);
 		_user->connectionStep();
@@ -139,25 +130,24 @@ Message	Wagner::cmd_nick(SocketConnection* socket, Message const &request)
 	return (output);
 }
 
-Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
+Message*	Wagner::cmd_user(SocketConnection* socket, Message* request)
 {
 	DEBUG_CALL_WAGNER
-	
-	Message			output;
-	size_t			size = request.params.size();
+
+	Message*		output = NULL;
+	size_t			size = request->params.size();
 	User*			_user = (_clients.find(socket))->second;
 	std::string		params;
 
-	if (request.params.empty() || request.params.size() < 4)
+	if (size == 0 || size < 4)
 	{
 		/*
 		TODO =>
 		ERR_NEEDMOREPARAMS (461) <command> :<reason> ""
 		Returned by the server by any command which requires more parameters than the number of parameters given
 		*/
-		output.valide = true;
 		params = ":" + _hostname + " " + "461" + " USER : User command needs more parameters";
-		output >> params;
+		output = new Message(params);
 		socket->is_alive(false);
 	}
 	else
@@ -166,10 +156,10 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 		{
 			switch (idx)
 			{
-				case 0 : _user->setUsername(request.params[idx]); 	break;
-				case 1 : _user->setHostname(request.params[idx]); 	break;
-				case 2 : _user->setServername(request.params[idx]);	break;
-				case 3 : _user->setRealname(request.params[idx]);	break;
+				case 0 : _user->setUsername(request->params[idx]); 	break;
+				case 1 : _user->setHostname(request->params[idx]); 	break;
+				case 2 : _user->setServername(request->params[idx]);	break;
+				case 3 : _user->setRealname(request->params[idx]);	break;
 				default: break;
 			}
 		}
@@ -179,52 +169,35 @@ Message	Wagner::cmd_user(SocketConnection* socket, Message const &request)
 
 	if (_user->isConnected())
 	{
-		Message	greeting_001, greeting_002, greeting_003, greeting_004, greeting_005;
-		User* _user = (_clients.find(socket))->second;
+		User*		_user = (_clients.find(socket))->second;
 
-		greeting_001.valide = true;
 		params = ":" + _hostname + " " + "001 "
 			+ _user->getNickname() 
 			+ " :Welcome to the Internet Relay Network " 
 			+ _user->getNickname() + "!" + _user->getUsername() + "@" + _user->getHostname() + "";
-		
-		greeting_001 >> params;
-		socket->insertResponse(greeting_001);
-	
-		greeting_002.valide = true;
+		socket->insertResponse(new Message(params));
+
 		params = ":" + _hostname + " " + "002" + " : Your host is <servername>, running version <version>";
-		greeting_002 >> params;
-//		std::cout << greeting_002.prefixe().server_name;
-		socket->insertResponse(greeting_002);
-		
-		greeting_003.valide = true;
+		socket->insertResponse(new Message(params));
+
 		params = ":" + _hostname + " " + "003" + " : This server was created <date>";
-		greeting_003 >> params;
-		socket->insertResponse(greeting_003);
+		socket->insertResponse(new Message(params));
 
-		greeting_004.valide = true;
 		params = ":" + _hostname + " " + "004" + " : <server_name> <version> <user_modes> <chan_modes>";
-		greeting_004 >> params;
-		socket->insertResponse(greeting_004);
-	
-		greeting_005.valide = true;
-		params = ":" + _hostname + " " + "005";
-		greeting_005 >> params;
+		socket->insertResponse(new Message(params));
 
-		return (greeting_005);
+		params = ":" + _hostname + " " + "005";
+		_user->socket = socket;
+		return (new Message(params));
 	}
 	else if (socket->is_alive())
 	{
-		output.valide = true;
 		params = ":" + _hostname + " " + "464" + " : A Password is requiered to connect to " + _hostname;
-		output >> params;		
+		output = new Message(params);
 		socket->is_alive(false);
 	}
 	return (output);
 }
-
-
-
 
 		/* post-registration greeting
 		Upon successful completion of the registration process,

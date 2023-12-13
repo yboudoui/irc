@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/12 15:53:36 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/13 18:40:00 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 # define User_HPP
 
 # include "Colors.hpp"
+# include "SocketConnection.hpp"
 # include <string>
 
+class SocketConnection;
 # define DEBUG_CALL_USER PRINT_DEBUG_CALL(YELLOW, User)
 
 typedef std::string	t_user_name;
@@ -47,6 +49,7 @@ class User
 
 		bool	isConnected() const;
 		void	connectionStep();
+		SocketConnection	*socket;
 };
 
 #endif
