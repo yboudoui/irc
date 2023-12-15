@@ -6,12 +6,12 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 18:56:53 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/15 18:48:48 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Wagner.hpp"
-# include <cstdlib>
+//# include <cstdlib>
 
 Wagner::Wagner(std::string host, int port, std::string pass)
 	: _hostname(host)
@@ -51,34 +51,38 @@ Wagner::~Wagner()
 	*/
 }
 
-void 			Wagner::addClient(SocketConnection*  socket)
+void 			Wagner::addEventListener(IQueueEventListener* listener)
 {
 	DEBUG_CALL_WAGNER
+	SocketConnection* socket = dynamic_cast<SocketConnection*>(listener);
 	if (socket == NULL)
 		return ;
 	_clients.insert(std::make_pair(socket, new User()));
 }
 
-void	Wagner::treatRequest(SocketConnection* socket, t_message_queue& requests, t_message_queue& responses)
+void	Wagner::treatEventListener(IQueueEventListener* listener)
 {
-	Message*	response;
-	Message*	curr_req;
-	(void)socket;
+	SocketConnection* socket = dynamic_cast<SocketConnection*>(listener);
+	if (socket == NULL)
+		return ;
+	t_message_queue			requests;
+	t_message_queue			responses;
 
-	std::map<std::string,pfonc>::iterator ite = _cmd.end();
-	std::map<std::string,pfonc>::iterator it = ite;
+	Message::color(BLUE);
+	requests >> socket->getReadCache();
+	Message::color(GREEN);
+
+	Message*	curr_req;
 
 	while (!requests.empty() && socket->is_alive())
 	{
 		curr_req = requests.front();
 		requests.pop_front();
-		it = _cmd.find(curr_req->command.name);
-		if (it != ite)
+		t_cmd_map::iterator	it = _cmd.find(curr_req->command.name);
+		if (it != _cmd.end())
 		{
 			pfonc	function = (it->second);
-			response = (this->*function)(socket, curr_req);
-			if (response)
-				responses.push_back(response);
+			(this->*function)(socket, curr_req, responses);
 		}
 		else
 		{
@@ -88,34 +92,41 @@ void	Wagner::treatRequest(SocketConnection* socket, t_message_queue& requests, t
 			When a server drops a command without processing it,it MUST use this reply.
 			*/
 			params = ":" + _hostname + " " + "263" + " " + curr_req->command.name + ": Unknown command: " + curr_req->command.name;
-			response = new Message(params);
-			responses.push_back(response);
+			responses.push_back(new Message(params));
 		}
 	}
+	std::string output;
+	output << responses;
+	socket->setSendCache(output);
 }
 
-Message*	Wagner::cmd_ping(SocketConnection* socket, Message* request)
+void	Wagner::cmd_ping(SocketConnection* socket, Message* request, t_message_queue& responses)
 {
 	DEBUG_CALL_WAGNER
 	std::string		params;
 	(void)request;
 	(void)socket;
-
+/*
+	t_message	m;
+	m.prefixe().server_name = _hostname;
+	m.command.name = "PONG";
+	m.params.push_back(_hostname);
+*/
 	params = ":" + _hostname + " " + "PONG " + _hostname;
-	return (new Message(params));
+	responses.push_back(new Message(params));
 }
 
-Message*	Wagner::cmd_quit(SocketConnection* socket, Message* request)
+void	Wagner::cmd_quit(SocketConnection* socket, Message* request, t_message_queue& responses)
 {
 	DEBUG_CALL_WAGNER
 	(void)request;
 	(void)socket;
+	(void)responses;
 	socket->is_alive(false);
 	// TODO : envoyer message d'info aux autres utilisateurs
-	return (NULL);
 }
 
-Message*	Wagner::cmd_whois(SocketConnection* socket, Message* request)
+void	Wagner::cmd_whois(SocketConnection* socket, Message* request, t_message_queue& responses)
 {
 	DEBUG_CALL_WAGNER
 	std::string		params;
@@ -129,20 +140,21 @@ Message*	Wagner::cmd_whois(SocketConnection* socket, Message* request)
 	params += " " + _user->getUsername();
 	params += " " + _user->getHostname();
 	params += " " + _user->getRealname();
-	return (new Message(params));
+	responses.push_back(new Message(params));
 }
 
-Message*	Wagner::cmd_mode(SocketConnection* socket, Message* request)
+void	Wagner::cmd_mode(SocketConnection* socket, Message* request, t_message_queue& responses)
 {
 	DEBUG_CALL_WAGNER
 	(void)request;
 	(void)socket;
-	return (NULL);
+	(void)responses;
 }
 
-Message*	Wagner::cmd_join(SocketConnection* socket, Message* request)
+void	Wagner::cmd_join(SocketConnection* socket, Message* request, t_message_queue& responses)
 {
 	DEBUG_CALL_WAGNER
+	(void)responses;
 /*
 	if (request.pair.empty())
 		ERR_NEEDMOREPARAMS
@@ -172,21 +184,14 @@ Message*	Wagner::cmd_join(SocketConnection* socket, Message* request)
 */
 
 	for (size_t i = 0; i < m.size(); i++)
-	{
-		name = m[i].first;
-		t_channel_map::iterator it = _channel_map.find(name);
-		if (it == _channel_map.end())
-			_channel_map.insert(std::make_pair(name, new Channel(name)));
-		_channel_map.find(name)->second->join(_clients[socket]);
-	}
-	return (NULL);
+		_channel_map.find_or_create(m[i].first)->join(_clients[socket]);
 }
 
-Message*	Wagner::cmd_privmsg(SocketConnection* socket, Message* request)
+void	Wagner::cmd_privmsg(SocketConnection* socket, Message* request, t_message_queue& responses)
 {
 	DEBUG_CALL_WAGNER
+	(void)responses;
 
-	t_channel_map::iterator	it;
 	std::string	receiver, message = request->params.back();
 	request->params.pop_back();
 
@@ -194,34 +199,34 @@ Message*	Wagner::cmd_privmsg(SocketConnection* socket, Message* request)
 	{
 		receiver = request->params.front().substr(1);
 		request->params.pop_front();
-		it = _channel_map.find(receiver);
-		if (it == _channel_map.end())
-			continue; // but still an error
-		it->second->send(_clients[socket], message);
+		Channel*	channel = _channel_map.find(receiver);
+		if (channel != NULL)
+			channel->send(_clients[socket], message);
+		else
+			continue; // but still an error or message to someone
 	}
-	return (NULL);
 }
 
-Message*	Wagner::cmd_kick(SocketConnection* socket, Message* request)
+void	Wagner::cmd_kick(SocketConnection* socket, Message* request, t_message_queue& responses)
 {
 	DEBUG_CALL_WAGNER
 	(void)request;
 	(void)socket;
-	return (NULL);
+	(void)responses;
 }
 
-Message*	Wagner::cmd_invite(SocketConnection* socket, Message* request)
+void	Wagner::cmd_invite(SocketConnection* socket, Message* request, t_message_queue& responses)
 {
 	DEBUG_CALL_WAGNER
 	(void)request;
 	(void)socket;
-	return (NULL);
+	(void)responses;
 }
 
-Message*	Wagner::cmd_topic(SocketConnection* socket, Message* request)
+void	Wagner::cmd_topic(SocketConnection* socket, Message* request, t_message_queue& responses)
 {
 	DEBUG_CALL_WAGNER
 	(void)request;
 	(void)socket;
-	return (NULL);
+	(void)responses;
 }

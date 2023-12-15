@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 18:40:53 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/15 17:45:35 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <vector>
 # include <map>
 # include <utility>
-# include "Message.hpp"
 # include "User.hpp"
+# include "Message.hpp"
 
 class User;
 # define DEBUG_CALL_CHANNEL PRINT_DEBUG_CALL(RED, Channel)
@@ -75,7 +75,7 @@ class Channel
 	private:
 		std::string					_name;
 		available<std::string>		_password;
-		//std::string					_topic;
+		available<std::string>		_topic;
 		//std::string					_key;
 		//SocketConnection&				_operator;
 
@@ -88,12 +88,25 @@ class Channel
 //		std::vector<SocketConnection&>	_UsersInvited;
 
 	public:
+		Channel();
 		Channel(std::string name);
 		~Channel();
 
-		Channel& operator = (const Channel &other);
 		void	join(User* user);
 		void	send(User* user, std::string message);
+};
+
+class ChannelMap
+{
+	private:
+		typedef	std::map<std::string, Channel*>	t_channel_map;
+		t_channel_map							_channel_map;
+
+	public:
+		ChannelMap();
+		~ChannelMap();
+		Channel*	find(std::string name);
+		Channel*	find_or_create(std::string name);
 };
 
 #endif

@@ -6,12 +6,13 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 18:37:02 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/15 17:50:20 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <sstream>
+#include "Queue.hpp"
 #include "SocketBind.hpp"
 #include "Wagner.hpp"
 
@@ -58,7 +59,7 @@ int	main(int argc, char *argv[])
 
 	Wagner		_wagner(hostname, port, password);
 	
-	Queue	queue = Queue();
+	Queue	queue = Queue(_wagner);
 
 	SocketBind*	sock = new SocketBind(_wagner, queue, port);
 

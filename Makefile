@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/12 15:28:21 by yboudoui         ###   ########.fr        #
+#    Updated: 2023/12/15 16:58:54 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRCS				=	main.cpp\
 						srcs/Wagner_connection.cpp \
 						srcs/Channel.cpp \
 						srcs/Queue.cpp \
+						srcs/IQueueEventListener.cpp \
 						srcs/SocketBind.cpp \
 						srcs/SocketConnection.cpp \
 						srcs/extractor.cpp

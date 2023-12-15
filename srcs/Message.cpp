@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 19:01:24 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/15 18:38:14 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,9 @@ void	Message::color(const char *c)
 }
 
 Message::Message(std::string raw_message)
-	: valide(false)
 {
 //	DEBUG_CALL_MESSAGE
 	Extractor	_cache(raw_message);
-	valide = true;
 	prefixe	= parse_prefixe(_cache);
 	command	= parse_command(_cache);
 	params	= parse_params(_cache);
@@ -34,8 +32,7 @@ Message::Message(std::string raw_message)
 }
 
 Message::Message(Message const& other)
-	: valide(false)
-	, prefixe(other.prefixe)
+	: prefixe(other.prefixe)
 	, command(other.command)
 	, params(other.params)
 {
@@ -45,16 +42,6 @@ Message::Message(Message const& other)
 Message::~Message()
 {
 //	DEBUG_CALL_MESSAGE
-}
-
-Message&	Message::operator>>(std::string &str)
-{
-	Extractor	_cache(str);
-	valide = true;
-	prefixe	= parse_prefixe(_cache);
-	command	= parse_command(_cache);
-	params	= parse_params(_cache);
-	return (*this);
 }
 
 t_prefixe	Message::parse_prefixe(Extractor &str)
@@ -104,7 +91,7 @@ t_params	Message::parse_params(Extractor &str)
 	_substr = str.extract_from(":", true);
 	output = str.split();
 	if (_substr)
-		output.push_back(_substr.value);
+		output.push_back(_substr());
 	return (output);
 }
 
@@ -144,15 +131,20 @@ std::ostream& operator<< (std::ostream& stream, const t_params& params)
 	return (stream);
 }
 
+std::ostream& operator<< (std::ostream& stream, const Message& message)
+{
+	if (message.prefixe)
+		stream << message.prefixe << " ";
+	if (message.command.name.size() || message.command.code.size())
+		stream << message.command << " ";
+	stream << message.params;
+	return (stream);
+}
+
 std::ostream& operator<< (std::ostream& stream, const Message* message)
 {
-	if (message == NULL)
-		return (stream);
-	if (message->prefixe)
-		stream << message->prefixe << " ";
-	if (message->command.name.size() || message->command.code.size())
-		stream << message->command << " ";
-	stream << message->params;
+	if (message != NULL)
+		stream << (*message);
 	return (stream);
 }
 
@@ -163,9 +155,24 @@ std::ostream& operator<< (std::ostream& stream, const t_message_queue queue)
 	return (stream);
 }
 
-std::string& operator<< (std::string& str, t_message_queue queue)
+std::string& operator << (std::string& str, Message& message)
 {
-	Message	*tmp;
+	std::stringstream	stream;
+	stream << message << "\r\n";
+	str += stream.str();
+	return (str);
+}
+
+std::string& operator << (std::string& str, Message* message)
+{
+	if (message != NULL)
+		str << (*message);
+	return (str);
+}
+
+std::string& operator << (std::string& str, t_message_queue queue)
+{
+	Message				*tmp;
 	std::stringstream	stream;
 	while (!queue.empty())
 	{
@@ -192,7 +199,7 @@ t_message_queue& operator >> (t_message_queue& queue, std::string &str)
 	line = extractor.extract_to("\r\n");
 	while (line)
 	{
-		queue.push_back(new Message(line.value));
+		queue.push_back(new Message(line()));
 		line = extractor.extract_to("\r\n");
 	}
 	str = extractor.str();

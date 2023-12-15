@@ -6,15 +6,15 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 19:18:37 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/15 18:11:55 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SocketBind.hpp"
 
-SocketBind::SocketBind(Wagner &w, IQueue &queue, int port, int backlog)
+SocketBind::SocketBind(IOrchestrator& orchestrator, IQueue &queue, int port, int backlog)
 	: _queue(queue)
-	, _w(w)
+	, _orchestrator(orchestrator)
 {
 	_fd = ::socket(AF_INET, SOCK_STREAM /*| SOCK_NONBLOCK */, 0);
 	if (_fd < 0)
@@ -37,7 +37,7 @@ SocketBind::~SocketBind()
 
 void	SocketBind::read(void)
 {
-	_w.addClient(new SocketConnection(_w, _queue, _fd));
+	_orchestrator.addEventListener(new SocketConnection(_queue, _fd));
 }
 
 void	SocketBind::write(void) {}

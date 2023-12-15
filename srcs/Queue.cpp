@@ -6,27 +6,15 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 19:18:58 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/15 17:40:52 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Queue.hpp"
 
-IQueueEventListener::IQueueEventListener(void)
-	: _alive(true) {}
-
-
-bool	IQueueEventListener::is_alive(bool alive)
-{
-	if (alive == false)
-		_alive = false;
-	return (_alive);
-}
-
-IQueueEventListener::~IQueueEventListener() {}
-
-Queue::Queue(size_t max_events)
+Queue::Queue(IOrchestrator& orchestrator, size_t max_events)
 	: _max_events(max_events)
+	, _orchestrator(orchestrator)
 {
 	_epoll_instance = epoll_create(_max_events);	/* for backward compatibility */
 	if (_epoll_instance < 0)
@@ -73,7 +61,10 @@ bool	Queue::event_loop(void)
 		if (_events_list[i].events & EPOLLIN)
 			listener->read();
 		if (_events_list[i].events & EPOLLOUT)
+		{
+			_orchestrator.treatEventListener(listener);
 			listener->write();
+		}
 	}
 	return (true);
 }

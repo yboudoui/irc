@@ -6,16 +6,11 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 18:01:55 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/15 14:46:13 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
-
-Channel::Channel()
-{
-	DEBUG_CALL_CHANNEL
-}
 
 Channel::Channel(std::string name)
 	: _name(name)
@@ -39,7 +34,7 @@ void	Channel::join(User* user)
 
 void	Channel::send(User* user, std::string message)
 {
-	std::string	param, msg;
+	std::string	param;
 	t_users_map::iterator	it = _users_map.begin();
 
 	param = ":" + user->getUsername();
@@ -50,39 +45,35 @@ void	Channel::send(User* user, std::string message)
 	{
 		if (it->first == user)
 			continue;
-		Message tmp(param);
-		msg << tmp;
-		it->first->socket->setSendCache(msg);
+		Message	*new_msg = new Message(param);
+		it->first->socket->insertResponse(new_msg);
 	}
 }
 
-ChannelMap::ChannelMap()
+Channel& Channel::operator = (const Channel &other)
 {
-
+	_name = other._name;
+	return (*this);
 }
 
-ChannelMap::~ChannelMap()
+available<Channel>	ChannelMap::find(std::string channel_name)
 {
+	available<Channel>		output;
+	t_channel_map::iterator	it;
 
+	it = _channel_map.find(channel_name);
+	if (it != _channel_map.end())
+		output(it->second);
+	return (output);
 }
 
-Channel*	ChannelMap::find(std::string name)
+available<Channel>	ChannelMap::find_or_create(std::string name)
 {
+	available<Channel>		output;
 	t_channel_map::iterator	it;
 
 	it = _channel_map.find(name);
 	if (it == _channel_map.end())
-		return (NULL);
-	return (it->second);
-}
-
-Channel*	ChannelMap::find_or_create(std::string name)
-{
-	t_channel_map::iterator	it;
-	Channel					output;
-
-	it = _channel_map.find(name);
-	if (it == _channel_map.end())
-		it = _channel_map.insert(std::make_pair(name, new Channel(name))).first;
-	return (it->second);
+		_channel_map.insert(std::make_pair(name, new Channel(name)));
+	_channel_map.find(name)->second->join(_clients[socket]);
 }

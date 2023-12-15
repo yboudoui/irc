@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:07:28 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 18:36:59 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/15 17:40:54 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,40 +21,22 @@ extern "C" {
 
 # include <map>
 # include <stdexcept>
+# include "IOrchestrator.hpp"
 # include "Colors.hpp"
 
 # define MAX_EVENTS 32
 
 # define DEBUG_CALL_QUEUE PRINT_DEBUG_CALL(YELLOW, Queue)
 
-class IQueueEventListener
-{
-	public:
-		IQueueEventListener(void);
-		bool			is_alive(bool alive = true);
-		virtual void	read(void)	= 0;
-		virtual void	write(void)	= 0;
-		static void free(IQueueEventListener* p) { delete p; };
-	protected:
-		virtual	~IQueueEventListener(void) = 0;
-	private:
-		bool	_alive;
-};
-
-class IQueue {
-	public:
-		virtual void	subscribe(int fd, IQueueEventListener* event)	= 0;
-		virtual void	unsubscribe(int fd)	= 0;
-};
-
 class Queue : public IQueue {
 	private:
 		int					_epoll_instance;
 		struct epoll_event	*_events_list;
 		size_t				_max_events;
+		IOrchestrator		&_orchestrator;
 
 	public:
-		Queue(size_t nevents = MAX_EVENTS);
+		Queue(IOrchestrator& orchestrator, size_t nevents = MAX_EVENTS);
 		~Queue();
 
 		void	subscribe(int fd, IQueueEventListener* listener);

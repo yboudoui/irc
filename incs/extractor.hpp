@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:43:12 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 15:54:05 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/15 17:40:56 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,34 +23,46 @@ class available
 {
 	public:
 	available()
-		: ok(false)
+		: _ok(false)
 	{}
+
+	available(Type& value)
+		: _ok(true)
+		, _value(value)
+	{}
+
 	operator bool() const {
-		return ok;
+		return _ok;
 	}
 
 	available& operator = (available other) {
-		value = other.value;
-		ok = other.ok;
+		_value = other._value;
+		_ok = other._ok;
 		return (*this);
 	}
 
 	void operator ()(Type v) {
-		value = v;
-		ok = true;
+		_value = v;
+		_ok = true;
 	}
 
-	Type operator ()(void) const{
-		return (value);
+	Type& operator ()(void)  {
+		return (_value);
+	}
+
+	Type operator ()(void) const {
+		return (_value);
 	}
 
 	std::ostream& operator<< (std::ostream& stream) const {
-		if (ok)
-			stream << value;
+		if (_ok)
+			stream << _value;
 		return (stream);
 	}
-	bool	ok;
-	Type	value;
+
+	private:
+		bool	_ok;
+		Type	_value;
 };
 
 typedef available<std::string>	t_available_string;
