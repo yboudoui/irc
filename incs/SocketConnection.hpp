@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 18:11:23 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:04:24 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 # define BUFFER_LEN	512
 
-class SocketConnection : public IQueueEventListener
+class SocketConnection : public IQueue::IEventListener
 {
 	private:
 		int						_fd;
@@ -33,6 +33,7 @@ class SocketConnection : public IQueueEventListener
 
 		std::string				_read_cache, _write_cache;
 
+	protected:
 		~SocketConnection();
 
 	public:

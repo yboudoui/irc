@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:07:28 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 17:40:54 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:04:18 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class Queue : public IQueue {
 		Queue(IOrchestrator& orchestrator, size_t nevents = MAX_EVENTS);
 		~Queue();
 
-		void	subscribe(int fd, IQueueEventListener* listener);
+		void	subscribe(int fd, IQueue::IEventListener* listener);
 		void	unsubscribe(int fd);
 		bool	event_loop(void);
 };

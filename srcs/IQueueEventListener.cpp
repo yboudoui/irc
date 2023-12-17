@@ -6,22 +6,22 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:57:55 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 16:59:18 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 16:35:13 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IQueueEventListener.hpp"
+#include "IQueue.hpp"
 
-IQueueEventListener::IQueueEventListener(void)
+IQueue::IEventListener::IEventListener(void)
 	: _alive(true) {}
 
 
-bool	IQueueEventListener::is_alive(bool alive)
+bool	IQueue::IEventListener::is_alive(bool alive)
 {
 	if (alive == false)
 		_alive = false;
 	return (_alive);
 }
 
-IQueueEventListener::~IQueueEventListener() {}
+IQueue::IEventListener::~IEventListener() {}
 

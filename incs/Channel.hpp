@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 17:45:35 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 12:59:17 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <map>
 # include <utility>
 # include "User.hpp"
-# include "Message.hpp"
+# include "MessageQueue.hpp"
 
 class User;
 # define DEBUG_CALL_CHANNEL PRINT_DEBUG_CALL(RED, Channel)

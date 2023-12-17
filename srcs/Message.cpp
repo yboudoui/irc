@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 18:38:14 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 12:23:03 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,13 +148,6 @@ std::ostream& operator<< (std::ostream& stream, const Message* message)
 	return (stream);
 }
 
-std::ostream& operator<< (std::ostream& stream, const t_message_queue queue)
-{
-	for (size_t i = 0; i < queue.size(); i++)
-		stream << queue[i] << std::endl;
-	return (stream);
-}
-
 std::string& operator << (std::string& str, Message& message)
 {
 	std::stringstream	stream;
@@ -168,40 +161,4 @@ std::string& operator << (std::string& str, Message* message)
 	if (message != NULL)
 		str << (*message);
 	return (str);
-}
-
-std::string& operator << (std::string& str, t_message_queue queue)
-{
-	Message				*tmp;
-	std::stringstream	stream;
-	while (!queue.empty())
-	{
-		tmp = queue.front();
-		queue.pop_front();
-		stream << tmp << "\r\n";
-		delete tmp;
-	}
-	str += stream.str();
-	return (str);
-}
-
-t_message_queue&	operator<< (t_message_queue& dest, t_message_queue src)
-{
-	dest.insert(dest.end(), src.begin(), src.end());
-	return (dest);
-}
-
-t_message_queue& operator >> (t_message_queue& queue, std::string &str)
-{
-	Extractor			extractor(str);
-	t_available_string	line;
-
-	line = extractor.extract_to("\r\n");
-	while (line)
-	{
-		queue.push_back(new Message(line()));
-		line = extractor.extract_to("\r\n");
-	}
-	str = extractor.str();
-	return (queue);
 }

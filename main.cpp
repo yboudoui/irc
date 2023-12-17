@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 17:50:20 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 16:42:30 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ int	main(int argc, char *argv[])
 
 	std::cout << "localhost:" << port << std::endl;
 	while (queue.event_loop());
-	IQueueEventListener::free(sock);
+	IQueue::IEventListener::free(sock);
 	return (0);
 }

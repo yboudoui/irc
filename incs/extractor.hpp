@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:43:12 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 17:40:56 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 15:34:40 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,17 +78,6 @@ class Extractor
 
 		std::string	str(void) const {return (_data);}
 
-		template <typename T>
-		T	to(void)
-		{
-			T	output;
-		
-			std::stringstream ss;
-			ss << _data;
-			ss >> output;
-			return (output);
-		};
-		
 		bool						is_digits(size_t len = 0);
 		std::deque<std::string>		split(std::string delimiter = " ");
 		Extractor& operator+= (const std::string &str);

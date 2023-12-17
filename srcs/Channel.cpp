@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 18:01:55 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:02:47 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	Channel::send(User* user, std::string message)
 			continue;
 		Message tmp(param);
 		msg << tmp;
-		it->first->socket->setSendCache(msg);
+		it->first->setSendCache(msg);
 	}
 }
 

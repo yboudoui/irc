@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 17:43:54 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:06:06 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,9 @@
 # include "SocketConnection.hpp"
 # include <string>
 
-class SocketConnection;
 # define DEBUG_CALL_USER PRINT_DEBUG_CALL(YELLOW, User)
 
-typedef std::string	t_user_name;
-class User
+class User : public SocketConnection
 {
 	private:
 		int					_connection_complete;
@@ -30,10 +28,10 @@ class User
 		std::string			_servername;
 		std::string			_realname;
 		std::string			_nickname;
+		~User();
 
 	public:
-		User();
-		~User();
+		User(IQueue &queue, int fd);
 
 		void	setUsername		(std::string name);
 		void	setHostname		(std::string name);
@@ -49,7 +47,6 @@ class User
 
 		bool	isConnected() const;
 		void	connectionStep();
-		SocketConnection	*socket;
 };
 
 #endif

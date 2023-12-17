@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/15 16:58:54 by yboudoui         ###   ########.fr        #
+#    Updated: 2023/12/17 19:01:44 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@ NAME				=	webserve
 
 SRCS				=	main.cpp\
 						srcs/Message.cpp \
+						srcs/MessageQueue.cpp \
+						srcs/responses.cpp \
 						srcs/User.cpp \
 						srcs/Wagner.cpp \
 						srcs/Wagner_connection.cpp \
@@ -38,7 +40,7 @@ DEPS				:=	$(OBJS:%.o=%.d)
 
 CXX					=	clang++
 
-CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG #-fsanitize=address
+CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG# -fsanitize=address
 
 RM					=	rm -f
 

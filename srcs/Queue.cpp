@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 17:40:52 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:04:13 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Queue::Queue(IOrchestrator& orchestrator, size_t max_events)
 	_events_list = new struct epoll_event [_max_events];
 }
 
-void	Queue::subscribe(int fd, IQueueEventListener* listener)
+void	Queue::subscribe(int fd, IQueue::IEventListener* listener)
 {
 	DEBUG_CALL_QUEUE
 
@@ -52,10 +52,10 @@ bool	Queue::event_loop(void)
 	}
 	for (int i = 0; i < num_events; i++)
 	{
-		IQueueEventListener* listener = (IQueueEventListener*)_events_list[i].data.ptr;
+		IQueue::IEventListener* listener = (IQueue::IEventListener*)_events_list[i].data.ptr;
 		if (listener->is_alive() == false)
 		{
-			IQueueEventListener::free(listener);
+			IQueue::IEventListener::free(listener);
 			continue ;
 		}
 		if (_events_list[i].events & EPOLLIN)

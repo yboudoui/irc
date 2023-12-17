@@ -6,190 +6,97 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 18:38:26 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 19:18:16 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Wagner.hpp"
 
-void	Wagner::cmd_cap(SocketConnection* socket, Message* request, t_message_queue& responses)
+void	Wagner::cmd_cap(Context& ctx)
 {
 	DEBUG_CALL_WAGNER
-	(void)request;
-	(void)socket;
-	(void)responses;
+	(void)ctx;
 }
 
-void	Wagner::cmd_pass(SocketConnection* socket, Message* request, t_message_queue& responses)
+void	Wagner::cmd_pass(Context& ctx)
 {
 	DEBUG_CALL_WAGNER
 
+	Message*		request = ctx.curr_request;
 	std::string		params;
 	std::string		clientPass = request->params.front();
 
-	if (request->params.empty() || clientPass == "")
-	{
-		if (socket->is_alive())
-		{
-			/*
-			ERR_NEEDMOREPARAMS (461) <command> :<reason> ""
-			Returned by the server by any command which requires more parameters than the number of parameters given
-			*/
-			params = ":" + _hostname + " " + "461" + " PASS : command requires more parameters";
-			responses.push_back(new Message(params));
-			socket->is_alive(false);
-		}
-	}
-	else if (clientPass != _pass)
-	{
-		/*
-		ERR_PASSWDMISMATCH (464) :<reason> 
-		Returned by the PASS command to indicate the given password was required and was either not given or was incorrect
-		*/
-		params = ":" + _hostname + " " + "464" + " : A Password is requiered to connect to " + _hostname;
-		responses.push_back(new Message(params));
-		socket->is_alive(false);
-	}
+	if (!request->params.empty() && clientPass == _pass)
+		return (ctx.user->connectionStep());
+	if (clientPass != _pass)
+		ctx.reply(Response::ERR_PASSWDMISMATCH);
 	else
-	{
-		User* _user = (_clients.find(socket))->second;
-		_user->connectionStep();
-	}
+		ctx.reply(Response::ERR_NEEDMOREPARAMS);
+	ctx.killConnection();
 }
 
-void	Wagner::cmd_nick(SocketConnection* socket, Message* request, t_message_queue& responses)
+void	Wagner::cmd_nick(Context& ctx)
 {
 	DEBUG_CALL_WAGNER
 
-	User*			_user;
-	std::string		params;
+	Message	*request = ctx.curr_request;
 
-	std::string UserNickname = request->params.front();
-//	std::cout << "UserNickname : " <<  UserNickname << std::endl;
 	/* STEP #1 : check if the new nickname is already in use || */
 	if (request->params.empty())
-	{
-		if (socket->is_alive())
-		{
-			/*
-			ERR_NONICKNAMEGIVEN (431) :<reason> 
-			Returned when a nickname parameter expected for a command isn't found
-			*/
-			params = ":" + _hostname + " " + "431" + " : a nickname parameter is expected";
-			responses.push_back(new Message(params));
-			socket->is_alive(false);
-		}
-	}
-	else if (UserNickname == "anonymous"
-		||  UserNickname.find_first_of("!%#@") != std::string::npos)
-	{
-		if (socket->is_alive())
-		{
-			/*
-			ERR_ERRONEUSNICKNAME (432) <nick> :<reason> 
-			Returned after receiving a NICK message which contains a nickname which is considered invalid
-			such as it's reserved ('anonymous') or contains characters considered invalid for nicknames.
-			*/
-			params = ":" + _hostname + " " + "432" + " " + UserNickname + " : invalid nickname";
-			responses.push_back(new Message(params));
-			socket->is_alive(false);
-		}
-	}
+		return (ctx.reply(Response::ERR_NONICKNAMEGIVEN).killConnection());
+
+	std::string nickname = request->params.front();
+	if (nickname == "anonymous" || nickname.find_first_of("!%#@") != std::string::npos)
+		return (ctx.reply(Response::ERR_ERRONEUSNICKNAME).killConnection());
 	else
 	{
 		/* STEP #2 : check if the new nickname is already in use */
-		std::map<SocketConnection*,	User*>::iterator	clientIt = _clients.begin();
-		std::map<SocketConnection*,	User*>::iterator	clientIte = _clients.end();
-		while (clientIt != clientIte)
+		for (t_clients::iterator it = _clients.begin(); it != _clients.end(); it++)
 		{
-			if (clientIt->second->getNickname() == UserNickname)
-			{
-				if (socket->is_alive())
-				{
-					/*
-					ERR_NICKNAMEINUSE (433) <nick> :<reason> 
-					Returned after receiving a NICK message which contains a nickname which is considered invalid
-					such as it's reserved ('anonymous') or contains characters considered invalid for nicknames.
-					*/
-					params = ":" + _hostname + " " + "432" + " " + UserNickname + " :nickname alreasy in use";
-					responses.push_back(new Message(params));
-					socket->is_alive(false);
-				}
-				return ;
-			}
-			clientIt++;
+			if ((*it)->getNickname() != nickname)
+				continue ;
+			return (ctx.reply(Response::ERR_NICKNAMEINUSE).killConnection());
 		}
-		_user = (_clients.find(socket))->second;
-		_user->setNickname(UserNickname);
-		_user->connectionStep();
+		ctx.user->setNickname(nickname);
+		ctx.user->connectionStep();
 	}
 }
 
-void	Wagner::cmd_user(SocketConnection* socket, Message* request, t_message_queue& responses)
+void	Wagner::cmd_user(Context& ctx)
 {
 	DEBUG_CALL_WAGNER
-
+	Message*		request = ctx.curr_request;
 	size_t			size = request->params.size();
-	User*			_user = (_clients.find(socket))->second;
 	std::string		params;
 
 	if (size == 0 || size < 4)
-	{
-		/*
-		TODO =>
-		ERR_NEEDMOREPARAMS (461) <command> :<reason> ""
-		Returned by the server by any command which requires more parameters than the number of parameters given
-		*/
-		params = ":" + _hostname + " " + "461" + " USER : User command needs more parameters";
-		responses.push_back(new Message(params));
-		socket->is_alive(false);
-	}
+		return (ctx.reply(Response::ERR_NEEDMOREPARAMS).killConnection());
 	else
 	{
 		for (size_t idx = 0; idx < size; idx++)
 		{
 			switch (idx)
 			{
-				case 0 : _user->setUsername(request->params[idx]); 	break;
-				case 1 : _user->setHostname(request->params[idx]); 	break;
-				case 2 : _user->setServername(request->params[idx]);	break;
-				case 3 : _user->setRealname(request->params[idx]);	break;
+				case 0 : ctx.user->setUsername(request->params[idx]);	break;
+				case 1 : ctx.user->setHostname(request->params[idx]);	break;
+				case 2 : ctx.user->setServername(request->params[idx]);	break;
+				case 3 : ctx.user->setRealname(request->params[idx]);	break;
 				default: break;
 			}
 		}
-		_user->connectionStep();
+		ctx.user->connectionStep();
 	}
 
-	if (_user->isConnected())
+	if (ctx.user->isConnected())
 	{
-		User*		_user = (_clients.find(socket))->second;
-
-		params = ":" + _hostname + " " + "001 "
-			+ _user->getNickname() 
-			+ " :Welcome to the Internet Relay Network " 
-			+ _user->getNickname() + "!" + _user->getUsername() + "@" + _user->getHostname() + "";
-		responses.push_back(new Message(params));
-
-		params = ":" + _hostname + " " + "002" + " : Your host is <servername>, running version <version>";
-		responses.push_back(new Message(params));
-
-		params = ":" + _hostname + " " + "003" + " : This server was created <date>";
-		responses.push_back(new Message(params));
-
-		params = ":" + _hostname + " " + "004" + " : <server_name> <version> <user_modes> <chan_modes>";
-		responses.push_back(new Message(params));
-
-		params = ":" + _hostname + " " + "005";
-		responses.push_back(new Message(params));
-		_user->socket = socket;
+		Response::t_reponse_code	code = (Response::t_reponse_code)(0
+			| Response::_001 | Response::_002 | Response::_003
+			| Response::_004 | Response::_005);
+		ctx.reply(code);
+		_clients.insert(ctx.user);
 		return ;
 	}
-	else if (socket->is_alive())
-	{
-		params = ":" + _hostname + " " + "464" + " : A Password is requiered to connect to " + _hostname;
-		responses.push_back(new Message(params));
-		socket->is_alive(false);
-	}
+	ctx.reply(Response::ERR_PASSWDMISMATCH).killConnection();
 }
 
 		/* post-registration greeting

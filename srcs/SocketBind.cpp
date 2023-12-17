@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/15 18:11:55 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:04:32 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ SocketBind::~SocketBind()
 
 void	SocketBind::read(void)
 {
-	_orchestrator.addEventListener(new SocketConnection(_queue, _fd));
+	_orchestrator.addEventListener(_queue, _fd);
 }
 
 void	SocketBind::write(void) {}
