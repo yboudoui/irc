@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 15:23:16 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/18 17:12:08 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <set>
 # include <map>
+# include <vector>
 # include "IOrchestrator.hpp"
 # include "Channel.hpp"
 # include "User.hpp"
@@ -34,10 +35,9 @@ class Wagner: public IOrchestrator
 				bool		valide(void);
 				void		killConnection(void);
 				void		send(void);
-				Context&	reply(Response::t_reponse_code);
 				Message		*curr_request;
-				User			*user;
-				Response		_reply;
+				User		*user;
+				Response	reply;
 			private:
 				MessageQueue	requests;
 				MessageQueue	responses;

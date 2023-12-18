@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 15:17:50 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/18 17:13:15 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ Wagner::Wagner(std::string host, int port, std::string pass)
 	_cmd.insert(std::make_pair("PING",		&Wagner::cmd_ping));
 	_cmd.insert(std::make_pair("QUIT",		&Wagner::cmd_quit));
 	_cmd.insert(std::make_pair("WHOIS",		&Wagner::cmd_whois));
-	_cmd.insert(std::make_pair("MODE",		&Wagner::cmd_mode));
+	//_cmd.insert(std::make_pair("MODE",		&Wagner::cmd_mode));
 	_cmd.insert(std::make_pair("JOIN",		&Wagner::cmd_join));
 	_cmd.insert(std::make_pair("PRIVMSG",	&Wagner::cmd_privmsg));
 	_cmd.insert(std::make_pair("KICK",		&Wagner::cmd_kick));
@@ -67,7 +67,6 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 
 	while (ctx.valide())
 	{
-		std::cout << "[" << ctx.curr_request->prefixe << "]" << ctx.curr_request << std::endl;
 		t_cmd_map::iterator	it = _cmd.find(ctx.curr_request->command.name);
 		if (it != _cmd.end())
 			(this->*(it->second))(ctx);
@@ -80,13 +79,13 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 void	Wagner::cmd_notFound	(Context& ctx)
 {
 	DEBUG_CALL_WAGNER
-	ctx.reply(Response::_263);
+	ctx.reply |= Response::_263;
 }
 
 void	Wagner::cmd_ping(Context& ctx)
 {
 	DEBUG_CALL_WAGNER
-	ctx.reply(Response::PONG);
+	ctx.reply |= Response::PONG;
 }
 
 void	Wagner::cmd_quit(Context& ctx)
@@ -99,7 +98,7 @@ void	Wagner::cmd_quit(Context& ctx)
 void	Wagner::cmd_whois(Context& ctx)
 {
 	DEBUG_CALL_WAGNER
-	ctx.reply(Response::RPL_WHOISUSER);
+	ctx.reply |= Response::RPL_WHOISUSER;
 }
 
 void	Wagner::cmd_join(Context& ctx)
@@ -108,7 +107,10 @@ void	Wagner::cmd_join(Context& ctx)
 	Message*	request = ctx.curr_request;
 
 	if (request->params.empty())
-		return ((void)ctx.reply(Response::ERR_NEEDMOREPARAMS));
+	{
+		ctx.reply |= Response::ERR_NEEDMOREPARAMS;
+		return ;
+	}
 
 	std::vector< std::pair<std::string, available<std::string> > >	m;
 	std::pair<std::string, available<std::string> >					new_pair;
@@ -138,19 +140,22 @@ void	Wagner::cmd_join(Context& ctx)
 void	Wagner::cmd_privmsg(Context& ctx)
 {
 	DEBUG_CALL_WAGNER
-	Message	*request = ctx.curr_request;
+	Channel*	channel = NULL;
+	Message*	request = ctx.curr_request;
 
 	std::string	receiver, message = request->params.back();
 	request->params.pop_back();
 
+	ctx.reply.setMessage(message);
+	ctx.reply |= Response::PRIVMSG;
 	while (!request->params.empty())
 	{
 		receiver = request->params.front().substr(1);
 		request->params.pop_front();
-		Channel*	channel = _channel_map.find(receiver);
+		channel = _channel_map.find(receiver);
 		if (channel != NULL)
 		{
-			ctx._reply.setMessage(message);
+			ctx.reply.setChannel(channel);
 			channel->send(ctx);
 		}
 		else

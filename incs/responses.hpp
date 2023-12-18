@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 15:15:56 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/18 17:02:18 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ class Response
 		void			setChannel(Channel* channel);
 		void			setMessage(std::string message);
 
-		MessageQueue&	response(t_reponse_code code);
+		Response&	operator |= (t_reponse_code code);
+		std::string	str();
+//		MessageQueue&	response(t_reponse_code code);
 
 	private:
 		MessageQueue	_queue;

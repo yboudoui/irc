@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 15:23:58 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/18 16:53:20 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,20 @@ void	Channel::join(User* user)
 		_users_map.insert(std::make_pair(user, NONE));
 }
 
-void	Channel::send(IOrchestrator::Context& ctx) 
+void	Channel::send(IOrchestrator::Context& ctx)
 {
 	std::string	param, msg;
 	t_users_map::iterator	it = _users_map.begin();
 
-	ctx._reply.setChannel(this);
+	IQueue::IEventListener*	listener = ctx.eventListener(NULL);
 	for (; it != _users_map.end(); it++)
 	{
-		if (it->first == ctx.user)
+		if (it->first == listener)
 			continue;
-		ctx._reply.setUser(it->first);
-		ctx.reply(Response::PRIVMSG);
+		ctx.eventListener(it->first);
+		ctx.send();
 	}
+	ctx.eventListener(listener);
 }
 
 std::string	Channel::getName(void)

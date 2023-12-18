@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 19:18:16 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 17:11:09 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void	Wagner::cmd_pass(Context& ctx)
 	if (!request->params.empty() && clientPass == _pass)
 		return (ctx.user->connectionStep());
 	if (clientPass != _pass)
-		ctx.reply(Response::ERR_PASSWDMISMATCH);
+		ctx.reply |= Response::ERR_PASSWDMISMATCH;
 	else
-		ctx.reply(Response::ERR_NEEDMOREPARAMS);
+		ctx.reply |= Response::ERR_NEEDMOREPARAMS;
 	ctx.killConnection();
 }
 
@@ -43,11 +43,19 @@ void	Wagner::cmd_nick(Context& ctx)
 
 	/* STEP #1 : check if the new nickname is already in use || */
 	if (request->params.empty())
-		return (ctx.reply(Response::ERR_NONICKNAMEGIVEN).killConnection());
+	{
+		ctx.reply |= Response::ERR_NONICKNAMEGIVEN;
+		ctx.killConnection();
+		return ;
+	}
 
 	std::string nickname = request->params.front();
 	if (nickname == "anonymous" || nickname.find_first_of("!%#@") != std::string::npos)
-		return (ctx.reply(Response::ERR_ERRONEUSNICKNAME).killConnection());
+	{
+		ctx.reply |= Response::ERR_ERRONEUSNICKNAME;
+		ctx.killConnection();
+		return ;
+	}
 	else
 	{
 		/* STEP #2 : check if the new nickname is already in use */
@@ -55,7 +63,8 @@ void	Wagner::cmd_nick(Context& ctx)
 		{
 			if ((*it)->getNickname() != nickname)
 				continue ;
-			return (ctx.reply(Response::ERR_NICKNAMEINUSE).killConnection());
+			ctx.reply |= Response::ERR_NICKNAMEINUSE;
+			return (ctx.killConnection());
 		}
 		ctx.user->setNickname(nickname);
 		ctx.user->connectionStep();
@@ -70,7 +79,10 @@ void	Wagner::cmd_user(Context& ctx)
 	std::string		params;
 
 	if (size == 0 || size < 4)
-		return (ctx.reply(Response::ERR_NEEDMOREPARAMS).killConnection());
+	{
+		ctx.reply |= Response::ERR_NEEDMOREPARAMS;
+		return (ctx.killConnection());
+	}
 	else
 	{
 		for (size_t idx = 0; idx < size; idx++)
@@ -89,14 +101,16 @@ void	Wagner::cmd_user(Context& ctx)
 
 	if (ctx.user->isConnected())
 	{
-		Response::t_reponse_code	code = (Response::t_reponse_code)(0
-			| Response::_001 | Response::_002 | Response::_003
-			| Response::_004 | Response::_005);
-		ctx.reply(code);
+		ctx.reply |= Response::_001;
+		ctx.reply |= Response::_002;
+		ctx.reply |= Response::_003;
+		ctx.reply |= Response::_004;
+		ctx.reply |= Response::_005;
 		_clients.insert(ctx.user);
 		return ;
 	}
-	ctx.reply(Response::ERR_PASSWDMISMATCH).killConnection();
+	ctx.reply |= Response::ERR_PASSWDMISMATCH;
+	ctx.killConnection();
 }
 
 		/* post-registration greeting

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 15:16:27 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/18 17:02:11 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,20 @@
 
 Response::Response(void)
 {
-/*
-	_pfonc_map[_001]					= &Response::__001;
-	_pfonc_map[_002]					= &Response::__002;
-	_pfonc_map[_003]					= &Response::__003;
-	_pfonc_map[_004]					= &Response::__004;
-	_pfonc_map[_005]					= &Response::__005;
-	_pfonc_map[RPL_WHOISUSER]			= &Response::_RPL_WHOISUSER;
-	_pfonc_map[_263]					= &Response::__263;
-	_pfonc_map[ERR_NONICKNAMEGIVEN]		= &Response::_ERR_NONICKNAMEGIVEN;
-	_pfonc_map[ERR_ERRONEUSNICKNAME]	= &Response::_ERR_ERRONEUSNICKNAME;
-	_pfonc_map[ERR_NICKNAMEINUSE]		= &Response::_ERR_NICKNAMEINUSE;
-	_pfonc_map[ERR_NEEDMOREPARAMS]		= &Response::_ERR_NEEDMOREPARAMS;
-	_pfonc_map[ERR_PASSWDMISMATCH]		= &Response::_ERR_PASSWDMISMATCH;
-	_pfonc_map[PONG]					= &Response::_PONG;
-*/
-	_pfonc_map[1]					= &Response::__001;
-	_pfonc_map[2]					= &Response::__002;
-	_pfonc_map[3]					= &Response::__003;
-	_pfonc_map[4]					= &Response::__004;
-	_pfonc_map[5]					= &Response::__005;
-	_pfonc_map[6]					= &Response::_RPL_WHOISUSER;
-	_pfonc_map[7]					= &Response::__263;
-	_pfonc_map[8]		= &Response::_ERR_NONICKNAMEGIVEN;
+	_pfonc_map[1]	= &Response::__001;
+	_pfonc_map[2]	= &Response::__002;
+	_pfonc_map[3]	= &Response::__003;
+	_pfonc_map[4]	= &Response::__004;
+	_pfonc_map[5]	= &Response::__005;
+	_pfonc_map[6]	= &Response::_RPL_WHOISUSER;
+	_pfonc_map[7]	= &Response::__263;
+	_pfonc_map[8]	= &Response::_ERR_NONICKNAMEGIVEN;
 	_pfonc_map[9]	= &Response::_ERR_ERRONEUSNICKNAME;
-	_pfonc_map[10]		= &Response::_ERR_NICKNAMEINUSE;
-	_pfonc_map[11]		= &Response::_ERR_NEEDMOREPARAMS;
-	_pfonc_map[12]		= &Response::_ERR_PASSWDMISMATCH;
-	_pfonc_map[13]					= &Response::_PONG;
-	_pfonc_map[14] = &Response::_PRIVMSG;
+	_pfonc_map[10]	= &Response::_ERR_NICKNAMEINUSE;
+	_pfonc_map[11]	= &Response::_ERR_NEEDMOREPARAMS;
+	_pfonc_map[12]	= &Response::_ERR_PASSWDMISMATCH;
+	_pfonc_map[13]	= &Response::_PONG;
+	_pfonc_map[14]	= &Response::_PRIVMSG;
 
 }
 
@@ -73,7 +58,27 @@ void		Response::setMessage(std::string message)
 	_message = message;
 }
 
+Response&	Response::operator |= (t_reponse_code code)
+{
+	for (size_t i = 1; i < MAX_REPONSE_CODE; i++)
+	{
+		if ((1u << i) & code)
+		{
+			pfonc	func = _pfonc_map[i];
+			std::string a = (this->*func)();
+			_queue += new Message(a);
+		}
+	}
+	return (*this);
+}
 
+std::string	Response::str()
+{
+	std::string output = _queue.str();
+	_queue.clear();
+	return (output);
+}
+/*
 MessageQueue&		Response::response(t_reponse_code code)
 {
 	_queue.clear();
@@ -88,7 +93,7 @@ MessageQueue&		Response::response(t_reponse_code code)
 	}
 	return (_queue);
 }
-
+*/
 std::string	Response::__001(void)
 {
 	std::stringstream	output;
