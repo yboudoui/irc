@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   WagnerContext.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 19:21:11 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 19:21:36 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:18:38 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,11 @@ Wagner::Context&	Wagner::Context::reply(Response::t_reponse_code code)
 {
 	if (user->is_alive() == false)
 		return (*this);
-	responses += _reply.response(code);
+	MessageQueue	tmp;
+	tmp += _reply.response(code);
+	user->setSendCache(tmp.str());
+
+	//responses += _reply.response(code);
 	return (*this);
 }
 

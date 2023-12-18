@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   responses.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 19:03:15 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:15:56 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <sstream>
 
 # include "User.hpp"
+# include "Channel.hpp"
 # include "MessageQueue.hpp"
 
 class Response
@@ -37,11 +38,15 @@ class Response
 			ERR_NEEDMOREPARAMS		= (1u << 10),
 			ERR_PASSWDMISMATCH		= (1u << 11),
 			PONG					= (1u << 12),
-			MAX_REPONSE_CODE		= 13,
+			PRIVMSG= (1u << 13),
+			MAX_REPONSE_CODE		= 14,
 		}	t_reponse_code;
 		void			setHostName(std::string hostName);
 		void			setUser(User* user);
 		void			setRequest(Message* message);
+		void			setChannel(Channel* channel);
+		void			setMessage(std::string message);
+
 		MessageQueue&	response(t_reponse_code code);
 
 	private:
@@ -51,6 +56,8 @@ class Response
 		std::string	_hostname;
 		User		*_user;
 		Message		*_request;
+		Channel		*_channel;
+		std::string _message;
 
 		std::string	__001(void);
 		std::string	__002(void);
@@ -87,6 +94,7 @@ class Response
 
 		std::string	_PONG(void);
 		std::string	_RPL_WHOISUSER(void);
+		std::string	_PRIVMSG(void);
 
 };
 

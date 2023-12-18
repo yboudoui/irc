@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 19:20:42 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:23:16 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,11 @@
 
 class Wagner: public IOrchestrator
 {
-	private:
-		class Context {
+	public:
+		Wagner(std::string host, int port, std::string pass);
+		~Wagner();
+
+		class Context : public IOrchestrator::Context {
 			public:
 				Context(IQueue::IEventListener*, std::string);
 				bool		valide(void);
@@ -34,12 +37,16 @@ class Wagner: public IOrchestrator
 				Context&	reply(Response::t_reponse_code);
 				Message		*curr_request;
 				User			*user;
-			private:
 				Response		_reply;
+			private:
 				MessageQueue	requests;
 				MessageQueue	responses;
 		};
 
+		void	addEventListener(IQueue &queue, int fd_socketBind);
+		void	treatEventListener(IQueue::IEventListener* listener);
+		
+	private:
 		typedef void (Wagner::*pfonc)(Context&);
 		typedef std::map<std::string, pfonc>			t_cmd_map;
 		typedef std::set<User*>							t_clients;
@@ -66,14 +73,6 @@ class Wagner: public IOrchestrator
 		void	cmd_invite		(Context&);
 		void	cmd_topic		(Context&);
 		void	cmd_notFound	(Context&);
-
-
-	public:
-		Wagner(std::string host, int port, std::string pass);
-		~Wagner();
-
-		void	addEventListener(IQueue &queue, int fd_socketBind);
-		void	treatEventListener(IQueue::IEventListener* listener);
 };
 
 #endif

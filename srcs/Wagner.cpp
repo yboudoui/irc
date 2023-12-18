@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 19:21:31 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:17:50 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 
 	while (ctx.valide())
 	{
+		std::cout << "[" << ctx.curr_request->prefixe << "]" << ctx.curr_request << std::endl;
 		t_cmd_map::iterator	it = _cmd.find(ctx.curr_request->command.name);
 		if (it != _cmd.end())
 			(this->*(it->second))(ctx);
@@ -99,12 +100,6 @@ void	Wagner::cmd_whois(Context& ctx)
 {
 	DEBUG_CALL_WAGNER
 	ctx.reply(Response::RPL_WHOISUSER);
-}
-
-void	Wagner::cmd_mode(Context& ctx)
-{
-	DEBUG_CALL_WAGNER
-	(void)ctx;
 }
 
 void	Wagner::cmd_join(Context& ctx)
@@ -154,7 +149,10 @@ void	Wagner::cmd_privmsg(Context& ctx)
 		request->params.pop_front();
 		Channel*	channel = _channel_map.find(receiver);
 		if (channel != NULL)
-			channel->send(ctx.user, message);
+		{
+			ctx._reply.setMessage(message);
+			channel->send(ctx);
+		}
 		else
 			continue; // but still an error or message to someone
 	}

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 17:02:47 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:23:58 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,24 +37,26 @@ void	Channel::join(User* user)
 		_users_map.insert(std::make_pair(user, NONE));
 }
 
-void	Channel::send(User* user, std::string message)
+void	Channel::send(IOrchestrator::Context& ctx) 
 {
 	std::string	param, msg;
 	t_users_map::iterator	it = _users_map.begin();
 
-	param = ":" + user->getUsername();
-	param += " PRIVMSG ";
-	param += "#" + _name;
-	param += " " + message;
+	ctx._reply.setChannel(this);
 	for (; it != _users_map.end(); it++)
 	{
-		if (it->first == user)
+		if (it->first == ctx.user)
 			continue;
-		Message tmp(param);
-		msg << tmp;
-		it->first->setSendCache(msg);
+		ctx._reply.setUser(it->first);
+		ctx.reply(Response::PRIVMSG);
 	}
 }
+
+std::string	Channel::getName(void)
+{
+	return _name;
+}
+
 
 ChannelMap::ChannelMap()
 {
@@ -86,3 +88,4 @@ Channel*	ChannelMap::find_or_create(std::string name)
 		it = _channel_map.insert(std::make_pair(name, new Channel(name))).first;
 	return (it->second);
 }
+

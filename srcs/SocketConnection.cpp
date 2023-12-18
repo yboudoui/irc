@@ -6,11 +6,12 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 17:04:25 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 12:33:34 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SocketConnection.hpp"
+#include <iostream>
 
 SocketConnection::SocketConnection(IQueue &queue, int fd_socketBind)
 	: _queue(queue)
@@ -48,6 +49,8 @@ std::string&	SocketConnection::getReadCache(void)
 void	SocketConnection::write(void)
 {
 	ssize_t	bytes_send;
+	if (_write_cache.size())
+		std::cout << "Reponse : "<<  _write_cache.c_str() << std::endl;
 	bytes_send = ::send(_fd, _write_cache.c_str(), _write_cache.size(), MSG_DONTWAIT);
 	_write_cache.erase(0, bytes_send);
 }

@@ -1,12 +1,14 @@
-#!/bin/bash
+#!/bin/sh
+
 random_port=$(shuf -i 1024-65535 -n 1)
 random_pass=$(shuf -i 111-999 -n 1)
 
-writeSpeed=10
+writeSpeed=5
 
+#ctrl+V ctrl+M  retrun (\r\n)
 # Commande pour ouvrir un terminal et lancer webserve
 gnome-terminal --geometry=140x100+0+0 --title="FT_IRC" -- bash -c "./webserve $random_port $random_pass; exec bash"
-sleep 1
+sleep 0.5
 
 gnome-terminal --geometry=140x34+1280+0  --title="IRSSI_TRISTAN" -- bash -c "nc 127.0.0.1 $random_port "
 WID_TRISTAN=`xdotool search --name "IRSSI_TRISTAN" `
@@ -14,15 +16,23 @@ WID_TRISTAN=`xdotool search --name "IRSSI_TRISTAN" `
 gnome-terminal --geometry=140x34+1280+720  --title="IRSSI_ISOLDE" -- bash -c "nc 127.0.0.1 $random_port "
 WID_ISOLDE=`xdotool search --name "IRSSI_ISOLDE" `
 
+xdotool windowfocus $WID_TRISTAN 
+xdotool type --delay $writeSpeed "PASS $random_pass"
+xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool type --delay $writeSpeed "NICK tristan"
+xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool type --delay $writeSpeed "USER tristan tristan localhost :Tristan Wagner"
+xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
 
 
-xdotool windowfocus $WID_TRISTAN type  --clearmodifiers --file --delay $writeSpeed  $(echo -e "PASS $random_pass\r\n") && xdotool key "Return" 
-xdotool windowfocus $WID_TRISTAN type  --clearmodifiers --file --delay $writeSpeed  $(echo -e "NICK tristan\r\n") && xdotool key "Return" 
-xdotool windowfocus $WID_TRISTAN type  --clearmodifiers --file --delay $writeSpeed  $(echo -e "USER tristan tristan localhost :Tristan Wagner\r\n") && xdotool key "Return" 
+xdotool windowfocus $WID_ISOLDE
+xdotool type --delay $writeSpeed "PASS $random_pass"
+xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool type --delay $writeSpeed "NICK isolde"
+xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool type --delay $writeSpeed "USER isolde isolde localhost :Isolde Wagner"
+xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
 
-xdotool windowfocus $WID_ISOLDE type  --clearmodifiers --file --delay $writeSpeed "/PASS $random_pass\r\n" && xdotool key "Return" 
-xdotool windowfocus $WID_ISOLDE type --delay $writeSpeed "/NICK isolde\r\n" && xdotool key "Return" 
-xdotool windowfocus $WID_ISOLDE type --delay $writeSpeed "/USER isolde isolde localhost :Isolde Wagner\r\n" && xdotool key "Return" 
 
 # Assurez-vous que le script est exécutable avec la commande suivante si nécessaire :
 # chmod +x nom_du_script.sh
@@ -49,10 +59,21 @@ while IFS= read -r ligne || [ -n "$ligne" ]; do
     cmd=$(echo "$ligne" | cut -d ';' -f 2)
 
     if [ "$name" = "TRISTAN" ]; then
-        WID=$WID_TRISTAN;   
+        WID=$WID_TRISTAN;
+        nick=tristan;
     else 
         WID=$WID_ISOLDE;
+        nick=isolde;
     fi
 
-    xdotool windowfocus $WID type  --clearmodifiers --file --delay $writeSpeed  $(echo -e "$cmd\r\n")" && xdotool key "Return" 
+    premierCaractere=$(echo "$cmd" | awk '{print substr($0, 1, 1)}')
+
+    if [ $premierCaractere = "/" ]; then
+        msg=":"$nick" "$(echo "$cmd" | awk '{print substr($0, 2)}')
+    else
+        msg=":"$nick" PRIVMSG #DerRing :"$cmd
+    fi
+    xdotool windowfocus $WID type --delay $writeSpeed  "$msg" && xdotool key "Return" 
+    xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+
 done < "$fichier"

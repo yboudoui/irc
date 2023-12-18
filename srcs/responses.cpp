@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   responses.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 19:14:03 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:16:27 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ Response::Response(void)
 	_pfonc_map[11]		= &Response::_ERR_NEEDMOREPARAMS;
 	_pfonc_map[12]		= &Response::_ERR_PASSWDMISMATCH;
 	_pfonc_map[13]					= &Response::_PONG;
+	_pfonc_map[14] = &Response::_PRIVMSG;
 
 }
 
@@ -61,6 +62,17 @@ void	Response::setRequest(Message* message)
 	// TODO check NULL
 	_request = message;
 }
+
+void		Response::setChannel(Channel* channel)
+{
+	_channel = channel;
+}
+
+void		Response::setMessage(std::string message)
+{
+	_message = message;
+}
+
 
 MessageQueue&		Response::response(t_reponse_code code)
 {
@@ -213,4 +225,13 @@ std::string	Response::_RPL_WHOISUSER(void)
 	return (output.str());
 }
 
+std::string	Response::_PRIVMSG(void)
+{
+	std::stringstream	output;
 
+	output << ":" <<  _user->getNickname();
+	output << " PRIVMSG ";
+	output << "#" << _channel->getName();
+	output << " " << _message;
+	return (output.str());
+}

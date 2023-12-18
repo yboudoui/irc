@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 12:23:03 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 12:43:43 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ t_prefixe	Message::parse_prefixe(Extractor &str)
 	t_prefixe			output;
 	t_available_string	_substr;
 
+	std::cout << RED << str << std::endl;
 	if (str.size() < 2 || str[0] != ':')
 		return (output);
 //	if (str[1] == ' ')
@@ -65,6 +66,7 @@ t_prefixe	Message::parse_prefixe(Extractor &str)
 		output().pseudo(substr.str());
 	if (output().pseudo)
 		output().server_name(substr.str());
+	std::cout << RED << "\tprefixe :\t" << output << std::endl;
 	return (output);
 }
 

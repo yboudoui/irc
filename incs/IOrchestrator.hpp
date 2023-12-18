@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IOrchestrator.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:44:46 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 17:04:29 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:23:01 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ class IOrchestrator
 	public:
 		virtual void	treatEventListener(IQueue::IEventListener*)	= 0;
 		virtual void	addEventListener(IQueue&, int)				= 0;
+		class Context {
+		};
 };
 
 #endif

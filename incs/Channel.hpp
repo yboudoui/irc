@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 12:59:17 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:25:03 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <map>
 # include <utility>
 # include "User.hpp"
+# include "IOrchestrator.hpp"
 # include "MessageQueue.hpp"
 
 class User;
@@ -80,7 +81,7 @@ class Channel
 		//SocketConnection&				_operator;
 
 		//int							_userLimit;
-		//int							_mode;
+		int							_modes;
 
 		typedef	std::map<User*, t_user_right>	t_users_map;
 
@@ -93,7 +94,9 @@ class Channel
 		~Channel();
 
 		void	join(User* user);
-		void	send(User* user, std::string message);
+		void	send(IOrchestrator::Context& ctx);
+		std::string	getName(void);
+
 };
 
 class ChannelMap
