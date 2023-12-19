@@ -6,13 +6,14 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 16:43:02 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 16:43:48 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:12:01 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AVAILABLE_HPP
 # define AVAILABLE_HPP
 
+# include <ostream>
 template <typename Type>
 class available
 {

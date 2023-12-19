@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 12:33:34 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:40:22 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ std::string&	SocketConnection::getReadCache(void)
 void	SocketConnection::write(void)
 {
 	ssize_t	bytes_send;
-	if (_write_cache.size())
-		std::cout << "Reponse : "<<  _write_cache.c_str() << std::endl;
-	bytes_send = ::send(_fd, _write_cache.c_str(), _write_cache.size(), MSG_DONTWAIT);
+	bytes_send = ::send(_fd, _write_cache.c_str(), _write_cache.size(), 0);//MSG_DONTWAIT);
 	_write_cache.erase(0, bytes_send);
 }

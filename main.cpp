@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 16:42:30 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:30:14 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	main(int argc, char *argv[])
 	// https://www.alien.net.au/irc/irc2numerics.html
 	password = argv[1];
 
-	Wagner		_wagner(hostname, port, password);
+	Wagner		_wagner(hostname, password);
 	
 	Queue	queue = Queue(_wagner);
 

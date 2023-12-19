@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/18 17:14:04 by yboudoui         ###   ########.fr        #
+#    Updated: 2023/12/19 11:22:28 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,9 @@ SRCS				=	main.cpp\
 						srcs/responses.cpp \
 						srcs/User.cpp \
 						srcs/Wagner.cpp \
-						srcs/WagnerContext.cpp \
 						srcs/Wagner_connection.cpp \
 						srcs/Channel.cpp \
 						srcs/Queue.cpp \
-						srcs/IOrchestrator.cpp \
 						srcs/IQueueEventListener.cpp \
 						srcs/SocketBind.cpp \
 						srcs/SocketConnection.cpp \
@@ -42,7 +40,7 @@ DEPS				:=	$(OBJS:%.o=%.d)
 
 CXX					=	clang++
 
-CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG# -fsanitize=address
+CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG -fsanitize=address
 
 RM					=	rm -f
 

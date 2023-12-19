@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 16:45:26 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:17:42 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 # define CHANNEL_HPP
 
 # include <map>
-# include "User.hpp"
 # include "available.hpp"
-# include "IOrchestrator.hpp"
+# include "responses.hpp"
+//# include "IOrchestrator.hpp"
 
+class Response;
 # define DEBUG_CALL_CHANNEL PRINT_DEBUG_CALL(RED, Channel)
 /*
 the channel ceases to exist when the last client leaves it
@@ -74,7 +75,6 @@ class Channel
 		std::string					_name;
 		available<std::string>		_password;
 		available<std::string>		_topic;
-		//std::string					_key;
 		//SocketConnection&				_operator;
 
 		//int							_userLimit;
@@ -91,7 +91,7 @@ class Channel
 		~Channel();
 
 		void		join(User* user);
-		void		send(IOrchestrator::Context& ctx);
+		void		send(User* user, Response response);
 		std::string	getName(void);
 
 };
@@ -105,6 +105,7 @@ class ChannelMap
 	public:
 		ChannelMap();
 		~ChannelMap();
+		bool		send(std::string name, User* user, Response reply);
 		Channel*	find(std::string name);
 		Channel*	find_or_create(std::string name);
 };

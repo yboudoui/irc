@@ -6,15 +6,15 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 17:13:15 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:35:24 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Wagner.hpp"
+# include <vector>
 
-Wagner::Wagner(std::string host, int port, std::string pass)
+Wagner::Wagner(std::string host, std::string pass)
 	: _hostname(host)
-	, _port(port)
 	, _pass(pass)
 {
 	DEBUG_CALL_WAGNER
@@ -61,56 +61,60 @@ void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 
 void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 {
+	user = dynamic_cast<User*>(listener);
+	if (user == NULL)
+		throw std::runtime_error("Bad EventListener");
 	Message::color(BLUE);
-	Context	ctx(listener, _hostname);
+	requests << user->getReadCache();
 	Message::color(GREEN);
 
-	while (ctx.valide())
+	reply.setUser(user);
+	reply.setHostName(_hostname);
+
+	while (!requests.empty() && user->is_alive())
 	{
-		t_cmd_map::iterator	it = _cmd.find(ctx.curr_request->command.name);
+		request = requests.getLastMessage();
+		reply.setRequest(request);
+
+		t_cmd_map::iterator	it = _cmd.find(request->command.name);
 		if (it != _cmd.end())
-			(this->*(it->second))(ctx);
+			(this->*(it->second))();
 		else
-			cmd_notFound(ctx);
+			cmd_notFound();
 	}
-	ctx.send();
 }
 
-void	Wagner::cmd_notFound	(Context& ctx)
+void	Wagner::cmd_notFound	(void)
 {
 	DEBUG_CALL_WAGNER
-	ctx.reply |= Response::_263;
+	reply(Response::_263);
 }
 
-void	Wagner::cmd_ping(Context& ctx)
+void	Wagner::cmd_ping(void)
 {
 	DEBUG_CALL_WAGNER
-	ctx.reply |= Response::PONG;
+	reply(Response::PONG);
 }
 
-void	Wagner::cmd_quit(Context& ctx)
+void	Wagner::cmd_quit(void)
 {
 	DEBUG_CALL_WAGNER
 	// TODO : envoyer message d'info aux autres utilisateurs
-	ctx.killConnection();
+	user->is_alive(false);
 }
 
-void	Wagner::cmd_whois(Context& ctx)
+void	Wagner::cmd_whois(void)
 {
 	DEBUG_CALL_WAGNER
-	ctx.reply |= Response::RPL_WHOISUSER;
+	reply(Response::RPL_WHOISUSER);
 }
 
-void	Wagner::cmd_join(Context& ctx)
+void	Wagner::cmd_join(void)
 {
 	DEBUG_CALL_WAGNER
-	Message*	request = ctx.curr_request;
 
 	if (request->params.empty())
-	{
-		ctx.reply |= Response::ERR_NEEDMOREPARAMS;
-		return ;
-	}
+		return (reply(Response::ERR_NEEDMOREPARAMS));
 
 	std::vector< std::pair<std::string, available<std::string> > >	m;
 	std::pair<std::string, available<std::string> >					new_pair;
@@ -134,49 +138,40 @@ void	Wagner::cmd_join(Context& ctx)
 		There is still some parameters.. error */
 
 	for (size_t i = 0; i < m.size(); i++)
-		_channel_map.find_or_create(m[i].first)->join(ctx.user);
+	{
+//		PRINT_DEBUG_MESSAGE(RED, m[i].first)
+		_channel_map.find_or_create(m[i].first)->join(user);
+	}
 }
 
-void	Wagner::cmd_privmsg(Context& ctx)
+void	Wagner::cmd_privmsg(void)
 {
 	DEBUG_CALL_WAGNER
-	Channel*	channel = NULL;
-	Message*	request = ctx.curr_request;
 
 	std::string	receiver, message = request->params.back();
 	request->params.pop_back();
 
-	ctx.reply.setMessage(message);
-	ctx.reply |= Response::PRIVMSG;
+	reply.setMessage(message);
 	while (!request->params.empty())
 	{
 		receiver = request->params.front().substr(1);
 		request->params.pop_front();
-		channel = _channel_map.find(receiver);
-		if (channel != NULL)
-		{
-			ctx.reply.setChannel(channel);
-			channel->send(ctx);
-		}
-		else
+		if (_channel_map.send(receiver, user, reply) == false)
 			continue; // but still an error or message to someone
 	}
 }
 
-void	Wagner::cmd_kick(Context& ctx)
+void	Wagner::cmd_kick(void)
 {
 	DEBUG_CALL_WAGNER
-	(void)ctx;
 }
 
-void	Wagner::cmd_invite(Context& ctx)
+void	Wagner::cmd_invite(void)
 {
 	DEBUG_CALL_WAGNER
-	(void)ctx;
 }
 
-void	Wagner::cmd_topic(Context& ctx)
+void	Wagner::cmd_topic(void)
 {
 	DEBUG_CALL_WAGNER
-	(void)ctx;
 }

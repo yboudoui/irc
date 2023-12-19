@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:18:56 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 18:04:26 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:11:59 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,6 @@ bool	MessageQueue::empty(void)
 	return (_queue.empty());
 }
 
-Message*	MessageQueue::readLast(void)
-{
-	Message*	output = NULL;
-	if (_queue.empty())
-		return (output);
-	output = _queue.front();
-	return (output);
-}
-
 Message*	MessageQueue::getLastMessage(void)
 {
 	Message*	output = NULL;
@@ -64,7 +55,7 @@ std::string	MessageQueue::str(void)
 	return (stream.str());
 }
 
-MessageQueue&	MessageQueue::operator += (std::string& src)
+MessageQueue&	MessageQueue::operator << (std::string& src)
 {
 	Extractor			extractor(src);
 	t_available_string	line;
@@ -86,13 +77,13 @@ MessageQueue&	MessageQueue::operator += (Message* src)
 	_queue.push_back(src);
 	return (*this);
 }
-
+/*
 MessageQueue&	MessageQueue::operator += (MessageQueue& src)
 {
 	_queue.insert(_queue.end(), src._queue.begin(), src._queue.end());
 	return (*this);
 }
-
+*/
 std::ostream& operator<< (std::ostream& stream, const MessageQueue& queue)
 {
 	for (size_t i = 0; i < queue._queue.size(); i++)

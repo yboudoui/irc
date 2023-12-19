@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 17:02:11 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:44:00 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,52 +48,31 @@ void	Response::setRequest(Message* message)
 	_request = message;
 }
 
-void		Response::setChannel(Channel* channel)
+void	Response::setChannel(Channel* channel)
 {
 	_channel = channel;
 }
 
-void		Response::setMessage(std::string message)
+void	Response::setMessage(std::string message)
 {
 	_message = message;
 }
 
-Response&	Response::operator |= (t_reponse_code code)
+void	Response::operator () (int code, bool kill)
 {
+	if (_user->is_alive() == false)
+		return ;
+	MessageQueue	queue;
+
 	for (size_t i = 1; i < MAX_REPONSE_CODE; i++)
 	{
 		if ((1u << i) & code)
-		{
-			pfonc	func = _pfonc_map[i];
-			std::string a = (this->*func)();
-			_queue += new Message(a);
-		}
+			queue += new Message((this->*(_pfonc_map[i]))());
 	}
-	return (*this);
+	_user->setSendCache(queue.str());
+	_user->is_alive(!kill);
 }
 
-std::string	Response::str()
-{
-	std::string output = _queue.str();
-	_queue.clear();
-	return (output);
-}
-/*
-MessageQueue&		Response::response(t_reponse_code code)
-{
-	_queue.clear();
-	for (size_t i = 1; i < MAX_REPONSE_CODE; i++)
-	{
-		if ((1u << i) & code)
-		{
-			pfonc	func = _pfonc_map[i];
-			std::string a = (this->*func)();
-			_queue += new Message(a);
-		}
-	}
-	return (_queue);
-}
-*/
 std::string	Response::__001(void)
 {
 	std::stringstream	output;

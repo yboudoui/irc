@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 17:02:18 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:31:18 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include "Channel.hpp"
 # include "MessageQueue.hpp"
 
+class Channel;
 class Response
 {
 	public:
@@ -38,7 +39,7 @@ class Response
 			ERR_NEEDMOREPARAMS		= (1u << 10),
 			ERR_PASSWDMISMATCH		= (1u << 11),
 			PONG					= (1u << 12),
-			PRIVMSG= (1u << 13),
+			PRIVMSG					= (1u << 13),
 			MAX_REPONSE_CODE		= 14,
 		}	t_reponse_code;
 		void			setHostName(std::string hostName);
@@ -47,12 +48,9 @@ class Response
 		void			setChannel(Channel* channel);
 		void			setMessage(std::string message);
 
-		Response&	operator |= (t_reponse_code code);
-		std::string	str();
-//		MessageQueue&	response(t_reponse_code code);
+		void	operator () (int code, bool kill = false);
 
 	private:
-		MessageQueue	_queue;
 		typedef std::string (Response::*pfonc)(void);
 		pfonc		_pfonc_map[MAX_REPONSE_CODE + 1];
 		std::string	_hostname;

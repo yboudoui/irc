@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 12:43:43 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:09:05 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,24 +49,24 @@ t_prefixe	Message::parse_prefixe(Extractor &str)
 	t_prefixe			output;
 	t_available_string	_substr;
 
-	std::cout << RED << str << std::endl;
 	if (str.size() < 2 || str[0] != ':')
 		return (output);
 //	if (str[1] == ' ')
 //		throw std::runtime_error("Bad prefix format");
 	str.erase(0, 1);
 
+	struct s_prefixe t;
 	_substr = str.extract_to(" ");
 	if (!_substr)
 		return (output);
 	Extractor substr(_substr());
-	output().host = substr.extract_from("@");
-	output().user = substr.extract_from("!");
-	if (output().host || output().user)
-		output().pseudo(substr.str());
-	if (output().pseudo)
-		output().server_name(substr.str());
-	std::cout << RED << "\tprefixe :\t" << output << std::endl;
+	t.host = substr.extract_from("@");
+	t.user = substr.extract_from("!");
+	if (t.host || t.user)
+		t.pseudo(substr.str());
+	if (!t.pseudo)
+		t.server_name(substr.str());
+	output(t);
 	return (output);
 }
 
