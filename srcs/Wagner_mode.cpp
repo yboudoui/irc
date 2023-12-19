@@ -6,9 +6,10 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 15:06:05 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 15:30:24 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 # include "Wagner.hpp"
 #include <stdio.h>
@@ -37,6 +38,14 @@ void	Wagner::cmd_mode(void)
 	DEBUG_CALL_WAGNER
 	std::cout << request << std::endl;
 
+    t_params::iterator  it = request->params.begin();
+    t_params::iterator  ite = request->params.end();
+
+    for ( ; it != ite ; it++)
+    {
+        std::cout << "param :" << *it << std::endl;
+    }
+	(void)ctx;
 }
 */
 
@@ -94,6 +103,7 @@ define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
 */
 
     // Initialiser les modes à zéro
+    /*
     int channelModes = 0;
 
     setMode(&channelModes, INVITE_ONLY);
@@ -109,4 +119,69 @@ define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
     } else {
         printf("INVITE_ONLY n'est pas actif.\n");
     }
+    */
 
+
+
+/*
+#include <iostream>
+#include <string>
+#include <vector>
+
+// Fonction pour traiter la commande MODE IRC avec paramètres
+void processModeCommand(const std::string& modeCommand, int& userMode, std::string& password, int& userLimit) {
+    char modeOperator = '+';  // Opérateur par défaut
+    std::vector<std::string> parameters;  // Pour stocker les paramètres des modes
+
+    for (size_t i = 0; i < modeCommand.size(); ++i) {
+        char mode = modeCommand[i];
+
+        if (mode == '+' || mode == '-') {
+            // Mettre à jour l'opérateur en cours
+            modeOperator = mode;
+        } else {
+            // Traiter le mode en fonction de l'opérateur
+            switch (mode) {
+                case 'i':
+                    userMode = (modeOperator == '+') ? (userMode | (1 << 0)) : (userMode & ~(1 << 0));
+                    break;
+                case 'k':
+                    if (modeOperator == '+') {
+                        // Récupérer le paramètre après le mode +k
+                        password = modeCommand.substr(i + 1);
+                        i = modeCommand.size();  // Sortir de la boucle après le mode +k
+                    }
+                    break;
+                case 'l':
+                    if (modeOperator == '+') {
+                        // Récupérer le paramètre après le mode +l
+                        userLimit = std::stoi(modeCommand.substr(i + 1));
+                        i = modeCommand.size();  // Sortir de la boucle après le mode +l
+                    }
+                    break;
+                default:
+                    // Gérer d'autres modes si nécessaire
+                    break;
+            }
+        }
+    }
+}
+
+int main() {
+    int userMode = 0;  // Mode initial
+    std::string password;
+    int userLimit = 0;
+
+    // Exemple d'utilisation de la fonction avec une commande MODE IRC
+    std::string modeCommand = "+ikmotdepasse+l10";  // Exemple de commande MODE IRC
+    processModeCommand(modeCommand, userMode, password, userLimit);
+
+    // Afficher le résultat
+    std::cout << "User Mode après la commande : " << userMode << std::endl;
+    std::cout << "Mot de passe : " << password << std::endl;
+    std::cout << "Limite d'utilisateurs : " << userLimit << std::endl;
+
+    return 0;
+}
+
+*/
