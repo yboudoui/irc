@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 16:36:49 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 17:11:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,10 +142,7 @@ void	Wagner::cmd_join(void)
 		There is still some parameters.. error */
 
 	for (size_t i = 0; i < m.size(); i++)
-	{
-//		PRINT_DEBUG_MESSAGE(RED, m[i].first)
 		_channel_map.find_or_create(m[i].first)->join(user);
-	}
 }
 
 void	Wagner::cmd_privmsg(void)
@@ -183,6 +180,4 @@ void	Wagner::cmd_topic(void)
 void	Wagner::cmd_mode(void)
 {
 	DEBUG_CALL_WAGNER
-	for (size_t i = 0; i < request->params.size(); i++)
-		std::cout << "->" << request->params[i] << std::endl;
 }

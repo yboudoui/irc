@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:44:25 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 16:22:13 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 17:03:23 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ std::deque<std::string>	Extractor::split(std::string delimiter)
 		_data.erase(0, pos + delimiter.length());
 		pos = _data.find(delimiter);
 	}
-	output.push_back(_data);
+	if (_data.empty() == false)
+		output.push_back(_data);
 	return (output);
 }
 
