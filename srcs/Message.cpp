@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 12:09:05 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:23:01 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ Message::Message(std::string raw_message)
 	prefixe	= parse_prefixe(_cache);
 	command	= parse_command(_cache);
 	params	= parse_params(_cache);
+
 	PRINT_DEBUG_MESSAGE(_color, "\t" << this)
 }
 
@@ -90,7 +91,7 @@ t_params	Message::parse_params(Extractor &str)
 	t_params			output;
 	t_available_string	_substr;
 
-	_substr = str.extract_from(":", true);
+	_substr = str.extract_from(":");
 	output = str.split();
 	if (_substr)
 		output.push_back(_substr());

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 12:35:24 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:23:44 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ Wagner::Wagner(std::string host, std::string pass)
 	_cmd.insert(std::make_pair("PING",		&Wagner::cmd_ping));
 	_cmd.insert(std::make_pair("QUIT",		&Wagner::cmd_quit));
 	_cmd.insert(std::make_pair("WHOIS",		&Wagner::cmd_whois));
-	//_cmd.insert(std::make_pair("MODE",		&Wagner::cmd_mode));
+	_cmd.insert(std::make_pair("MODE",		&Wagner::cmd_mode));
 	_cmd.insert(std::make_pair("JOIN",		&Wagner::cmd_join));
 	_cmd.insert(std::make_pair("PRIVMSG",	&Wagner::cmd_privmsg));
 	_cmd.insert(std::make_pair("KICK",		&Wagner::cmd_kick));
@@ -74,14 +74,20 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 	while (!requests.empty() && user->is_alive())
 	{
 		request = requests.getLastMessage();
+		if (request == NULL)
+		{
+			PRINT_DEBUG_MESSAGE(CYAN, "WTF");
+			continue;
+		}
 		reply.setRequest(request);
-
 		t_cmd_map::iterator	it = _cmd.find(request->command.name);
 		if (it != _cmd.end())
 			(this->*(it->second))();
 		else
 			cmd_notFound();
+
 	}
+
 }
 
 void	Wagner::cmd_notFound	(void)
@@ -174,4 +180,11 @@ void	Wagner::cmd_invite(void)
 void	Wagner::cmd_topic(void)
 {
 	DEBUG_CALL_WAGNER
+}
+
+void	Wagner::cmd_mode(void)
+{
+	DEBUG_CALL_WAGNER
+	for (size_t i = 0; i < request->params.size(); i++)
+		std::cout << "->" << request->params[i] << std::endl;
 }

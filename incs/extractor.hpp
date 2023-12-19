@@ -6,14 +6,13 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:43:12 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 16:52:02 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 15:28:22 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXTRACTOR_HPP
 # define EXTRACTOR_HPP
 
-//# include <string>
 # include "Colors.hpp"
 # include "available.hpp"
 # include <sstream>

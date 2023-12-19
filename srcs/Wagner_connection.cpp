@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 12:41:56 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:14:24 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,11 @@ void	Wagner::cmd_pass(void)
 {
 	DEBUG_CALL_WAGNER
 
-	std::string		clientPass = request->params.front();
-
-	if (!request->params.empty() && clientPass == _pass)
-		return (user->connectionStep());
-	if (clientPass != _pass)
-		reply(Response::ERR_PASSWDMISMATCH, true);
-	else
-		reply(Response::ERR_NEEDMOREPARAMS, true);
+	if (request->params.empty())
+		return (reply(Response::ERR_NEEDMOREPARAMS));
+	if (request->params.front() != _pass)
+		return (reply(Response::ERR_PASSWDMISMATCH));
+	return (user->connectionStep());
 }
 
 void	Wagner::cmd_nick(void)

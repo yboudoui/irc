@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:44:25 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 15:54:06 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:22:13 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ t_available_string	Extractor::extract_to(std::string delimiter, bool or_end)
 	has_delimiter = _data.find(delimiter);
 	if (has_delimiter == std::string::npos)
 	{
-		if (!or_end)
+		if (or_end == false)
 			return (output);
 		output(_data);
-		_data.erase();
+		_data.clear();
 	}
 	else
 	{
@@ -52,10 +52,10 @@ t_available_string	Extractor::extract_from(std::string delimiter, bool or_end)
 	has_delimiter = _data.find(delimiter);
 	if (has_delimiter == std::string::npos)
 	{
-		if (!or_end)
+		if (or_end == false)
 			return (output);
 		output(_data);
-		_data.erase();
+		_data.clear();
 	}
 	else
 	{
@@ -90,6 +90,7 @@ std::deque<std::string>	Extractor::split(std::string delimiter)
 		_data.erase(0, pos + delimiter.length());
 		pos = _data.find(delimiter);
 	}
+	output.push_back(_data);
 	return (output);
 }
 

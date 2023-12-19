@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 16:43:02 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 12:12:01 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 15:44:09 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ class available
 		: _ok(false)
 	{}
 
-	available(Type& value)
+	available(Type value)
 		: _ok(true)
 		, _value(value)
 	{}

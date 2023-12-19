@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/18 14:37:24 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/19 15:06:05 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,14 @@ void unsetMode(int *modes, enum ChannelModes mode) {
 int isModeSet(int modes, enum ChannelModes mode) {
     return (modes & mode) != 0;
 }
-
-void	Wagner::cmd_mode(Context& ctx)
+/*
+void	Wagner::cmd_mode(void)
 {
 	DEBUG_CALL_WAGNER
-    Message*	request = ctx.curr_request;
+	std::cout << request << std::endl;
 
-	(void)ctx;
 }
-
+*/
 
 /*
 define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
