@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 17:11:00 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/20 07:13:44 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,3 +93,18 @@ Channel*	ChannelMap::find_or_create(std::string name)
 	return (it->second);
 }
 
+void Channel::setMode(char op, enum ChannelModes mode)
+{
+    if (op == '-')
+        _modes |= mode;
+    else
+        _modes &= ~mode;
+}
+void Channel::setKey(std::string pass)
+{
+    _key = pass;
+}
+void Channel::setLimit(int limit)
+{
+    _userLimit = limit;
+}

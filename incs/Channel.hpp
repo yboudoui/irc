@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 12:17:42 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 14:51:08 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,13 @@ l ->
 	be in the channel at the same time.
 */
 
+enum ChannelModes {
+    INVITE_ONLY     = 1 << 0,   // 00001
+    TOPIC_ONLY_OP   = 1 << 1,   // 00010
+    KEY_PROTECTED   = 1 << 2,   // 00100
+    USER_LIMIT		= 1 << 3    // 01000
+};
+
 typedef enum e_user_right {
 	NONE,
 }	t_user_right;
@@ -73,12 +80,12 @@ class Channel
 {
 	private:
 		std::string					_name;
-		available<std::string>		_password;
+		available<std::string>		_key;
 		available<std::string>		_topic;
 		//SocketConnection&				_operator;
 
-		//int							_userLimit;
-//		int							_modes;
+		int							_userLimit;
+		int							_modes;
 
 		typedef	std::map<User*, t_user_right>	t_users_map;
 
@@ -94,6 +101,9 @@ class Channel
 		void		send(User* user, Response response);
 		std::string	getName(void);
 
+		void setMode(char op, enum ChannelModes mode);
+		void setKey(std::string pass);
+		void setLimit(int limit);
 };
 
 class ChannelMap

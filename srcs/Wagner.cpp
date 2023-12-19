@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 07:13:23 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 07:14:26 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 	if (user == NULL)
 		throw std::runtime_error("Bad EventListener");
 	Message::color(BLUE);
+	if (user->getReadCache().size())
+		std::cout << std::endl << RED << user->getReadCache() << std::endl << std::endl;
 	requests << user->getReadCache();
 	Message::color(GREEN);
 

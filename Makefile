@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/19 12:20:22 by sethomas         ###   ########.fr        #
+#    Updated: 2023/12/19 12:32:00 by sethomas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,8 @@ SRCS				=	main.cpp\
 						srcs/responses.cpp \
 						srcs/User.cpp \
 						srcs/Wagner.cpp \
-						srcs/WagnerContext.cpp \
 						srcs/Wagner_connection.cpp \
+						srcs/Wagner_mode.cpp \
 						srcs/Channel.cpp \
 						srcs/Queue.cpp \
 						srcs/IQueueEventListener.cpp \

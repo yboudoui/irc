@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 15:30:24 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/19 15:31:27 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,84 @@
 #include <stdio.h>
 
 
-enum ChannelModes {
-    INVITE_ONLY     = 1 << 0,   // 00001
-    TOPIC_ONLY_OP   = 1 << 1,   // 00010
-    KEY_PROTECTED   = 1 << 2    // 00100
-};
 
-void setMode(int *modes, enum ChannelModes mode) {
-    *modes |= mode;
-}
-
-void unsetMode(int *modes, enum ChannelModes mode) {
-    *modes &= ~mode;
-}
 
 int isModeSet(int modes, enum ChannelModes mode) {
     return (modes & mode) != 0;
+}
+
+
+/*
+enum ChannelModes {
+    INVITE_ONLY     = 1 << 0,   // 00001
+    TOPIC_ONLY_OP   = 1 << 1,   // 00010
+    KEY_PROTECTED   = 1 << 2,   // 00100
+    USER_LIMIT		= 1 << 3    // 01000
+};
+*/
+
+void processModeCommand(t_params& params, 
+    const std::string& command,Channel& channel)
+{
+    (void)params;
+    (void)command;
+    char op = '+';  // Opérateur par défaut
+
+    for (size_t i = 0; i < command.size(); ++i) {
+        char c = command[i];
+        if (c == '+' || c == '-') {
+            // Mettre à jour l'opérateur en cours
+            op = c;
+        } else {
+            // Traiter le mode en fonction de l'opérateur
+            switch (c) {
+
+                case 'i':
+                    channel.setMode(op, INVITE_ONLY);
+                    break;
+                case 't':
+                    channel.setMode(op, TOPIC_ONLY_OP);
+                    break;
+                case 'k':
+                    channel.setMode(op, KEY_PROTECTED);
+                    if (op == '+')
+                    {
+                        // Récupérer le paramètre suivant
+                        channel.setKey("key");
+                    }
+                    break;
+                case 'l':
+                    channel.setMode(op, USER_LIMIT);
+                    if (op == '+')
+                    {
+                        // Récupérer le paramètre suivant
+                        channel.setLimit(10);
+                    }
+                    break;
+                default:
+                    // Gérer d'autres modes si nécessaire
+                    break;
+            }
+        }
+    }
 }
 /*
 void	Wagner::cmd_mode(void)
 {
 	DEBUG_CALL_WAGNER
-	std::cout << request << std::endl;
+
+
+	if (request->params.empty())
+		return (reply(Response::ERR_NEEDMOREPARAMS));
 
     t_params::iterator  it = request->params.begin();
     t_params::iterator  ite = request->params.end();
 
+    Channel* channel = _channel_map.find("toto");
     for ( ; it != ite ; it++)
     {
         std::cout << "param :" << *it << std::endl;
     }
-	(void)ctx;
 }
 */
 
@@ -99,7 +146,9 @@ define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
 
     ERR_UMODEUNKNOWNFLAG (501)
     :<reason> 
-    Returned by the server to indicate that a MODE message was sent with a nickname parameter and that the mode flag sent was not recognised 
+    Returned by the server to indicate that a MODE 
+    message was sent with a nickname parameter 
+    and that the mode flag sent was not recognised 
 */
 
     // Initialiser les modes à zéro
