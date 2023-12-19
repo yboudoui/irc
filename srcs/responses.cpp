@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 12:44:00 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:42:43 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 Response::Response(void)
 {
-	_pfonc_map[1]	= &Response::__001;
-	_pfonc_map[2]	= &Response::__002;
-	_pfonc_map[3]	= &Response::__003;
-	_pfonc_map[4]	= &Response::__004;
-	_pfonc_map[5]	= &Response::__005;
+	_pfonc_map[0]	= &Response::__001;
+	_pfonc_map[1]	= &Response::__002;
+	_pfonc_map[2]	= &Response::__003;
+	_pfonc_map[3]	= &Response::__004;
+	_pfonc_map[4]	= &Response::__005;
+	_pfonc_map[5]	= &Response::__263;
 	_pfonc_map[6]	= &Response::_RPL_WHOISUSER;
-	_pfonc_map[7]	= &Response::__263;
-	_pfonc_map[8]	= &Response::_ERR_NONICKNAMEGIVEN;
-	_pfonc_map[9]	= &Response::_ERR_ERRONEUSNICKNAME;
-	_pfonc_map[10]	= &Response::_ERR_NICKNAMEINUSE;
-	_pfonc_map[11]	= &Response::_ERR_NEEDMOREPARAMS;
-	_pfonc_map[12]	= &Response::_ERR_PASSWDMISMATCH;
-	_pfonc_map[13]	= &Response::_PONG;
-	_pfonc_map[14]	= &Response::_PRIVMSG;
+	_pfonc_map[7]	= &Response::_ERR_NONICKNAMEGIVEN;
+	_pfonc_map[8]	= &Response::_ERR_ERRONEUSNICKNAME;
+	_pfonc_map[9]	= &Response::_ERR_NICKNAMEINUSE;
+	_pfonc_map[10]	= &Response::_ERR_NEEDMOREPARAMS;
+	_pfonc_map[11]	= &Response::_464_ERR_PASSWDMISMATCH;
+	_pfonc_map[12]	= &Response::_PONG;
+	_pfonc_map[13]	= &Response::_PRIVMSG;
 
 }
 
@@ -64,7 +64,7 @@ void	Response::operator () (int code, bool kill)
 		return ;
 	MessageQueue	queue;
 
-	for (size_t i = 1; i < MAX_REPONSE_CODE; i++)
+	for (size_t i = 0; i < MAX_REPONSE_CODE; i++)
 	{
 		if ((1u << i) & code)
 			queue += new Message((this->*(_pfonc_map[i]))());
@@ -175,7 +175,7 @@ std::string	Response::_ERR_NEEDMOREPARAMS(void)
 	return (output.str());
 }
 
-std::string	Response::_ERR_PASSWDMISMATCH(void)
+std::string	Response::_464_ERR_PASSWDMISMATCH(void)
 {
 	std::stringstream	output;
 

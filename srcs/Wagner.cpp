@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 16:23:44 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:36:49 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 	User*	user = new User(queue, fd_socketBind);
 	if (user == NULL)
 		return ; // error
-	_clients.insert(user);
+	_clients.insert(user); //sure?
 }
 
 void	Wagner::treatEventListener(IQueue::IEventListener* listener)
@@ -85,9 +85,7 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 			(this->*(it->second))();
 		else
 			cmd_notFound();
-
 	}
-
 }
 
 void	Wagner::cmd_notFound	(void)

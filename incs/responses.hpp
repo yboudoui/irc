@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 12:31:18 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:34:37 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,20 @@ class Response
 		Response(void);
 		typedef enum e_reponse_code {
 			NONE_REPONSE_CODE,
-			_001					= (1u << 0),
-			_002					= (1u << 1),
-			_003					= (1u << 2),
-			_004					= (1u << 3),
-			_005					= (1u << 4),
-			_263					= (1u << 5),
-			RPL_WHOISUSER			= (1u << 6),
-			ERR_NONICKNAMEGIVEN		= (1u << 7),
-			ERR_ERRONEUSNICKNAME	= (1u << 8),
-			ERR_NICKNAMEINUSE		= (1u << 9),
-			ERR_NEEDMOREPARAMS		= (1u << 10),
-			ERR_PASSWDMISMATCH		= (1u << 11),
-			PONG					= (1u << 12),
-			PRIVMSG					= (1u << 13),
+			_001					= (1UL << 0),
+			_002					= (1UL << 1),
+			_003					= (1UL << 2),
+			_004					= (1UL << 3),
+			_005					= (1UL << 4),
+			_263					= (1UL << 5),
+			RPL_WHOISUSER			= (1UL << 6),
+			ERR_NONICKNAMEGIVEN		= (1UL << 7),
+			ERR_ERRONEUSNICKNAME	= (1UL << 8),
+			ERR_NICKNAMEINUSE		= (1UL << 9),
+			ERR_NEEDMOREPARAMS		= (1UL << 10),
+			ERR_PASSWDMISMATCH		= (1UL << 11),
+			PONG					= (1UL << 12),
+			PRIVMSG					= (1UL << 13),
 			MAX_REPONSE_CODE		= 14,
 		}	t_reponse_code;
 		void			setHostName(std::string hostName);
@@ -90,7 +90,7 @@ class Response
 /*	ERR_PASSWDMISMATCH (464) :<reason>
 	Returned by the PASS command to indicate the given password was required and was either not given 
 	or was incorrect
-*/		std::string	_ERR_PASSWDMISMATCH(void);
+*/		std::string	_464_ERR_PASSWDMISMATCH(void);
 
 		std::string	_PONG(void);
 		std::string	_RPL_WHOISUSER(void);
