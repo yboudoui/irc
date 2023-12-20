@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 10:01:59 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 10:44:03 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ class Channel
 		Channel(std::string name);
 		~Channel();
 
-		void		join(User* user);
+		void		join(User* user, std::string usr_password);
 		void		send(User* user, Response response);
 		std::string	getName(void);
 
@@ -107,7 +107,7 @@ class Channel
 		void setKey(std::string pass);
 		void setLimit(int limit);
 		bool isOperator(User* user);
-		bool canJoin(User* user);
+		bool canJoin(User* user, std::string usr_password);
 
 		void ProcessModeCmd(User* user,
 			const std::string& command,t_params& params);

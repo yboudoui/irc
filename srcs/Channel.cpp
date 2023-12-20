@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 10:03:56 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 10:53:40 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ Channel::~Channel()
 	DEBUG_CALL_CHANNEL
 }
 
-void	Channel::join(User* user)
+// TODO if (this->canJoin(user, usr_password))
+void	Channel::join(User* user, std::string usr_password)
 {
+	(void)usr_password;
 	if (user == NULL)
 		return ;
 	t_users_map::iterator it = _users_map.find(user);
@@ -143,12 +145,18 @@ bool Channel::isOperator(User* user)
 	return true;
 }
 
-bool Channel::canJoin(User* user)
+bool Channel::canJoin(User* user, std::string usr_password)
 {
 	// TODO check if the user can join the channel,
 	// check channel mode INVITE_ONLY
+	// check channel mode KEY_PROTECTED & password 
 	// if true, check if the user has been invited by
 	// an operator
+
+	// 475 cannot join Channel () (KEY_PROTECTED)
+	// 473 cannot join Channel () (INVITE_ONLY)
+	// 464 bad channel key	(KEY_PROTECTED && usr_password != key)
 	(void)user;
+	(void)usr_password;
 	return true;
 }

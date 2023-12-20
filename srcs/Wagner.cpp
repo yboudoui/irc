@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 09:21:43 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 10:52:18 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,9 @@ void	Wagner::cmd_whois(void)
 	reply(Response::RPL_WHOISUSER);
 }
 
+// TODO 
+// /JOIN #channel password
+// si un pass est saisi l'envoyer a join
 void	Wagner::cmd_join(void)
 {
 	DEBUG_CALL_WAGNER
@@ -145,7 +148,7 @@ void	Wagner::cmd_join(void)
 		There is still some parameters.. error */
 
 	for (size_t i = 0; i < m.size(); i++)
-		_channel_map.find_or_create(m[i].first)->join(user);
+		_channel_map.find_or_create(m[i].first)->join(user, "usr_password");
 }
 
 void	Wagner::cmd_privmsg(void)
