@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 14:51:08 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 10:01:59 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <map>
 # include "available.hpp"
 # include "responses.hpp"
+# include "Message.hpp"
 //# include "IOrchestrator.hpp"
 
 class Response;
@@ -101,11 +102,16 @@ class Channel
 		void		send(User* user, Response response);
 		std::string	getName(void);
 
+		bool getMode(enum ChannelModes mode);
 		void setMode(char op, enum ChannelModes mode);
 		void setKey(std::string pass);
 		void setLimit(int limit);
-};
+		bool isOperator(User* user);
+		bool canJoin(User* user);
 
+		void ProcessModeCmd(User* user,
+			const std::string& command,t_params& params);
+};
 class ChannelMap
 {
 	private:

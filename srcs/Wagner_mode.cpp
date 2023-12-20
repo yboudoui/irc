@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 15:31:27 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 09:28:58 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@
 
 
 
-int isModeSet(int modes, enum ChannelModes mode) {
-    return (modes & mode) != 0;
-}
+
 
 
 /*
@@ -31,42 +29,67 @@ enum ChannelModes {
 };
 */
 
-void processModeCommand(t_params& params, 
-    const std::string& command,Channel& channel)
+void Channel::ProcessModeCmd(User* user, 
+    const std::string& command,
+    t_params& params)
 {
     (void)params;
     (void)command;
+    (void)user;
     char op = '+';  // Opérateur par défaut
 
     for (size_t i = 0; i < command.size(); ++i) {
         char c = command[i];
         if (c == '+' || c == '-') {
-            // Mettre à jour l'opérateur en cours
-            op = c;
+            op = c; // Mettre à jour l'opérateur en cours
         } else {
-            // Traiter le mode en fonction de l'opérateur
             switch (c) {
-
                 case 'i':
-                    channel.setMode(op, INVITE_ONLY);
+                    std::cout << "INVITE_ONLY [" << op << "]" << std::endl;
+                    this->setMode(op, INVITE_ONLY);
                     break;
                 case 't':
-                    channel.setMode(op, TOPIC_ONLY_OP);
+                    std::cout << "TOPIC_ONLY_OP [" << op << "]" << std::endl;
+                     this->setMode(op, TOPIC_ONLY_OP);
                     break;
                 case 'k':
-                    channel.setMode(op, KEY_PROTECTED);
+                    if (params.empty())
+                    {
+                        std::cout << "ERR_NEEDMOREPARAMS [461]" << std::endl;
+
+                        /*
+                        ERR_NEEDMOREPARAMS (461) 
+                        <command> :<reason>
+                        */
+                       break;
+                    }
+                    if (this->getMode(KEY_PROTECTED))
+                    {
+                        std::cout << "ERR_KEYSET [467]" << std::endl;
+                        /*
+                        ERR_KEYSET (467)
+                        <channel> :<reason>
+                        Returned when the channel key for a 
+                        channel has already been set 
+                        */   
+                       break;  
+                    }
+
+                    std::cout << "KEY_PROTECTED [" << op << "]" << std::endl;
+                    this->setMode(op, KEY_PROTECTED);
                     if (op == '+')
                     {
                         // Récupérer le paramètre suivant
-                        channel.setKey("key");
+                        this->setKey("key");
                     }
                     break;
                 case 'l':
-                    channel.setMode(op, USER_LIMIT);
+                    std::cout << "USER_LIMIT [" << op << "]" << std::endl;
+                    this->setMode(op, USER_LIMIT);
                     if (op == '+')
                     {
                         // Récupérer le paramètre suivant
-                        channel.setLimit(10);
+                        this->setLimit(10);
                     }
                     break;
                 default:
@@ -76,25 +99,77 @@ void processModeCommand(t_params& params,
         }
     }
 }
-/*
+
 void	Wagner::cmd_mode(void)
 {
 	DEBUG_CALL_WAGNER
 
-
-	if (request->params.empty())
+	if (request->params.size() < 2 )
 		return (reply(Response::ERR_NEEDMOREPARAMS));
 
-    t_params::iterator  it = request->params.begin();
+    t_params::iterator  it;
     t_params::iterator  ite = request->params.end();
 
-    Channel* channel = _channel_map.find("toto");
+    std::string s_channel, s_modes;
+
+    s_channel = *request->params.begin();
+    request->params.pop_front();
+    s_modes = *request->params.begin();
+    request->params.pop_front();
+
+    if (!s_channel.empty() && s_channel[0] == '#')
+        s_channel = s_channel.substr(1);
+    Channel* channel = _channel_map.find(s_channel);
+    if (!channel)
+    {
+        if (!findClient(s_channel))
+        {
+            std::cout << "ERR_NOSUCHCHANNEL " << s_channel << std::endl;
+        // TODO REPLY ERROR
+        /*
+        ERR_NOSUCHCHANNEL (403)
+        <channel> :<reason> 
+        Used to indicate the given channel name is invalid, 
+        or does not exist
+        */
+        }
+        else
+        {
+            // MODE USER / CLIENT  // ne rien faire (?)
+            /*
+            ERR_UMODEUNKNOWNFLAG (501)
+            :<reason> 
+            Returned by the server to indicate that a MODE 
+            message was sent with a nickname parameter 
+            and that the mode flag sent was not recognised 
+            s*/
+        }
+        return ;
+    }
+    if (!channel->isOperator(user))
+    {
+        std::cout << "ERR_CHANOPRIVSNEEDED " << user->getNickname() << std::endl;
+        // TODO REPLY ERROR
+        /* 
+        ERR_CHANOPRIVSNEEDED (482) 
+        <channel> :<reason> 
+        Returned by any command requiring special channel 
+        privileges (eg. channel operator) to indicate 
+        the operation was unsuccessful 
+        */
+        return ;
+    }
+    channel->ProcessModeCmd(user, s_modes, request->params);
+
+
+    
+    it = request->params.begin();
     for ( ; it != ite ; it++)
     {
         std::cout << "param :" << *it << std::endl;
     }
 }
-*/
+
 
 /*
 define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
@@ -107,7 +182,11 @@ define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
    Replies:
 
     ERR_NEEDMOREPARAMS (461) <command> :<reason>  Returned by the server by any command which requires more parameters than the number of parameters given 
-    ERR_CHANOPRIVSNEEDED (482) <channel> :<reason>  Returned by any command requiring special channel privileges (eg. channel operator) to indicate the operation was unsuccessful 
+    ERR_CHANOPRIVSNEEDED (482) 
+    <channel> :<reason> 
+    Returned by any command requiring special channel 
+    privileges (eg. channel operator) to indicate 
+    the operation was unsuccessful 
     ERR_NOTONCHANNEL (442) <channel> :<reason>   Returned by the server whenever a client tries to perform a channel effecting command for which the client is not a member 
 
     RPL_BANLIST (367) 
@@ -130,7 +209,8 @@ define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
     
     ERR_KEYSET (467)
     <channel> :<reason>
-    Returned when the channel key for a channel has already been set 
+    Returned when the channel key for a 
+    channel has already been set 
 
     ERR_NOSUCHCHANNEL (403)
     <channel> :<reason> 
@@ -138,7 +218,8 @@ define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
 
     ERR_USERSDONTMATCH (502)
     :<reason> 
-    Error sent to any user trying to view or change the user mode for a user other than themselves 
+    Error sent to any user trying to view or 
+    change the user mode for a user other than themselves 
 
     RPL_UMODEIS (221)
     <user_modes> [<user_mode_params>]

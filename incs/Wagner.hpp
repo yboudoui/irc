@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 15:05:55 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/20 08:51:22 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ class Wagner: public IOrchestrator
 		void	cmd_invite		(void);
 		void	cmd_topic		(void);
 		void	cmd_notFound	(void);
+
+		User*	findClient(std::string name);
 };
 
 #endif

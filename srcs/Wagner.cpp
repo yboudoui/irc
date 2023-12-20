@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 07:14:26 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 09:21:43 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,19 +168,37 @@ void	Wagner::cmd_privmsg(void)
 void	Wagner::cmd_kick(void)
 {
 	DEBUG_CALL_WAGNER
+	// check channel.isOperator()
 }
 
 void	Wagner::cmd_invite(void)
 {
 	DEBUG_CALL_WAGNER
+	// check channel.isOperator()
 }
 
 void	Wagner::cmd_topic(void)
 {
 	DEBUG_CALL_WAGNER
+	// check channel mode TOPIC_ONLY_OP
 }
 
-void	Wagner::cmd_mode(void)
+User*	Wagner::findClient(std::string name)
 {
-	DEBUG_CALL_WAGNER
+	t_clients::iterator	it = _clients.begin();
+	t_clients::iterator	ite = _clients.end();
+
+	for ( ; it != ite ; it++)
+	{
+		if ((*it)->getNickname() == name)
+		{
+			return *it;
+		}
+	}
+	return (NULL);
 }
+
+// void	Wagner::cmd_mode(void)
+// {
+// 	DEBUG_CALL_WAGNER
+// }
