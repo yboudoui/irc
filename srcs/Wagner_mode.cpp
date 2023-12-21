@@ -6,15 +6,16 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 10:39:40 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:45:05 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 # include "Wagner.hpp"
 #include <stdio.h>
-
-
+#include <stdlib.h>
+#include <cctype>
+#include <string>
 
 
 
@@ -53,7 +54,7 @@ void Channel::ProcessModeCmd(User* user,
                      this->setMode(op, TOPIC_ONLY_OP);
                     break;
                 case 'k':
-                    if (params.empty())
+                    if (params.empty() && op == '+')
                     {
                         std::cout << "ERR_NEEDMOREPARAMS [461]" << std::endl;
                         /*
@@ -62,7 +63,7 @@ void Channel::ProcessModeCmd(User* user,
                         */
                        break;
                     }
-                    if (this->getMode(KEY_PROTECTED))
+                    if (this->getMode(KEY_PROTECTED) && op == '+')
                     {
                         std::cout << "ERR_KEYSET [467]" << std::endl;
                         /*
@@ -75,24 +76,80 @@ void Channel::ProcessModeCmd(User* user,
                     }
 
                     std::cout << "KEY_PROTECTED [" << op << "]" << std::endl;
-                    this->setMode(op, KEY_PROTECTED);
                     if (op == '+')
                     {
                         // Récupérer le paramètre suivant
-                        this->setKey("key");
+                        std::string pass = *params.begin();
+                        params.pop_front();
+                        if (pass.find_first_not_of("abcdefghijklmnopqrstuvwxyz01234A56789"))
+                        {
+                            this->setMode(op, KEY_PROTECTED);
+                            this->setKey(pass);
+                        }
+                        else 
+                        {
+                            std::cout << "error keyset" << std::endl;
+                            /*
+                            ERR_KEYSET (467)
+                            <channel> :<reason>
+                            Returned when the channel key for a 
+                            channel has already been set 
+                            */  
+                        }
+                        
                     }
+                    else 
+                        this->setMode(op, KEY_PROTECTED);
                     break;
                 case 'l':
                     std::cout << "USER_LIMIT [" << op << "]" << std::endl;
-                    this->setMode(op, USER_LIMIT);
+                    
+                    if (params.empty() && op == '+')
+                    {
+                        std::cout << "ERR_NEEDMOREPARAMS [461]" << std::endl;
+                        /*
+                        ERR_NEEDMOREPARAMS (461) 
+                        <command> :<reason>
+                        */
+                       break;
+                    }
                     if (op == '+')
                     {
-                        // Récupérer le paramètre suivant
-                        this->setLimit(10);
+                        std::string limit = *params.begin();
+                        int i_limit;
+                        params.pop_front();
+                        if (limit.find_first_not_of("0123456789"))
+                        {
+                            this->setMode(op, USER_LIMIT);
+                          	std::stringstream ss;
+                            ss << limit;
+                            ss >> i_limit;
+                            this->setLimit(i_limit);
+                            //TODO check stringstream
+                            
+                        }
+                        else 
+                        {
+                            std::cout << "error keyset" << std::endl;
+                            /*
+                            ERR_KEYSET (467)
+                            <channel> :<reason>
+                            Returned when the channel key for a 
+                            channel has already been set 
+                            */  
+                        }
+                    }
+                    else
+                    {
+                      this->setMode(op, USER_LIMIT);
                     }
                     break;
                 default:
-                    // Gérer d'autres modes si nécessaire
+                    /*
+                    ERR_UNKNOWNMODE (472)
+                    <char> :<reason>
+                    Returned when a given mode is unknown 
+                    */
                     break;
             }
         }
@@ -158,6 +215,18 @@ void	Wagner::cmd_mode(void)
         */
         return ;
     }
+    if (!channel->isOnChannel(user))
+    {
+        std::cout << "ERR_NOTONCHANNEL " << user->getNickname() << std::endl;
+        // TODO REPLY ERROR
+        /* 
+            ERR_NOTONCHANNEL (442) 
+            <channel> :<reason>   Returned by the server 
+            whenever a client tries to perform a channel 
+            effecting command for which the client is not a member
+        */
+        return ;
+    }
     channel->ProcessModeCmd(user, s_modes, request->params);
 
 
@@ -186,7 +255,10 @@ define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
     Returned by any command requiring special channel 
     privileges (eg. channel operator) to indicate 
     the operation was unsuccessful 
-    ERR_NOTONCHANNEL (442) <channel> :<reason>   Returned by the server whenever a client tries to perform a channel effecting command for which the client is not a member 
+    ERR_NOTONCHANNEL (442) 
+    <channel> :<reason>   Returned by the server 
+    whenever a client tries to perform a channel 
+    effecting command for which the client is not a member 
 
     RPL_BANLIST (367) 
     <channel> <banid> [<time_left> :<reason>]

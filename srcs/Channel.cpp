@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 10:53:40 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:46:19 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ Channel*	ChannelMap::find_or_create(std::string name)
 }
 
 #include <bitset>
-
 void afficherEnBinaire(int nombre) {
 	for (int i = sizeof(int) * 8 -1 ; i >= 0 ; i--)
 	{

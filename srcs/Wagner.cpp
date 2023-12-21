@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 10:52:18 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:41:29 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,18 +172,40 @@ void	Wagner::cmd_kick(void)
 {
 	DEBUG_CALL_WAGNER
 	// check channel.isOperator()
+	/*
+	ERR_CHANOPRIVSNEEDED (482) 
+    <channel> :<reason> 
+    Returned by any command requiring special channel 
+    privileges (eg. channel operator) to indicate 
+    the operation was unsuccessful
+	*/
 }
 
 void	Wagner::cmd_invite(void)
 {
 	DEBUG_CALL_WAGNER
 	// check channel.isOperator()
+	/*
+	ERR_CHANOPRIVSNEEDED (482) 
+    <channel> :<reason> 
+    Returned by any command requiring special channel 
+    privileges (eg. channel operator) to indicate 
+    the operation was unsuccessful
+	*/
 }
 
 void	Wagner::cmd_topic(void)
 {
 	DEBUG_CALL_WAGNER
 	// check channel mode TOPIC_ONLY_OP
+	// check channel userIsOperator()
+	/*
+	ERR_CHANOPRIVSNEEDED (482) 
+    <channel> :<reason> 
+    Returned by any command requiring special channel 
+    privileges (eg. channel operator) to indicate 
+    the operation was unsuccessful
+	*/
 }
 
 User*	Wagner::findClient(std::string name)
