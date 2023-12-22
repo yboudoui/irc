@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 12:25:06 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/22 14:48:38 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,27 +168,9 @@ void	Wagner::cmd_mode(void)
     if (!channel)
     {
         if (!findClient(s_channel))
-        {
-            std::cout << "ERR_NOSUCHCHANNEL " << s_channel << std::endl;
-        // TODO REPLY ERROR
-        /*
-        ERR_NOSUCHCHANNEL (403)
-        <channel> :<reason> 
-        Used to indicate the given channel name is invalid, 
-        or does not exist
-        */
-        }
+            user->setSendCache(ERR_NOSUCHCHANNEL(s_channel));
         else
-        {
-            // MODE USER / CLIENT  // ne rien faire (?)
-            /*
-            ERR_UMODEUNKNOWNFLAG (501)
-            :<reason> 
-            Returned by the server to indicate that a MODE 
-            message was sent with a nickname parameter 
-            and that the mode flag sent was not recognised 
-            s*/
-        }
+            user->setSendCache(ERR_UMODEUNKNOWNFLAG());
         return ;
     }
     if (!channel->isOperator(user))

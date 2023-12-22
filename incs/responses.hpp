@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 17:57:50 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/22 14:48:53 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@
 # include "User.hpp"
 # include "Channel.hpp"
 # include "MessageQueue.hpp"
+# define HOSTNAME "localhost"
+
+std::string	_ERR_NEEDMOREPARAMS(std::string cmd, std::string reason = "command requires more parameters");
+std::string	ERR_NOSUCHCHANNEL(std::string channel, std::string reason = "no such channel");
+std::string	ERR_UMODEUNKNOWNFLAG(std::string reason = "U MODE UNKNOWN FLAG");
 
 class Channel;
 class Response

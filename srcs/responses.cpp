@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 17:57:51 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/22 15:22:55 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,71 @@ std::string	Response::_ERR_NEEDMOREPARAMS(void)
 	output << ":" << _hostname;
 	output << " 461";
 	output << " " << _request->command.name << " : command requires more parameters";
+	return (output.str());
+}
+
+std::string	ERR_NEEDMOREPARAMS(std::string cmd, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 461";
+	output << " " << cmd << " : " << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+typedef struct {
+	std::stringstream	str;
+	std::ostream	operator << (std::ostream& stream)
+	{
+		stream << str << "\r\n";
+		PRINT_DEBUG_MESSAGE(GREEN, stream.str());
+		return stream;
+	}	
+}	print;
+
+print	ERR_NOSUCHCHANNEL(std::string channel, std::string reason)
+{
+	print output;
+
+	output.str << ":" << HOSTNAME;
+	output.str << " 403";
+	output.str << " " << channel << " : " << channel;
+	return (output);
+}
+
+std::cout 
+	<< ERR_NOSUCHCHANNEL(chan, res) 
+	<< ERR_NOSUCHCHANNEL(chan, res) 
+	<< std::endl;
+*/
+
+std::string	ERR_NOSUCHCHANNEL(std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	(void)reason;
+	output << ":" << HOSTNAME;
+	output << " 403";
+	output << " " << channel << " : " << channel;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+std::string	ERR_UMODEUNKNOWNFLAG(std::string reason)
+{
+	std::stringstream	output;
+
+	(void)reason;
+	output << ":" << HOSTNAME;
+	output << " 501";
+	output << " : " << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 
