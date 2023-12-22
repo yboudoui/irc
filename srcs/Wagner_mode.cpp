@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 17:45:05 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/22 12:25:06 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@
 #include <string>
 
 
+#include <cstdlib>
+#include <cstdio>
 
-
+#define ERR_NEEDMOREPARAMS(cmd, reason)  ":localhost 461 " + std::string(cmd) + " :" + std::string(reason)
 
 /*
 enum ChannelModes {
@@ -34,17 +36,18 @@ void Channel::ProcessModeCmd(User* user,
     const std::string& command,
     t_params& params)
 {
-    (void)params;
-    (void)command;
     (void)user;
     char op = '+';  // Opérateur par défaut
-
     for (size_t i = 0; i < command.size(); ++i) {
         char c = command[i];
-        if (c == '+' || c == '-') {
-            op = c; // Mettre à jour l'opérateur en cours
-        } else {
+
             switch (c) {
+                case '+' :
+                case '-' :
+                    op = c; // Mettre à jour l'opérateur en cours
+                    break;
+
+                // 			_users_map.insert(std::make_pair(user, NONE));
                 case 'i':
                     std::cout << "INVITE_ONLY [" << op << "]" << std::endl;
                     this->setMode(op, INVITE_ONLY);
@@ -99,52 +102,38 @@ void Channel::ProcessModeCmd(User* user,
                         
                     }
                     else 
-                        this->setMode(op, KEY_PROTECTED);
-                    break;
-                case 'l':
-                    std::cout << "USER_LIMIT [" << op << "]" << std::endl;
-                    
-                    if (params.empty() && op == '+')
                     {
-                        std::cout << "ERR_NEEDMOREPARAMS [461]" << std::endl;
-                        /*
-                        ERR_NEEDMOREPARAMS (461) 
-                        <command> :<reason>
-                        */
+                        this->setMode(op, KEY_PROTECTED);
+                    }
+                    break;
+                
+                case 'o':
+                    std::cout << "OPERATOR [" << op << "]" << std::endl;
+                    
+                    if (params.empty())
+                    {
+                        std::cout << "reply : " << ERR_NEEDMOREPARAMS("MODE", "nickname is missing (o)");
                        break;
                     }
-                    if (op == '+')
-                    {
-                        std::string limit = *params.begin();
-                        int i_limit;
-                        params.pop_front();
-                        if (limit.find_first_not_of("0123456789"))
-                        {
-                            this->setMode(op, USER_LIMIT);
-                          	std::stringstream ss;
-                            ss << limit;
-                            ss >> i_limit;
-                            this->setLimit(i_limit);
-                            //TODO check stringstream
-                            
-                        }
-                        else 
-                        {
-                            std::cout << "error keyset" << std::endl;
-                            /*
-                            ERR_KEYSET (467)
-                            <channel> :<reason>
-                            Returned when the channel key for a 
-                            channel has already been set 
-                            */  
-                        }
-                    }
+                    // search user and give him op priv.
+                
+                    User* ChannelUser;
+                    ChannelUser = findUser(*params.begin());
+                    params.pop_front();
+                    if(ChannelUser)
+                        (_users_map.find(ChannelUser))->second = OPERATOR;
                     else
                     {
-                      this->setMode(op, USER_LIMIT);
+                    std::cout << "ERR_NOSUCHNICK [401]" << std::endl;
+                    // ERR_NOSUCHNICK (401)
+                    // <nick> :<reason> 
+                    // Used to indicate the nickname parameter supplied 
+                    // to a command is currently unused 
                     }
                     break;
+                
                 default:
+                    std::cout << "ERR_UNKNOWNMODE [472]" << std::endl;
                     /*
                     ERR_UNKNOWNMODE (472)
                     <char> :<reason>
@@ -152,7 +141,7 @@ void Channel::ProcessModeCmd(User* user,
                     */
                     break;
             }
-        }
+        
     }
 }
 
@@ -215,7 +204,7 @@ void	Wagner::cmd_mode(void)
         */
         return ;
     }
-    if (!channel->isOnChannel(user))
+    if (!channel->isInChannel(user))
     {
         std::cout << "ERR_NOTONCHANNEL " << user->getNickname() << std::endl;
         // TODO REPLY ERROR
@@ -249,12 +238,17 @@ define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
    however, on anyone `deopping' themselves (using "-o").  Numeric
    Replies:
 
-    ERR_NEEDMOREPARAMS (461) <command> :<reason>  Returned by the server by any command which requires more parameters than the number of parameters given 
+    ERR_NEEDMOREPARAMS (461)
+    <command> :<reason>  
+    Returned by the server by any command which requires
+     more parameters than the number of parameters given 
+
     ERR_CHANOPRIVSNEEDED (482) 
     <channel> :<reason> 
     Returned by any command requiring special channel 
     privileges (eg. channel operator) to indicate 
     the operation was unsuccessful 
+
     ERR_NOTONCHANNEL (442) 
     <channel> :<reason>   Returned by the server 
     whenever a client tries to perform a channel 
@@ -276,7 +270,8 @@ define _WHOIS(pf, c, r, a a, d) "sd sdf sd sd";
 
     ERR_NOSUCHNICK (401)
     <nick> :<reason> 
-    Used to indicate the nickname parameter supplied to a command is currently unused 
+    Used to indicate the nickname parameter supplied 
+    to a command is currently unused 
     
     ERR_KEYSET (467)
     <channel> :<reason>

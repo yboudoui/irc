@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 17:46:19 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/21 14:39:02 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,12 @@ void	Channel::join(User* user, std::string usr_password)
 		return ;
 	t_users_map::iterator it = _users_map.find(user);
 	if (it == _users_map.end())
-		_users_map.insert(std::make_pair(user, NONE));
+	{
+		if (!_users_map.size())
+			_users_map.insert(std::make_pair(user, OPERATOR));
+		else
+			_users_map.insert(std::make_pair(user, NONE));
+	}
 }
 
 void	Channel::send(User* user, Response reply)
@@ -107,18 +112,18 @@ void afficherEnBinaire(int nombre) {
 
 void Channel::setMode(char op, enum ChannelModes mode)
 {
-	std::cout << "setMode 1 :" ;
-	 afficherEnBinaire(_modes) ;
-	std::cout << std::endl;
-	{
+	// std::cout << "setMode 1 :" ;
+	//  afficherEnBinaire(_modes) ;
+	// std::cout << std::endl;
+	// {
     if (op == '+')
         _modes |= mode;
     else
         _modes &= ~mode;
-	}
-	std::cout << "setMode 2 :" ;
-	 afficherEnBinaire(_modes) ;
-	std::cout << std::endl;
+	// }
+	// std::cout << "setMode 2 :" ;
+	//  afficherEnBinaire(_modes) ;
+	// std::cout << std::endl;
 
 }
 
@@ -138,11 +143,41 @@ void Channel::setLimit(int limit)
 
 bool Channel::isOperator(User* user)
 {
-	// TODO check the user rights,
-	// if he can change the modes / kick /invite etc.
-	(void)user;
+	t_users_map::iterator	it = _users_map.begin();
+	t_users_map::iterator	ite = _users_map.end();
+
+	it = _users_map.find(user);
+	if (it == ite)
+		return false;
+	if (it->second == OPERATOR)
+		return true;
+	return false;
+}
+
+bool Channel::isInChannel(User* user)
+{
+	t_users_map::iterator	it = _users_map.begin();
+	t_users_map::iterator	ite = _users_map.end();
+
+	it = _users_map.find(user);
+	if (it == ite)
+		return false;
 	return true;
 }
+
+User * Channel::findUser(std::string nick)
+{
+	t_users_map::iterator	it = _users_map.begin();
+	t_users_map::iterator	ite = _users_map.end();
+
+	for ( ; it != ite ; it++)
+	{
+		if ((it->first)->getNickname() == nick)
+			return it->first;
+	}
+	return NULL;
+}
+
 
 bool Channel::canJoin(User* user, std::string usr_password)
 {
@@ -155,6 +190,9 @@ bool Channel::canJoin(User* user, std::string usr_password)
 	// 475 cannot join Channel () (KEY_PROTECTED)
 	// 473 cannot join Channel () (INVITE_ONLY)
 	// 464 bad channel key	(KEY_PROTECTED && usr_password != key)
+
+	// check aslo channel user limit
+	// !! delete user from user_map when he QUIT
 	(void)user;
 	(void)usr_password;
 	return true;

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 10:44:03 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/21 14:46:38 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,12 @@ enum ChannelModes {
     USER_LIMIT		= 1 << 3    // 01000
 };
 
+
 typedef enum e_user_right {
 	NONE,
+	OPERATOR,
 }	t_user_right;
+
 
 class Channel
 {
@@ -107,6 +110,9 @@ class Channel
 		void setKey(std::string pass);
 		void setLimit(int limit);
 		bool isOperator(User* user);
+		bool isInChannel(User* user);
+		User* findUser(std::string nick);
+
 		bool canJoin(User* user, std::string usr_password);
 
 		void ProcessModeCmd(User* user,
