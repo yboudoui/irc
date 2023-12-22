@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/21 14:46:38 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/22 14:10:06 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,16 +118,34 @@ class Channel
 		void ProcessModeCmd(User* user,
 			const std::string& command,t_params& params);
 };
+#include "BiMultiMap.hpp"
+
 class ChannelMap
 {
 	private:
+		BiMultiMap<User*, Channel*>	_bimap;
+
 		typedef	std::map<std::string, Channel*>	t_channel_map;
+		typedef	std::map<User*, t_user_right>	t_users_map;
+/*
+		typedef std::multimap<Channel*, User*>												t_channels_to_users;
+		typedef std::pair <t_channels_to_users::iterator, t_channels_to_users::iterator>	t_channels_to_users_range;
+
+		typedef std::multimap<User*, Channel*>												t_users_to_channels;
+		typedef std::pair <t_users_to_channels::iterator, t_users_to_channels::iterator>	t_users_to_channels_range;
+
+		t_users_to_channels		_users_to_channels;
+		t_channels_to_users		_channels_to_users;
+*/
 		t_channel_map							_channel_map;
+		void	remove(User* user);
+		void	remove(Channel* channel);
 
 	public:
 		ChannelMap();
 		~ChannelMap();
 		bool		send(std::string name, User* user, Response reply);
+		bool		sendToAllChannelOfUser(User* user, Response reply);
 		Channel*	find(std::string name);
 		Channel*	find_or_create(std::string name);
 };

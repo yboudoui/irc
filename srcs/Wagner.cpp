@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/21 14:11:08 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/22 14:09:52 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,16 @@ void	Wagner::cmd_quit(void)
 	DEBUG_CALL_WAGNER
 	// TODO : envoyer message d'info aux autres utilisateurs
 	// TODO : supprimer le user de toutes les channels
+
+	std::string	message = "default message quit";
+	if (request->params.empty() == false)
+	{
+		message = request->params.back();
+		request->params.pop_back();
+	}
+
+	reply.setMessage(message);
+	//_channel(user).send(Response::QUIT).toAllChannel();
 	user->is_alive(false);
 }
 
@@ -164,6 +174,7 @@ void	Wagner::cmd_privmsg(void)
 	{
 		receiver = request->params.front().substr(1);
 		request->params.pop_front();
+		//_channel(user).send(Response::QUIT).toChannel(receiver);
 		if (_channel_map.send(receiver, user, reply) == false)
 			continue; // but still an error or message to someone
 	}

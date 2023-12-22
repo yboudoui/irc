@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/20 08:51:05 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/22 14:07:33 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define User_HPP
 
 # include "Colors.hpp"
+# include "User.hpp"
 # include "SocketConnection.hpp"
 # include <string>
 
@@ -22,12 +23,12 @@
 class User : public SocketConnection
 {
 	private:
-		int					_connection_complete;
-		std::string			_username;
-		std::string			_hostname;
-		std::string			_servername;
-		std::string			_realname;
-		std::string			_nickname;
+		int						_connection_complete;
+		std::string				_username;
+		std::string				_hostname;
+		std::string				_servername;
+		std::string				_realname;
+		std::string				_nickname;
 		~User();
 
 	public:

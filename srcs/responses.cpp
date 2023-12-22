@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 16:42:43 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 17:57:51 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ Response::Response(void)
 	_pfonc_map[11]	= &Response::_464_ERR_PASSWDMISMATCH;
 	_pfonc_map[12]	= &Response::_PONG;
 	_pfonc_map[13]	= &Response::_PRIVMSG;
+	_pfonc_map[14]	= &Response::_QUIT;
 
 }
 
@@ -217,5 +218,13 @@ std::string	Response::_PRIVMSG(void)
 	output << " PRIVMSG ";
 	output << "#" << _channel->getName();
 	output << " " << _message;
+	return (output.str());
+}
+
+std::string	Response::_QUIT(void)
+{
+	std::stringstream	output;
+
+	output << " QUIT " << _message;
 	return (output.str());
 }

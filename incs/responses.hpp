@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 16:34:37 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/19 17:57:50 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ class Response
 			ERR_PASSWDMISMATCH		= (1UL << 11),
 			PONG					= (1UL << 12),
 			PRIVMSG					= (1UL << 13),
-			MAX_REPONSE_CODE		= 14,
+			QUIT					= (1UL << 14),
+			MAX_REPONSE_CODE		= 15,
 		}	t_reponse_code;
 		void			setHostName(std::string hostName);
 		void			setUser(User* user);
@@ -95,7 +96,7 @@ class Response
 		std::string	_PONG(void);
 		std::string	_RPL_WHOISUSER(void);
 		std::string	_PRIVMSG(void);
-
+		std::string	_QUIT(void);
 };
 
 #endif

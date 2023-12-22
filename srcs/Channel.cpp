@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/21 14:39:02 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/22 14:10:30 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,51 @@ ChannelMap::~ChannelMap()
 
 }
 
+void	ChannelMap::remove(User* user)
+{
+
+	if (user == NULL)
+		return ;
+	_bimap.remove(user);
+/*
+	t_users_to_channels_range		user_range;
+	t_channels_to_users_range		channel_range;
+	t_channels_to_users::iterator	pos;
+
+	user_range = _users_to_channels.equal_range(user);
+	if (user_range->first == _users_to_channels.end())
+		return ;
+	for (t_users_to_channels::iterator u = user_range->first; u != user_range->second; u++)
+	{
+		channel_range = _channels_to_users.equal_range(u->second);
+		pos = std::find_if(channel_range->first, channel_range->second, value_equals<Channel*,User*>(user));
+		_channels_to_users.erase(pos);
+	}
+	_users_to_channels.erase(user);
+*/
+}
+
+void	ChannelMap::remove(Channel* channel)
+{
+	if (channel == NULL)
+		return ;
+	_bimap.remove(channel);
+
+}
+
 bool		ChannelMap::send(std::string name, User* user, Response reply)
 {
 	Channel*	channel = find(name);
 	if (channel)
 		return (channel->send(user, reply), true);
 	return (false);
+}
+
+bool		ChannelMap::sendToAllChannelOfUser(User* user, Response reply)
+{
+	(void)user;
+	(void)reply;
+	return (true);
 }
 
 Channel*	ChannelMap::find(std::string name)
