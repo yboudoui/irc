@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 14:09:52 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/22 16:02:24 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 	User*	user = new User(queue, fd_socketBind);
 	if (user == NULL)
 		return ; // error
-	_clients.insert(user); //sure?
+	_clients.insert(user);
 }
 
 void	Wagner::treatEventListener(IQueue::IEventListener* listener)

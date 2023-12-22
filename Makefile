@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/20 07:16:21 by sethomas         ###   ########.fr        #
+#    Updated: 2023/12/22 16:15:55 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ DEPS				:=	$(OBJS:%.o=%.d)
 
 CXX					=	clang++
 
-CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG -fsanitize=address
+CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG# -fsanitize=address
 
 RM					=	rm -f
 

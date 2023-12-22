@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 12:30:14 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/22 16:16:47 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "Queue.hpp"
 #include "SocketBind.hpp"
 #include "Wagner.hpp"
-
+#include <signal.h>
 /*
 nc 127.0.0.1 8080 
 ctrl+V ctrl+M  retrun (\r\n)
@@ -46,7 +46,7 @@ int	main(int argc, char *argv[])
 	argc -= 1;
 	argv += 1;
 	if (argc != 2) {
-		std::cout << "This software require 2 argument : <port> <password>" << std::endl;
+		std::cerr << "This software require 2 argument : <port> <password>" << std::endl;
 		return (1);
 	}
 
@@ -61,9 +61,20 @@ int	main(int argc, char *argv[])
 	
 	Queue	queue = Queue(_wagner);
 
+	struct sigaction	signals[2] = {};
+	signals[0].sa_handler = queue.stop;
+	signals[1].sa_handler = SIG_IGN;
+
+	if (sigaction(SIGINT, &signals[0], NULL) == -1 && sigaction(SIGINT, &signals[1], NULL) == -1)
+	{
+		std::cerr << "Unable to set sigaction handler" << std::endl;
+		return (1);
+	}
+
 	SocketBind*	sock = new SocketBind(_wagner, queue, port);
 
 	std::cout << "localhost:" << port << std::endl;
+
 	while (queue.event_loop());
 	IQueue::IEventListener::free(sock);
 	return (0);

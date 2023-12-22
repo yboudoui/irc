@@ -6,11 +6,13 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 17:04:13 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/22 16:14:48 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Queue.hpp"
+
+bool	Queue::_stop = false;
 
 Queue::Queue(IOrchestrator& orchestrator, size_t max_events)
 	: _max_events(max_events)
@@ -44,6 +46,8 @@ bool	Queue::event_loop(void)
 {
 	int	num_events;
 
+	if (_stop)
+		return (false);
 	num_events = epoll_wait(_epoll_instance, _events_list, _max_events, 0);
 	if (num_events < 0)
 	{
@@ -76,4 +80,9 @@ Queue::~Queue()
 	delete [] _events_list;
 }
 
+void	Queue::stop(int sig_value)
+{
+	(void)sig_value;
+	_stop = true;
+}
 
