@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 12:18:21 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 13:08:52 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ std::string	ERR_NORECIPIENT(std::string reason = "no recipient is given with the
 std::string	ERR_NOTEXTTOSEND(std::string reason = "no message given");
 std::string	ERR_CANNOTSENDTOCHAN(std::string channel, std::string reason = "no rights to send text to the channel");
 std::string	ERR_TOOMANYTARGETS(std::string target, std::string reason = "the given target is ambigous");
-std::string	ERR_NOSUCHNICK(std::string nick, std::string reason = "the nickname parameter supplied to the command is currently unused");
+//std::string	ERR_NOSUCHNICK(std::string nick, std::string reason = "the nickname parameter supplied to the command is currently unused");
 
 class Response
 {

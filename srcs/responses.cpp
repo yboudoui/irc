@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 12:18:37 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 13:09:57 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,7 +347,8 @@ std::string	ERR_NOSUCHNICK(std::string channel, std::string nickname, std::strin
 	(void)nickname;
 	output << ":" << HOSTNAME;
 	output << " 401";
-	output << " #" << channel;
+	if (channel.size())
+		output << " #" << channel;
 	output << " " << nickname;
 	output << " :" << reason;
 	output << "\r\n";
@@ -659,24 +660,7 @@ std::string	ERR_TOOMANYTARGETS(std::string target, std::string reason)
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
-/*
-ERR_NOSUCHNICK (401)
-<nick> :<reason> 
-Used to indicate the nickname
-parameter supplied to a command is currently unused
-*/
-std::string	ERR_NOSUCHNICK(std::string nick, std::string reason)
-{
-	std::stringstream	output;
 
-	output << ":" << HOSTNAME;
-	output << " 401";
-	output << " " << nick;
-	output << " :" << reason;
-	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
-	return (output.str());
-}
 /*
 ERR_NOTOPLEVEL (413) ??? ON NE GERE PAS LES MASQUES ?
 <mask> :<reason>

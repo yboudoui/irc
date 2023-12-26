@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 12:37:54 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 13:09:12 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,5 @@ void	Wagner::cmd_privmsg(void)
 		return(target_user->setSendCache(response));
 
 	}
-	return(user->setSendCache(ERR_NOSUCHNICK(s_target)));
+	return(user->setSendCache(ERR_NOSUCHNICK("", s_target)));
 }

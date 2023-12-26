@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 10:52:43 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 12:46:28 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ enum ChannelModes {
 typedef enum e_user_right {
 	NONE,
 	OPERATOR,
+	INVITED,
 }	t_user_right;
 
 
@@ -101,23 +102,30 @@ class Channel
 		~Channel();
 
 		void		join(User* user, std::string usr_password);
-		//void		send(User* user, Response response);
 		void		send(std::string senderNickname, std::string message);
+		
+		// getters
+		int			getLimit(void);
+		std::string getChannelModes();
 		std::string	getName(void);
 		std::string	getTopic(void);
+		bool		getMode(enum ChannelModes mode);
 
-		std::string getChannelModes();
-		bool getMode(enum ChannelModes mode);
-		void setMode(char op, enum ChannelModes mode);
-		void setKey(std::string pass);
-		void setTopic(std::string topic);
-		void setLimit(int limit);
-		bool isOperator(User* user);
-		bool isInChannel(User* user);
-		User* findUser(std::string nick);
+		// setters 
+		void	setMode(char op, enum ChannelModes mode);
+		void	setKey(std::string pass);
+		void	setTopic(std::string topic);
+		void	setLimit(int limit);
+		
+		// checkers
+		bool	isOperator(User* user);
+		bool	isInChannel(User* user);
+		bool	canJoin(User* user, std::string usr_password);
 
-		bool		canJoin(User* user, std::string usr_password);
-		void		ProcessModeCmd(User* user, const std::string& command,t_params& params);
+		// others
+		User*	findUser(std::string nick);
+
+		void	ProcessModeCmd(User* user, const std::string& command,t_params& params);
 };
 
 
@@ -137,7 +145,6 @@ class ChannelMap
 		~ChannelMap();
 
 		bool		send(std::string channelName, std::string senderNickname, std::string message);
-		//bool		sendToAllChannelOfUser(User* user, Response reply);
 		bool		sendToAllChannelOfUser(User* user, std::string message);
 
 		Channel*	find(std::string name);

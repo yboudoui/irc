@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 09:22:49 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 12:58:46 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,45 @@ If a JOIN is successful, the user is then sent the channel's topic
 RPL_NAMREPLY), which must include the user joining.
 
 Numeric Replies:
-        ERR_NEEDMOREPARAMS              ERR_BANNEDFROMCHAN
-        ERR_INVITEONLYCHAN              ERR_BADCHANNELKEY
-        ERR_CHANNELISFULL               ERR_BADCHANMASK
-        ERR_NOSUCHCHANNEL               ERR_TOOMANYCHANNELS
-        RPL_TOPIC
+
+ERR_NEEDMOREPARAMS (461)
+<command> :<reason>	
+
+ERR_INVITEONLYCHAN (473) //canJoin
+<channel> :<reason>
+Returned when attempting to join a channel which is invite only without an invitation
+
+ERR_BADCHANNELKEY (475) //canJoin
+<channel> :<reason>
+Returned when attempting to join a key-locked
+channel either without a key or with the wrong key
+
+ERR_CHANNELISFULL (471) // canJoin
+<channel> :<reason>
+Returned when attempting to join
+a channel which is set +l and is already full
+
+
+
+	ERR_NOSUCHCHANNEL (403)
+	Used to indicate the given channel name is invalid, or does not exist
+
+	RPL_TOPIC
+Erreurs non gerees
+	ERR_TOOMANYCHANNELS (405)
+	<channel> :<reason>
+	Sent to a user when they have joined the maximum number
+	of allowed channels and they tried to join another channel
+
+	ERR_BADCHANMASK (476)
+	<channel> :<reason>
+	The given channel mask was invalid
+
+	ERR_BANNEDFROMCHAN (474)
+	<channel> :<reason>	
+	Returned when attempting to join a channel a user is banned from
+
+
 */
 
 // TODO 

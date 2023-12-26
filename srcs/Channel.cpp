@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 11:54:55 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 12:47:50 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ std::string	Channel::getName(void)
 	return _name;
 }
 
+int	Channel::getLimit(void)
+{
+	return _userLimit;
+}
+
 std::string	Channel::getTopic(void)
 {
 	return _topic;
@@ -80,7 +85,6 @@ ChannelMap::~ChannelMap()
 
 void	ChannelMap::remove(User* user)
 {
-
 	if (user == NULL)
 		return ;
 //	_bimap.remove(user);
@@ -102,7 +106,6 @@ bool		ChannelMap::send(std::string channelName, std::string senderNickname, std:
 }
 
 // TODO ??? 
-//bool		ChannelMap::sendToAllChannelOfUser(User* user, Response reply)
 bool		ChannelMap::sendToAllChannelOfUser(User* user, std::string message)
 {
 	(void)user;
@@ -156,8 +159,6 @@ std::string Channel::getChannelModes() {
     return  modes;
 }
 
-
-
 void Channel::setKey(std::string pass)
 {
     _key = pass;
@@ -196,20 +197,6 @@ bool Channel::isInChannel(User* user)
 	return true;
 }
 
-User * Channel::findUser(std::string nick)
-{
-	t_users_map::iterator	it = _users_map.begin();
-	t_users_map::iterator	ite = _users_map.end();
-
-	for ( ; it != ite ; it++)
-	{
-		if ((it->first)->getNickname() == nick)
-			return it->first;
-	}
-	return NULL;
-}
-
-
 bool Channel::canJoin(User* user, std::string usr_password)
 {
 	// TODO check if the user can join the channel,
@@ -227,4 +214,18 @@ bool Channel::canJoin(User* user, std::string usr_password)
 	(void)user;
 	(void)usr_password;
 	return true;
+}
+
+
+User * Channel::findUser(std::string nick)
+{
+	t_users_map::iterator	it = _users_map.begin();
+	t_users_map::iterator	ite = _users_map.end();
+
+	for ( ; it != ite ; it++)
+	{
+		if ((it->first)->getNickname() == nick)
+			return it->first;
+	}
+	return NULL;
 }

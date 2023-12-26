@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 08:54:12 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 12:42:54 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ User* UserToInvite = findUser(nickToInvite);
 user->setSendCache(ERR_USERONCHANNEL(<channelName>, nickToInvite)));
 
 7. si tout est OK :
-	- ajouter le user à la channel 
+	- ajouter le user à la channel / set user mode to INVITED
 	(je crois que c'est inutile de faire un vector d'invites )
 user->setSendCache(RPL_INVITING(<nickToInvite>, channel)));
 
