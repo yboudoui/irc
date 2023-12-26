@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 07:49:54 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:19:50 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,13 @@ void	Wagner::cmd_pass(void)
 {
 	DEBUG_CALL_WAGNER
 	if (user->isConnected())
-		return(user->setSendCache(ERR_ALREADYREGISTRED(user->getNickname())));
+		return(user->setSendCache(ERR_ALREADYREGISTRED(user->nick_name.get())));
 	if (request->params.empty())
 		return(user->setSendCache(ERR_NEEDMOREPARAMS("", "PASS", "please type a password" )));
 	if (request->params.front() != _pass)
-		return(user->setSendCache(ERR_PASSWDMISMATCH(user->getNickname())));
+		return(user->setSendCache(ERR_PASSWDMISMATCH(user->nick_name.get())));
 	return (user->connectionStep());
 }
-
-
 
 void	Wagner::cmd_nick(void)
 {
@@ -45,14 +43,14 @@ void	Wagner::cmd_nick(void)
 		/* STEP #2 : check if the new nickname is already in use */
 		for (t_clients::iterator it = _clients.begin(); it != _clients.end(); it++)
 		{
-			std::cout << "TODO : le bug est ici :" << std::endl;
+//			std::cout << "TODO : le bug est ici :" << std::endl; QUEL BUG?
 			if ((*it)->is_alive() && *it != user)
 			{
-			if ((*it)->getNickname() == nickname)
-				return (user->setSendCache(ERR_NICKNAMEINUSE(nickname)));
+				if ((*it)->nick_name.get() == nickname)
+					return (user->setSendCache(ERR_NICKNAMEINUSE(nickname)));
 			}
 		}
-		user->setNickname(nickname);
+		user->nick_name.set(nickname);
 		user->connectionStep();
 	}
 }
@@ -71,10 +69,10 @@ void	Wagner::cmd_user(void)
 		{
 			switch (idx)
 			{
-				case 0 : user->setUsername(request->params[idx]);	break;
-				case 1 : user->setHostname(request->params[idx]);	break;
-				case 2 : user->setServername(request->params[idx]);	break;
-				case 3 : user->setRealname(request->params[idx]);	break;
+				case 0 : user->user_name.set(request->params[idx]);	break;
+				case 1 : user->host_name.set(request->params[idx]);	break;
+				case 2 : user->server_name.set(request->params[idx]);	break;
+				case 3 : user->real_name.set(request->params[idx]);	break;
 				default: break;
 			}
 		}
@@ -88,6 +86,6 @@ void	Wagner::cmd_user(void)
 		user->setSendCache(RPL_MYINFO()); //004
 		return ;
 	}
-	user->setSendCache(ERR_PASSWDMISMATCH(user->getNickname()));
+	user->setSendCache(ERR_PASSWDMISMATCH(user->nick_name.get()));
 	user->is_alive(false);
 }

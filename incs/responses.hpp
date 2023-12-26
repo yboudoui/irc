@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 14:35:26 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:46:41 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "MessageQueue.hpp"
 # define HOSTNAME "localhost"
 
+class User;
 class Channel;
 
 // MODE

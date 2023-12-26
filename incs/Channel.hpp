@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 14:08:19 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:46:21 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,12 @@
 # include "available.hpp"
 # include "responses.hpp"
 # include "Message.hpp"
+# include "User.hpp"
 
+
+# include "getset.hpp"
+
+class User;
 class Response;
 # define DEBUG_CALL_CHANNEL PRINT_DEBUG_CALL(RED, Channel)
 /*
@@ -83,39 +88,34 @@ typedef enum e_user_right {
 class Channel
 {
 	private:
-		std::string					_name;
-		std::string					_key;
-		std::string					_topic;
-		//SocketConnection&				_operator;
+		available<std::string>		_key;
 
-		int							_userLimit;
 		int							_modes;
 
 		typedef	std::map<User*, t_user_right>	t_users_map;
 
 		t_users_map	_users_map;
-//		std::vector<SocketConnection&>	_UsersInvited;
 
 	public:
+		get_set<std::string>	name;
+		get_set<std::string>	topic;
+		get_set<size_t>			limit;
+
 		Channel();
 		Channel(std::string name);
 		~Channel();
 
-		bool		join(User* user, std::string usr_password);
+		void		join(User* user, std::string usr_password);
+		void		remove(User* user);
 		void		send(std::string senderNickname, std::string message);
 		
 		// getters
-		int			getLimit(void);
 		std::string getChannelModes();
-		std::string	getName(void);
-		std::string	getTopic(void);
 		bool		getMode(enum ChannelModes mode);
 
 		// setters 
 		void	setMode(char op, enum ChannelModes mode);
 		void	setKey(std::string pass);
-		void	setTopic(std::string topic);
-		void	setLimit(int limit);
 		
 		// checkers
 		bool	isOperator(User* user);
@@ -127,29 +127,6 @@ class Channel
 		User*	findUser(std::string nick);
 
 		void	ProcessModeCmd(User* user, const std::string& command,t_params& params);
-};
-
-
-class ChannelMap
-{
-	private:
-
-		typedef	std::map<std::string, Channel*>	t_channel_map;
-		typedef	std::map<User*, t_user_right>	t_users_map;
-		t_channel_map	_channel_map;
-
-		void			remove(User* user);
-		void			remove(Channel* channel);
-
-	public:
-		ChannelMap();
-		~ChannelMap();
-
-		bool		send(std::string channelName, std::string senderNickname, std::string message);
-		bool		sendToAllChannelOfUser(User* user, std::string message);
-
-		Channel*	find(std::string name);
-		Channel*	find_or_create(std::string name);
 };
 
 #endif

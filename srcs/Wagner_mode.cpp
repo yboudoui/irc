@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/24 10:28:59 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:25:44 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,11 @@
 #include <stdlib.h>
 #include <string>
 
-void Channel::ProcessModeCmd(User* user, 
-    const std::string& cmd,
-    t_params& params)
+void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& params)
 {
-    char op = '+';
-    for (size_t i = 0; i < cmd.size(); ++i) {
+	char op = '+';
+	for (size_t i = 0; i < cmd.size(); ++i)
+	{
         char c = cmd[i];
 
             switch (c) {
@@ -37,12 +36,12 @@ void Channel::ProcessModeCmd(User* user,
                 case 'k':
                     if (params.empty() && op == '+')
                     {
-                        user->setSendCache(ERR_NEEDMOREPARAMS(this->getName(), "MODE", "please type a password (+k)"));
+                        user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type a password (+k)"));
                        break;
                     }
                     if (this->getMode(KEY_PROTECTED) && op == '+')
                     {
-                        user->setSendCache(ERR_KEYSET(user->getNickname(), this->getName()));
+                        user->setSendCache(ERR_KEYSET(user->nick_name.get(), name.get()));
                        break;  
                     }
                     if (op == '+')
@@ -55,17 +54,15 @@ void Channel::ProcessModeCmd(User* user,
                             this->setKey(pass);
                         }
                         else 
-                            user->setSendCache(ERR_KEYSET(user->getNickname(), this->getName(), "please type an alnum password"));
+                            user->setSendCache(ERR_KEYSET(user->nick_name.get(), name.get(), "please type an alnum password"));
                     }
-                    else 
-                    {
+                    else
                         this->setMode(op, KEY_PROTECTED);
-                    }
                     break;
                 case 'l' :
                     if (params.empty() && op == '+')
                     {
-                        user->setSendCache(ERR_NEEDMOREPARAMS(this->getName(), "MODE", "please type user limit (+l)"));
+                        user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type user limit (+l)"));
                        break;
                     }
                     if (op == '+')
@@ -82,7 +79,7 @@ void Channel::ProcessModeCmd(User* user,
                             this->setLimit(limit);
                         }
                         else 
-                            user->setSendCache(ERR_NEEDMOREPARAMS(this->getName(), "MODE", "please type a numeric user limit (+l)"));
+                            user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type a numeric user limit (+l)"));
                     }
                     else 
                     {
@@ -92,7 +89,7 @@ void Channel::ProcessModeCmd(User* user,
                 case 'o':
                     if (params.empty())
                     {
-                        user->setSendCache(ERR_NEEDMOREPARAMS(this->getName(), "MODE", "please type a nickname (o)"));
+                        user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type a nickname (o)"));
                         break;
                     }
                     {
@@ -107,12 +104,12 @@ void Channel::ProcessModeCmd(User* user,
                     if(ChannelUser)
                         (_users_map.find(ChannelUser))->second = OPERATOR;
                     else
-                        user->setSendCache(ERR_NOSUCHNICK(this->getName(), s_ChannelUser));
+                        user->setSendCache(ERR_NOSUCHNICK(name.get(), s_ChannelUser));
                     }
                     break;
                 
                 default:
-                    user->setSendCache(ERR_UNKNOWNMODE(this->getName(), c));
+                    user->setSendCache(ERR_UNKNOWNMODE(name.get(), c));
                     break;
             }
         
@@ -132,32 +129,32 @@ void	Wagner::cmd_mode(void)
     
     if (!s_channel.empty() && s_channel[0] == '#')
         s_channel = s_channel.substr(1);
-    Channel* channel = _channel_map.find(s_channel);
+    Channel* channel = find_channel(s_channel);
     if (!channel)
     {
         if (!findClient(s_channel))
-            user->setSendCache(ERR_NOSUCHCHANNEL(user->getNickname(), s_channel));
+            user->setSendCache(ERR_NOSUCHCHANNEL(user->nick_name.get(), s_channel));
         else
-            user->setSendCache(ERR_UMODEUNKNOWNFLAG(user->getNickname()));
+            user->setSendCache(ERR_UMODEUNKNOWNFLAG(user->nick_name.get()));
         return ;
     }
     if (!channel->isInChannel(user))
     {
-        user->setSendCache(ERR_NOTONCHANNEL(user->getNickname(), s_channel));
+        user->setSendCache(ERR_NOTONCHANNEL(user->nick_name.get(), s_channel));
         return ;
     }
     if (!request->params.empty())
     {
         if (!channel->isOperator(user))
         {
-            user->setSendCache(ERR_CHANOPRIVSNEEDED(user->getNickname(), s_channel));
+            user->setSendCache(ERR_CHANOPRIVSNEEDED(user->nick_name.get(), s_channel));
             return ;
         }
         s_modes = *request->params.begin();
         request->params.pop_front();
         channel->ProcessModeCmd(user, s_modes, request->params);
     }
-    user->setSendCache(RPL_CHANNELMODEIS(user->getNickname(), channel));
+    user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
 }
 
 

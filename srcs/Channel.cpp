@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 14:10:14 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:46:58 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ Channel::Channel()
 }
 
 Channel::Channel(std::string name)
-	: _name(name), _modes(0)
+	: _modes(0)
 {
 	DEBUG_CALL_CHANNEL
+	this->name.set(name);
 }
 
 Channel::~Channel()
@@ -63,15 +64,10 @@ void	Channel::send(std::string senderNickname, std::string message)
 	(void)message;
 	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
 	{
-		if (it->first->getNickname() == senderNickname)
+		if (it->first->nick_name.get() == senderNickname)
 			continue;
 		it->first->setSendCache(message);
 	}
-}
-
-std::string	Channel::getName(void)
-{
-	return _name;
 }
 
 int	Channel::getLimit(void)
@@ -79,72 +75,22 @@ int	Channel::getLimit(void)
 	return _userLimit;
 }
 
-std::string	Channel::getTopic(void)
-{
-	return _topic;
-}
-
-
-ChannelMap::ChannelMap()
-{
-
-}
-
-ChannelMap::~ChannelMap()
-{
-
-}
-
-void	ChannelMap::remove(User* user)
+void	Channel::remove(User* user)
 {
 	if (user == NULL)
 		return ;
-//	_bimap.remove(user);
-}
-
-void	ChannelMap::remove(Channel* channel)
-{
-	if (channel == NULL)
-		return ;
-//	_bimap.remove(channel);
-}
-
-bool		ChannelMap::send(std::string channelName, std::string senderNickname, std::string message)
-{
-	Channel*	channel = find(channelName);
-	if (channel)
-		return (channel->send(senderNickname, message), true);
-	return (false);
+	//_users_map.remove >>
 }
 
 // TODO ??? 
+/*
 bool		ChannelMap::sendToAllChannelOfUser(User* user, std::string message)
 {
 	(void)user;
 	(void)message;
 	return (true);
 }
-
-Channel*	ChannelMap::find(std::string name)
-{
-	t_channel_map::iterator	it;
-
-	it = _channel_map.find(name);
-	if (it == _channel_map.end())
-		return (NULL);
-	return (it->second);
-}
-
-Channel*	ChannelMap::find_or_create(std::string name)
-{
-	t_channel_map::iterator	it;
-
-	it = _channel_map.find(name);
-	if (it == _channel_map.end())
-		it = _channel_map.insert(std::make_pair(name, new Channel(name))).first;
-	return (it->second);
-}
-
+*/
 void Channel::setMode(char op, enum ChannelModes mode)
 {
     if (op == '+')
@@ -174,10 +120,6 @@ std::string Channel::getChannelModes() {
 void Channel::setKey(std::string pass)
 {
     _key = pass;
-}
-void Channel::setTopic(std::string topic)
-{
-    _topic = topic;
 }
 
 void Channel::setLimit(int limit)
@@ -290,7 +232,7 @@ User * Channel::findUser(std::string nick)
 
 	for ( ; it != ite ; it++)
 	{
-		if ((it->first)->getNickname() == nick)
+		if ((it->first)->nick_name.get() == nick)
 			return it->first;
 	}
 	return NULL;

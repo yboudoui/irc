@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 14:24:43 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:48:36 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,9 @@ std::string	Response::_ERR_ERRONEUSNICKNAME(void)
 	std::stringstream	output;
 
 	output << ":" << _hostname;
-	output << " 432";
-	output << " " << _user->getNickname() << " : a nickname parameter is expected";
+	output << " 432 ";
+	output << _user->nick_name.get();
+	output << " : a nickname parameter is expected";
 	return (output.str());
 }
 
@@ -101,8 +102,9 @@ std::string	Response::_ERR_NICKNAMEINUSE(void)
 	std::stringstream	output;
 
 	output << ":" << _hostname;
-	output << " 433";
-	output << " " << _user->getNickname() << " :nickname already in use";
+	output << " 433 ";
+	output << _user->nick_name.get();
+	output << " :nickname already in use";
 	return (output.str());
 }
 
@@ -144,10 +146,10 @@ std::string	RPL_WELCOME(User * user)
 
 	output << ":" << HOSTNAME;
 	output << " 001 ";
-	output << user->getNickname();
+	output << user->nick_name.get();
 	output << " :Welcome to the Internet Relay Network ";
-	output << user->getNickname() << "!"+user->getUsername();
-	output << "@"+ user->getHostname();
+	output << user->nick_name.get() << "!" << user->user_name.get();
+	output << "@"+ user->host_name.get();
 	output << "\r\n";
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
@@ -328,7 +330,7 @@ std::string	RPL_CHANNELMODEIS(std::string nickname, Channel* channel)
 	output << ":" << HOSTNAME;
 	output << " 324";
 	output << " " << nickname;
-	output << " #" << channel->getName();
+	output << " #" << channel->name.get();
 	output << " " << channel->getChannelModes();
 	output << "\r\n";
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());
@@ -564,11 +566,11 @@ std::string	RPL_WHOISUSER(User * _user)
 
 	output << ":" << HOSTNAME;
 	output << " 311 ";
-	output << _user->getNickname() << " ";
-	output << _user->getNickname() << " ";
-	output << _user->getUsername() << " ";
-	output << _user->getHostname() << " ";
-	output << _user->getRealname() << " ";
+	output << _user->nick_name.get() << " ";
+	output << _user->nick_name.get() << " ";
+	output << _user->user_name.get() << " ";
+	output << _user->host_name.get() << " ";
+	output << _user->real_name.get() << " ";
 	output << "\r\n";
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());

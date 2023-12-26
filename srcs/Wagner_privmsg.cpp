@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 13:09:12 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:21:16 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,27 +58,23 @@ void	Wagner::cmd_privmsg(void)
 	if (!s_target.empty() && s_target[0] == '#')
 		s_target = s_target.substr(1);
 
-	// 3. verifier qu'il n'y a pas d'ambiguite (channel.name et unser.nickname)
-	Channel * target_channel = _channel_map.find(s_target);
-	User * target_user = findClient(s_target);
+	// 3. verifier qu'il n'y a pas d'ambiguite (channel.name et user.nickname)
+	Channel*	target_channel = find_channel(s_target);
+	User*		target_user = findClient(s_target);
+
 	if (target_channel && target_user)
 		return(user->setSendCache(ERR_TOOMANYTARGETS(s_target)));
 
-
-	response = PRIVMSG(user->getNickname(), s_target, message);
+	response = PRIVMSG(user->nick_name.get(), s_target, message);
 	if (target_channel)
 	{
 		// 4. verifier que user appartient au channel
 		if (target_channel->isInChannel(user))
-			return(target_channel->send(user->getNickname(), response));
+			return(target_channel->send(user->nick_name.get(), response));
 		else
 			return(user->setSendCache(ERR_CANNOTSENDTOCHAN(s_target)));
 	}
 	else if (target_user)
-	{
-		
 		return(target_user->setSendCache(response));
-
-	}
 	return(user->setSendCache(ERR_NOSUCHNICK("", s_target)));
 }

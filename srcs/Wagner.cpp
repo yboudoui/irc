@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 10:41:23 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:12:23 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ User*	Wagner::findClient(std::string name)
 
 	for ( ; it != ite ; it++)
 	{
-		if ((*it)->getNickname() == name)
+		if ((*it)->nick_name.get() == name)
 		{
 			return *it;
 		}
@@ -112,3 +112,22 @@ User*	Wagner::findClient(std::string name)
 	return (NULL);
 }
 
+Channel*	Wagner::find_channel(std::string name)
+{
+	t_channel_map::iterator	it;
+
+	it = _channel_map.find(name);
+	if (it == _channel_map.end())
+		return (NULL);
+	return (it->second);
+}
+
+Channel*	Wagner::find_or_create_channel(std::string name)
+{
+	t_channel_map::iterator	it;
+
+	it = _channel_map.find(name);
+	if (it == _channel_map.end())
+		it = _channel_map.insert(std::make_pair(name, new Channel(name))).first;
+	return (it->second);
+}

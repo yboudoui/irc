@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 12:11:47 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:00:10 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@ class Wagner: public IOrchestrator
 		typedef void (Wagner::*pfonc)(void);
 		typedef std::map<std::string, pfonc>			t_cmd_map;
 		typedef std::set<User*>							t_clients;
+		typedef	std::map<std::string, Channel*>			t_channel_map;
+
 
 		t_cmd_map								_cmd;
 		t_clients								_clients;
+		t_channel_map							_channel_map;
 		std::string 							_hostname;
 		std::string 							_pass;
-
-		ChannelMap								_channel_map;
 
 // Context
 		User*			user;
@@ -63,6 +64,9 @@ class Wagner: public IOrchestrator
 		void	cmd_notFound	(void);
 
 		User*		findClient(std::string name);
+		Channel*	find_or_create_channel(std::string name);
+		Channel*	find_channel(std::string name);
+
 };
 #define SELEN_ERR_NEEDMOREPARAMS(cmd, reason)       "localhost 461 " + cmd + " :" + reason
 

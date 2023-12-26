@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 14:07:33 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:18:24 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,39 @@
 # include "Colors.hpp"
 # include "User.hpp"
 # include "SocketConnection.hpp"
+# include "getset.hpp"
+# include "Channel.hpp"
 # include <string>
+# include <vector>
 
+class Channel;
 # define DEBUG_CALL_USER PRINT_DEBUG_CALL(YELLOW, User)
 
 class User : public SocketConnection
 {
 	private:
-		int						_connection_complete;
-		std::string				_username;
-		std::string				_hostname;
-		std::string				_servername;
-		std::string				_realname;
-		std::string				_nickname;
+		int										_connection_complete;
+		typedef	std::map<std::string, Channel*>	t_channels;
+		t_channels								_channels;
 		~User();
 
 	public:
 		User(IQueue &queue, int fd);
 
-		void	setUsername		(std::string name);
-		void	setHostname		(std::string name);
-		void	setServername	(std::string name);
-		void	setRealname		(std::string name);
-		void	setNickname		(std::string name);
-
-		std::string const &	getUsername		(void) const;
-		std::string const &	getHostname		(void) const;
-		std::string const &	getServername	(void) const;
-		std::string const &	getRealname		(void) const;
-		std::string const &	getNickname		(void) const;
+		get_set<std::string>	user_name;
+		get_set<std::string>	host_name;
+		get_set<std::string>	server_name;
+		get_set<std::string>	real_name;
+		get_set<std::string>	nick_name;
 
 		bool	isConnected() const;
 		void	connectionStep();
+		void	sendToAllChannels();
+/*------------------*/
+
+		void	join(Channel* channel, std::string password);
+		void	quit(Channel* channel);
+		bool	send(std::string channelName, std::string message);
 };
 
 #endif
