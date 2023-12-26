@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:53:05 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:14:59 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ class Channel
 		// getters
 		std::string getChannelModes();
 		bool		getMode(enum ChannelModes mode);
-
+		std::string		getUserList();
+	
 		// setters 
 		void	setMode(char op, enum ChannelModes mode);
 		void	setKey(std::string pass);

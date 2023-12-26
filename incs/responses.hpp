@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:46:41 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:15:13 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,10 @@ std::string	ERR_INVITEONLYCHAN(std::string channel, std::string reason = "invite
 std::string	ERR_BADCHANNELKEY(std::string channel, std::string reason = "bad channel key");
 std::string	ERR_CHANNELISFULL(std::string channel, std::string reason = "channel is full");
 std::string	ERR_BANNEDFROMCHAN(std::string channel, std::string reason = "banned ... #sorry");
+
+std::string	RPL_NAMREPLY(std::string nickname, Channel *channel);
+
+
 
 
 class Response

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:55:20 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:14:39 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,3 +228,27 @@ User * Channel::findUser(std::string nick)
 	}
 	return NULL;
 }
+
+std::string Channel::getUserList()
+{
+	t_users_map::iterator	it;
+	t_users_map::iterator	ite = _users_map.end();
+	std::string	list = "";
+	//User * user;
+	for ( it = _users_map.begin() ; it != ite ; it++)
+	{
+		if (it->second != INVITED)
+		{
+			if (it->second == OPERATOR)
+				list.append("@");
+			else
+				list.append("+");
+			//user = *it->first();
+			//list.append(user->getNickname());
+
+			list.append(" ");
+		}
+	}
+	return list;
+}
+
