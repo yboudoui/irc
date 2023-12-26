@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 13:08:52 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 14:35:26 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,13 @@ std::string	ERR_NOTEXTTOSEND(std::string reason = "no message given");
 std::string	ERR_CANNOTSENDTOCHAN(std::string channel, std::string reason = "no rights to send text to the channel");
 std::string	ERR_TOOMANYTARGETS(std::string target, std::string reason = "the given target is ambigous");
 //std::string	ERR_NOSUCHNICK(std::string nick, std::string reason = "the nickname parameter supplied to the command is currently unused");
+
+// JOIN
+std::string	ERR_INVITEONLYCHAN(std::string channel, std::string reason = "invite only channel");
+std::string	ERR_BADCHANNELKEY(std::string channel, std::string reason = "bad channel key");
+std::string	ERR_CHANNELISFULL(std::string channel, std::string reason = "channel is full");
+std::string	ERR_BANNEDFROMCHAN(std::string channel, std::string reason = "banned ... #sorry");
+
 
 class Response
 {

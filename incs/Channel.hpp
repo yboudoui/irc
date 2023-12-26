@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 12:46:28 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 14:08:19 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ class Channel
 {
 	private:
 		std::string					_name;
-		available<std::string>		_key;
+		std::string					_key;
 		std::string					_topic;
 		//SocketConnection&				_operator;
 
@@ -101,7 +101,7 @@ class Channel
 		Channel(std::string name);
 		~Channel();
 
-		void		join(User* user, std::string usr_password);
+		bool		join(User* user, std::string usr_password);
 		void		send(std::string senderNickname, std::string message);
 		
 		// getters
@@ -123,6 +123,7 @@ class Channel
 		bool	canJoin(User* user, std::string usr_password);
 
 		// others
+		int		countUser();
 		User*	findUser(std::string nick);
 
 		void	ProcessModeCmd(User* user, const std::string& command,t_params& params);

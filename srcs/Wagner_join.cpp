@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 12:58:46 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 14:42:23 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,13 @@ from other servers.  The conditions which affect this are as follows:
 	1.  the user must be invited if the channel is invite-only;
 	2.  the user's nick/username/hostname must not match any active bans;
 	3.  the correct key (password) must be given if it is set.
+
 These are discussed in more detail under the MODE command (see
 section 4.2.3 for more details).
 Once a user has joined a channel, they receive notice about all
 commands their server receives which affect the channel.  This
-includes MODE, KICK, PART, QUIT and of course PRIVMSG/NOTICE.  The
+includes MODE, KICK, PART, QUIT and of course PRIVMSG/NOTICE. 
+The
 JOIN command needs to be broadcast to all servers so that each server
 knows where to find the users who are on the channel.  This allows
 optimal delivery of PRIVMSG/NOTICE messages to the channel.
@@ -60,9 +62,11 @@ a channel which is set +l and is already full
 
 
 	ERR_NOSUCHCHANNEL (403)
-	Used to indicate the given channel name is invalid, or does not exist
+	Used to indicate the given channel name is invalid, 
+	or does not exist
 
 	RPL_TOPIC
+
 Erreurs non gerees
 	ERR_TOOMANYCHANNELS (405)
 	<channel> :<reason>
@@ -76,20 +80,52 @@ Erreurs non gerees
 	ERR_BANNEDFROMCHAN (474)
 	<channel> :<reason>	
 	Returned when attempting to join a channel a user is banned from
-
-
 */
 
-// TODO 
-// /JOIN #channel password
-// si un pass est saisi l'envoyer a join
+// JOIN #chan1,#chan2,#chan3 password
 void	Wagner::cmd_join(void)
 {
 	DEBUG_CALL_WAGNER
 
+	//1. verifier qu'il y a au moins 1 param
 	if (request->params.empty())
-		return (reply(Response::ERR_NEEDMOREPARAMS));
+		return (user->setSendCache(ERR_NEEDMOREPARAMS("", "JOIN")));
+    std::string channelsToJoin = *request->params.begin();
+    request->params.pop_front();
+	
+	//1.2 recuperer le mot de pass si saisi
+	std::string	userPassword = "";
+	if (!request->params.empty())
+    {
+		userPassword = *request->params.begin();
+		request->params.pop_front();
+	}
+	//2.	split le param1 sur les virgules
+	//		(shlag >> ajout de la derniere , pour le split)
+	channelsToJoin.append(",");
+	unsigned long	pos = channelsToJoin.find(',');
+	std::string		s_channel;
+	bool hasJoin;
+	while (pos != std::string::npos)
+	{
+		s_channel = channelsToJoin.substr(0, pos);
+		channelsToJoin.erase(0, pos + 1);
+		pos = channelsToJoin.find(',');
 
+		if (!s_channel.empty() && s_channel[0] == '#')
+			s_channel = s_channel.substr(1);
+		//3. pour chaque channel (canJoin)
+		hasJoin = _channel_map.find_or_create(s_channel)->join(user, userPassword);
+		if (hasJoin)
+		{
+			Channel * channel = _channel_map.find(s_channel);
+			if (channel->getTopic().size())
+				user->setSendCache(RPL_TOPIC(channel->getName(), channel->getTopic()));
+			user->setSendCache(RPL_CHANNELMODEIS(user->getNickname(), channel));
+			// BRAODCAST a msg sur les chann.
+		}
+	}
+	/*
 	std::vector< std::pair<std::string, available<std::string> > >	m;
 	std::pair<std::string, available<std::string> >					new_pair;
 	std::string														name;
@@ -108,9 +144,8 @@ void	Wagner::cmd_join(void)
 	for (size_t i = 0; i < m.size() && index < request->params.size(); i++)
 		m[i].second(request->params[index++]);
 
-/*	if (index < request.params.size())
-		There is still some parameters.. error */
-
 	for (size_t i = 0; i < m.size(); i++)
 		_channel_map.find_or_create(m[i].first)->join(user, "usr_password");
+
+	*/
 }

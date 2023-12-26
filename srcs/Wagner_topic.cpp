@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 10:58:32 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 13:18:32 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	Wagner::cmd_topic(void)
 	DEBUG_CALL_WAGNER
 /*
 1. check si au moins 2 params
-user->setSendCache(ERR_NEEDMOREPARAMS("", "INVITE")));
+user->setSendCache(ERR_NEEDMOREPARAMS("", "TOPIC")));
 
 2. prendre le param #1 - verifier que la channel existe
 user->setSendCache(ERR_NOSUCHCHANNEL(user->getNickname(), <param#1>)));

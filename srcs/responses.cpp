@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 13:09:57 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 14:24:43 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -675,6 +675,78 @@ to a mask with a wild-card for a top level domain (i.e. *.*)
 */
 
 
+
+// JOIN
+/*
+ERR_INVITEONLYCHAN (473) //canJoin
+<channel> :<reason>
+Returned when attempting to join a channel which is invite only without an invitation
+*/
+std::string	ERR_INVITEONLYCHAN(std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 473";
+	output << " " << channel;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+ERR_BADCHANNELKEY (475) //canJoin
+<channel> :<reason>
+Returned when attempting to join a key-locked
+channel either without a key or with the wrong key
+*/
+std::string	ERR_BADCHANNELKEY(std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 475";
+	output << " " << channel;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+ERR_CHANNELISFULL (471) // canJoin
+<channel> :<reason>
+Returned when attempting to join
+a channel which is set +l and is already full
+*/
+std::string	ERR_CHANNELISFULL(std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 471";
+	output << " " << channel;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+ERR_BANNEDFROMCHAN (474) // canJoin
+<channel> :<reason>
+*/
+std::string	ERR_BANNEDFROMCHAN(std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 474";
+	output << " " << channel;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
 
 std::string	Response::_QUIT(void)
 {
