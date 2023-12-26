@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 14:22:12 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 07:49:54 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,33 +20,37 @@ void	Wagner::cmd_cap(void)
 void	Wagner::cmd_pass(void)
 {
 	DEBUG_CALL_WAGNER
-
+	if (user->isConnected())
+		return(user->setSendCache(ERR_ALREADYREGISTRED(user->getNickname())));
 	if (request->params.empty())
-		return (reply(Response::ERR_NEEDMOREPARAMS));
+		return(user->setSendCache(ERR_NEEDMOREPARAMS("", "PASS", "please type a password" )));
 	if (request->params.front() != _pass)
-		return (reply(Response::ERR_PASSWDMISMATCH));
+		return(user->setSendCache(ERR_PASSWDMISMATCH(user->getNickname())));
 	return (user->connectionStep());
 }
+
+
 
 void	Wagner::cmd_nick(void)
 {
 	DEBUG_CALL_WAGNER
-
-	/* STEP #1 : check if the new nickname is already in use || */
+	/* STEP #1 : check if the new nickname is already in use || valid */
 	if (request->params.empty())
-		return (reply(Response::ERR_NONICKNAMEGIVEN, true));
-
+		return (user->setSendCache(ERR_NONICKNAMEGIVEN()));
 	std::string nickname = request->params.front();
-	if (nickname == "anonymous" || nickname.find_first_of("!%#@") != std::string::npos)
-		return (reply(Response::ERR_ERRONEUSNICKNAME, true));
+	if (nickname == "anonymous" || nickname.find_first_of("<>?/\\!%#@&$") != std::string::npos)
+		return (user->setSendCache(ERR_ERRONEUSNICKNAME(nickname)));
 	else
 	{
 		/* STEP #2 : check if the new nickname is already in use */
 		for (t_clients::iterator it = _clients.begin(); it != _clients.end(); it++)
 		{
-			if ((*it)->getNickname() != nickname)
-				continue ;
-			return (reply(Response::ERR_NICKNAMEINUSE, true));
+			std::cout << "TODO : le bug est ici :" << std::endl;
+			if ((*it)->is_alive() && *it != user)
+			{
+			if ((*it)->getNickname() == nickname)
+				return (user->setSendCache(ERR_NICKNAMEINUSE(nickname)));
+			}
 		}
 		user->setNickname(nickname);
 		user->connectionStep();
@@ -60,7 +64,7 @@ void	Wagner::cmd_user(void)
 	std::string		params;
 
 	if (size == 0 || size < 4)
-		return (reply(Response::ERR_NEEDMOREPARAMS, true));
+		return(user->setSendCache(ERR_NEEDMOREPARAMS("", "user")));
 	else
 	{
 		for (size_t idx = 0; idx < size; idx++)
@@ -76,16 +80,14 @@ void	Wagner::cmd_user(void)
 		}
 		user->connectionStep();
 	}
-
 	if (user->isConnected())
 	{
-		reply(Response::_001
-			| Response::_002
-			| Response::_003
-			| Response::_004
-			| Response::_005);
-		_clients.insert(user);
+		user->setSendCache(RPL_WELCOME(user)); //001
+		user->setSendCache(RPL_YOURHOST()); //002
+		user->setSendCache(RPL_CREATED()); //003
+		user->setSendCache(RPL_MYINFO()); //004
 		return ;
 	}
-	reply(Response::ERR_PASSWDMISMATCH, true);
+	user->setSendCache(ERR_PASSWDMISMATCH(user->getNickname()));
+	user->is_alive(false);
 }

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 16:03:30 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 09:30:09 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ class Channel
 	private:
 		std::string					_name;
 		available<std::string>		_key;
-		available<std::string>		_topic;
+		std::string					_topic;
 		//SocketConnection&				_operator;
 
 		int							_userLimit;
@@ -103,14 +103,17 @@ class Channel
 		void		join(User* user, std::string usr_password);
 		void		send(User* user, Response response);
 		std::string	getName(void);
+		std::string	getTopic(void);
 
-		bool		getMode(enum ChannelModes mode);
-		void		setMode(char op, enum ChannelModes mode);
-		void		setKey(std::string pass);
-		void		setLimit(int limit);
-		bool		isOperator(User* user);
-		bool		isInChannel(User* user);
-		User*		findUser(std::string nick);
+		bool getMode(enum ChannelModes mode);
+		std::string getChannelModes();
+		void setMode(char op, enum ChannelModes mode);
+		void setKey(std::string pass);
+		void setTopic(std::string topic);
+		void setLimit(int limit);
+		bool isOperator(User* user);
+		bool isInChannel(User* user);
+		User* findUser(std::string nick);
 
 		bool		canJoin(User* user, std::string usr_password);
 

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 15:22:55 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 09:07:06 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,12 @@
 
 Response::Response(void)
 {
-	_pfonc_map[0]	= &Response::__001;
-	_pfonc_map[1]	= &Response::__002;
-	_pfonc_map[2]	= &Response::__003;
-	_pfonc_map[3]	= &Response::__004;
-	_pfonc_map[4]	= &Response::__005;
 	_pfonc_map[5]	= &Response::__263;
 	_pfonc_map[6]	= &Response::_RPL_WHOISUSER;
 	_pfonc_map[7]	= &Response::_ERR_NONICKNAMEGIVEN;
 	_pfonc_map[8]	= &Response::_ERR_ERRONEUSNICKNAME;
 	_pfonc_map[9]	= &Response::_ERR_NICKNAMEINUSE;
 	_pfonc_map[10]	= &Response::_ERR_NEEDMOREPARAMS;
-	_pfonc_map[11]	= &Response::_464_ERR_PASSWDMISMATCH;
 	_pfonc_map[12]	= &Response::_PONG;
 	_pfonc_map[13]	= &Response::_PRIVMSG;
 	_pfonc_map[14]	= &Response::_QUIT;
@@ -72,57 +66,6 @@ void	Response::operator () (int code, bool kill)
 	}
 	_user->setSendCache(queue.str());
 	_user->is_alive(!kill);
-}
-
-std::string	Response::__001(void)
-{
-	std::stringstream	output;
-
-	output << ":" << _hostname;
-	output << " 001 ";
-	output << _user->getNickname();
-	output << " :Welcome to the Internet Relay Network ";
-	output << _user->getNickname() << "!"+_user->getUsername() << "@"+_user->getHostname();
-	return (output.str());
-}
-
-std::string	Response::__002(void)
-{
-	std::stringstream	output;
-
-	output << ":" << _hostname;
-	output << " 002 ";
-	output << ": Your host is <servername>, running version <version>";
-	return (output.str());
-}
-
-std::string	Response::__003(void)
-{
-	std::stringstream	output;
-
-	output << ":" << _hostname;
-	output << " 003 ";
-	output << ": This server was created <date>";
-	return (output.str());
-}
-
-std::string	Response::__004(void)
-{
-	std::stringstream	output;
-
-	output << ":" << _hostname;
-	output << " 004 ";
-	output << ": <server_name> <version> <user_modes> <chan_modes>";
-	return (output.str());
-}
-
-std::string	Response::__005(void)
-{
-	std::stringstream	output;
-
-	output << ":" << _hostname;
-	output << " 005";
-	return (output.str());
 }
 
 std::string	Response::__263(void)
@@ -176,80 +119,435 @@ std::string	Response::_ERR_NEEDMOREPARAMS(void)
 	return (output.str());
 }
 
-std::string	ERR_NEEDMOREPARAMS(std::string cmd, std::string reason)
+std::string	ERR_NEEDMOREPARAMS(std::string channel, std::string cmd, std::string reason)
+{
+	std::stringstream	output;
+
+	(void)channel;
+	output << ":" << HOSTNAME;
+	output << " 461";
+	if (channel.size())
+		output << " #" << channel;
+	output << " " << cmd;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+
+/*** CONNECT ****/
+/*
+RPL_WELCOME (001)
+:Welcome to the Internet Relay Network <nick>!<user>@<host>
+*/
+std::string	RPL_WELCOME(User * user)
 {
 	std::stringstream	output;
 
 	output << ":" << HOSTNAME;
-	output << " 461";
-	output << " " << cmd << " : " << reason;
+	output << " 001 ";
+	output << user->getNickname();
+	output << " :Welcome to the Internet Relay Network ";
+	output << user->getNickname() << "!"+user->getUsername();
+	output << "@"+ user->getHostname();
 	output << "\r\n";
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 
 /*
-typedef struct {
-	std::stringstream	str;
-	std::ostream	operator << (std::ostream& stream)
-	{
-		stream << str << "\r\n";
-		PRINT_DEBUG_MESSAGE(GREEN, stream.str());
-		return stream;
-	}	
-}	print;
-
-print	ERR_NOSUCHCHANNEL(std::string channel, std::string reason)
-{
-	print output;
-
-	output.str << ":" << HOSTNAME;
-	output.str << " 403";
-	output.str << " " << channel << " : " << channel;
-	return (output);
-}
-
-std::cout 
-	<< ERR_NOSUCHCHANNEL(chan, res) 
-	<< ERR_NOSUCHCHANNEL(chan, res) 
-	<< std::endl;
+RPL_YOURHOST (002)
+:Your host is <servername>, running version <version>
 */
-
-std::string	ERR_NOSUCHCHANNEL(std::string channel, std::string reason)
+std::string	RPL_YOURHOST()
 {
 	std::stringstream	output;
 
-	(void)reason;
 	output << ":" << HOSTNAME;
-	output << " 403";
-	output << " " << channel << " : " << channel;
+	output << " 002 ";
+	output << ": Your host is <servername>, running version <version>";
 	output << "\r\n";
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 
-std::string	ERR_UMODEUNKNOWNFLAG(std::string reason)
+/*
+RPL_CREATED (003)
+:This server was created <date>
+*/
+std::string	RPL_CREATED()
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 003 ";
+	output << ": This server was created <date>";
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+RPL_MYINFO (004)
+:<server_name> <version> <user_modes> <chan_modes>
+*/
+std::string	RPL_MYINFO()
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 004 ";
+	output << ": <server_name> <version> <user_modes> <chan_modes>";
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+RPL_BOUNCE (005)
+Also known as RPL_PROTOCTL (Bahamut, Unreal, Ultimate)
+std::string	RPL_BOUNCE()
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 005";
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+*/
+
+
+/*** CHANNEL MODES ***/
+/*
+ERR_NOSUCHCHANNEL (403)
+<channel> :<reason> 
+Used to indicate the given channel name is invalid, or does not exist
+*/
+std::string	ERR_NOSUCHCHANNEL(std::string nickname, std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	(void)reason;
+	output << ":" << HOSTNAME;
+	output << " 403 ";
+	output << " " << nickname;
+	output << " " << channel;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+ERR_UMODEUNKNOWNFLAG (501)
+:<reason> 
+Returned by the server to indicate that a MODE 
+message was sent with a nickname parameter 
+and that the mode flag sent was not recognised
+*/
+std::string	ERR_UMODEUNKNOWNFLAG(std::string nickname, std::string reason)
 {
 	std::stringstream	output;
 
 	(void)reason;
 	output << ":" << HOSTNAME;
 	output << " 501";
-	output << " : " << reason;
+	output << " " << nickname;
+	output << " :" << reason;
 	output << "\r\n";
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 
-std::string	Response::_464_ERR_PASSWDMISMATCH(void)
+/*
+ERR_CHANOPRIVSNEEDED : 
+Returned by any command requiring special channel 
+privileges (eg. channel operator) to indicate 
+the operation was unsuccessfull
+*/
+std::string	ERR_CHANOPRIVSNEEDED(std::string nickname, std::string channel, std::string reason)
 {
 	std::stringstream	output;
 
-	output << ":" << _hostname;
-	output << " 464 ";
-	output << ": A Password is requiered to connect to " << _hostname;
+	(void)reason;
+	output << ":" << HOSTNAME;
+	output << " 482 #" << channel;
+	output << " " << nickname;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
+
+/* 
+ERR_NOTONCHANNEL (442) 
+<channel> :<reason>   Returned by the server 
+whenever a client tries to perform a channel 
+effecting command for which the client is not a member
+*/
+std::string	ERR_NOTONCHANNEL(std::string nickname, std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	(void)reason;
+	output << ":" << HOSTNAME;
+	output << " 442 #" << channel;
+	output << " " << nickname;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+ERR_KEYSET (467)
+<channel> :<reason>
+Returned when the channel key for a 
+channel has already been set 
+*/
+std::string	ERR_KEYSET(std::string nickname, std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 467 #" << channel;
+	output << " " << nickname;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+RPL_CHANNELMODEIS (324)
+<channel> <mode> <mode_params>
+*/
+std::string	RPL_CHANNELMODEIS(std::string nickname, Channel* channel)
+{
+	std::stringstream	output;
+	(void)nickname;
+	output << ":" << HOSTNAME;
+	output << " 324";
+	output << " " << nickname;
+	output << " #" << channel->getName();
+	output << " " << channel->getChannelModes();
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+ERR_NOSUCHNICK (401)
+<nick> :<reason> 
+Used to indicate the nickname parameter supplied 
+to a command is currently unused 
+*/
+std::string	ERR_NOSUCHNICK(std::string channel, std::string nickname, std::string reason)
+{
+	std::stringstream	output;
+	(void)nickname;
+	output << ":" << HOSTNAME;
+	output << " 401";
+	output << " #" << channel;
+	output << " " << nickname;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+ERR_UNKNOWNMODE (472)
+<char> :<reason>
+Returned when a given mode is unknown 
+*/
+std::string	ERR_UNKNOWNMODE(std::string channel, char c, std::string reason)
+{
+	std::stringstream	output;
+	output << ":" << HOSTNAME;
+	output << " 472";
+	output << " #" << channel;
+	output << " " << c;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+
+/*
+ERR_NONICKNAMEGIVEN (431)
+:<reason>
+Returned when a nickname parameter expected for a command isn't found
+*/
+std::string	ERR_NONICKNAMEGIVEN(std::string reason)
+{
+	std::stringstream	output;
+	output << ":" << HOSTNAME;
+	output << " 431";
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+ERR_NICKNAMEINUSE (433)
+<nick> :<reason>
+Returned by the NICK command when the given nickname is already in use
+*/
+/*
+ERR_NICKCOLLISION (436) // IDEM 433 ?
+<nick> :<reason>
+Returned by a server to a client when it detects a nickname collision
+*/
+std::string	ERR_NICKNAMEINUSE(std::string nick, std::string reason)
+{
+	std::stringstream	output;
+	output << ":" << HOSTNAME;
+	output << " 433";
+	output << " " << nick;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+ERR_ERRONEUSNICKNAME (432)
+<nick> :<reason>
+Returned after receiving a NICK message which contains a nickname
+which is considered invalid, such as it's reserved ('anonymous')
+or contains characters considered invalid for nicknames.
+*/
+std::string	ERR_ERRONEUSNICKNAME(std::string nick, std::string reason)
+{
+	std::stringstream	output;
+	output << ":" << HOSTNAME;
+	output << " 432";
+	output << " " << nick;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+
+/*
+ERR_ALREADYREGISTERED (462)
+:<reason>
+Returned by the server to any link which attempts to register again
+*/
+std::string	ERR_ALREADYREGISTRED(std::string nick, std::string reason)
+{
+	std::stringstream	output;
+	output << ":" << HOSTNAME;
+	output << " 462";
+	output << " " << nick;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+ERR_PASSWDMISMATCH (464)
+:<reason>
+Returned by the PASS command to indicate the given password
+was required and was either not given or was incorrect
+*/
+std::string	ERR_PASSWDMISMATCH(std::string nick, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 464";
+	output << " " << nick;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*** INVITE ***/
+/*
+ERR_USERONCHANNEL (443)
+<nick> <channel> [:<reason>]
+Returned when a client tries to 
+invite a user to a channel they're already on
+*/
+std::string	ERR_USERONCHANNEL(std::string nick, std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 443";
+	output << " " << nick;
+	output << " " << channel;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+341	RPL_INVITING (341)
+<nick> <channel>	
+Returned by the server to indicate that the attempted INVITE
+message was successful and is being passed onto the end client.
+Note that RFC1459 documents the parameters in the reverse order. 
+the format given here is the format used on production servers, 
+and should be considered the standard reply above that given by RFC1459.
+*/
+std::string	RPL_INVITING(std::string nick, std::string channel)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 341";
+	output << " " << nick;
+	output << " " << channel;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*** TOPIC */
+/*
+RPL_NOTOPIC (331)
+<channel> :<info>
+Response to TOPIC when no topic is set
+*/
+std::string	RPL_NOTOPIC(std::string channel, std::string info)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 331";
+	output << " " << channel;
+	output << " :" << info;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+RPL_TOPIC (332)
+<channel> :<info>
+Response to TOPIC when no topic is set
+*/
+std::string	RPL_TOPIC(std::string channel, std::string topic)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 332";
+	output << " " << channel;
+	output << " :" << topic;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
 
 std::string	Response::_PONG(void)
 {

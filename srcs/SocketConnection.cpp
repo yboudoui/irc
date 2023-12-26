@@ -6,11 +6,12 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 17:08:27 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 07:56:41 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SocketConnection.hpp"
+#include "Colors.hpp"
 #include <iostream>
 
 SocketConnection::SocketConnection(IQueue &queue, int fd_socketBind)
@@ -49,6 +50,10 @@ std::string&	SocketConnection::getReadCache(void)
 void	SocketConnection::write(void)
 {
 	ssize_t	bytes_send;
-	bytes_send = ::send(_fd, _write_cache.c_str(), _write_cache.size(), 0);//MSG_DONTWAIT);
-	_write_cache.erase(0, bytes_send);
+	if (_write_cache.size())
+	{
+		PRINT_DEBUG_MESSAGE(BLUE, _write_cache);
+		bytes_send = ::send(_fd, _write_cache.c_str(), _write_cache.size(), 0);//MSG_DONTWAIT);
+		_write_cache.erase(0, bytes_send);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 16:06:48 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 09:31:02 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,11 @@ void	Channel::send(User* user, Response reply)
 std::string	Channel::getName(void)
 {
 	return _name;
+}
+
+std::string	Channel::getTopic(void)
+{
+	return _topic;
 }
 
 
@@ -123,40 +128,41 @@ Channel*	ChannelMap::find_or_create(std::string name)
 	return (it->second);
 }
 
-#include <bitset>
-void afficherEnBinaire(int nombre)
-{
-	for (int i = sizeof(int) * 8 -1 ; i >= 0 ; i--)
-	{
-		int bit = (nombre >> i) & 1;
-		std::cout << bit;
-	}
-}
-
 void Channel::setMode(char op, enum ChannelModes mode)
 {
-	// std::cout << "setMode 1 :" ;
-	//  afficherEnBinaire(_modes) ;
-	// std::cout << std::endl;
-	// {
     if (op == '+')
         _modes |= mode;
     else
         _modes &= ~mode;
-	// }
-	// std::cout << "setMode 2 :" ;
-	//  afficherEnBinaire(_modes) ;
-	// std::cout << std::endl;
-
 }
 
 bool Channel::getMode(enum ChannelModes mode) {
     return (_modes & mode) != 0;
 }
 
+std::string Channel::getChannelModes() {
+	std::string modes;
+
+	if(this->getMode(INVITE_ONLY))
+		modes.append("i");
+	if(this->getMode(TOPIC_ONLY_OP))
+		modes.append("t");
+	if(this->getMode(KEY_PROTECTED))
+		modes.append("k");
+	if(this->getMode(USER_LIMIT))
+		modes.append("l");
+    return  modes;
+}
+
+
+
 void Channel::setKey(std::string pass)
 {
     _key = pass;
+}
+void Channel::setTopic(std::string topic)
+{
+    _topic = topic;
 }
 
 void Channel::setLimit(int limit)

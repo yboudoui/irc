@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 16:02:24 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 09:30:31 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,129 +97,6 @@ void	Wagner::cmd_notFound	(void)
 	reply(Response::_263);
 }
 
-void	Wagner::cmd_ping(void)
-{
-	DEBUG_CALL_WAGNER
-	reply(Response::PONG);
-}
-
-void	Wagner::cmd_quit(void)
-{
-	DEBUG_CALL_WAGNER
-	// TODO : envoyer message d'info aux autres utilisateurs
-	// TODO : supprimer le user de toutes les channels
-
-	std::string	message = "default message quit";
-	if (request->params.empty() == false)
-	{
-		message = request->params.back();
-		request->params.pop_back();
-	}
-
-	reply.setMessage(message);
-	//_channel(user).send(Response::QUIT).toAllChannel();
-	user->is_alive(false);
-}
-
-void	Wagner::cmd_whois(void)
-{
-	DEBUG_CALL_WAGNER
-	reply(Response::RPL_WHOISUSER);
-}
-
-// TODO 
-// /JOIN #channel password
-// si un pass est saisi l'envoyer a join
-void	Wagner::cmd_join(void)
-{
-	DEBUG_CALL_WAGNER
-
-	if (request->params.empty())
-		return (reply(Response::ERR_NEEDMOREPARAMS));
-
-	std::vector< std::pair<std::string, available<std::string> > >	m;
-	std::pair<std::string, available<std::string> >					new_pair;
-	std::string														name;
-	available<std::string>											password;
-	size_t															index;
-
-	for (index = 0; index < request->params.size(); index++)
-	{
-		name = request->params[index];
-		if (name[0] != '#' && name[0] != '&')
-			break ;
-		new_pair.first = name.substr(1);
-		m.push_back(new_pair);
-	}
-
-	for (size_t i = 0; i < m.size() && index < request->params.size(); i++)
-		m[i].second(request->params[index++]);
-
-/*	if (index < request.params.size())
-		There is still some parameters.. error */
-
-	for (size_t i = 0; i < m.size(); i++)
-		_channel_map.find_or_create(m[i].first)->join(user, "usr_password");
-}
-
-void	Wagner::cmd_privmsg(void)
-{
-	DEBUG_CALL_WAGNER
-
-	std::string	receiver, message = request->params.back();
-	request->params.pop_back();
-
-	reply.setMessage(message);
-	while (!request->params.empty())
-	{
-		receiver = request->params.front().substr(1);
-		request->params.pop_front();
-		//_channel(user).send(Response::QUIT).toChannel(receiver);
-		if (_channel_map.send(receiver, user, reply) == false)
-			continue; // but still an error or message to someone
-	}
-}
-
-void	Wagner::cmd_kick(void)
-{
-	DEBUG_CALL_WAGNER
-	// check channel.isOperator()
-	/*
-	ERR_CHANOPRIVSNEEDED (482) 
-    <channel> :<reason> 
-    Returned by any command requiring special channel 
-    privileges (eg. channel operator) to indicate 
-    the operation was unsuccessful
-	*/
-}
-
-void	Wagner::cmd_invite(void)
-{
-	DEBUG_CALL_WAGNER
-	// check channel.isOperator()
-	/*
-	ERR_CHANOPRIVSNEEDED (482) 
-    <channel> :<reason> 
-    Returned by any command requiring special channel 
-    privileges (eg. channel operator) to indicate 
-    the operation was unsuccessful
-	*/
-}
-
-void	Wagner::cmd_topic(void)
-{
-	DEBUG_CALL_WAGNER
-	// check channel mode TOPIC_ONLY_OP
-	// check channel userIsOperator()
-	/*
-	ERR_CHANOPRIVSNEEDED (482) 
-    <channel> :<reason> 
-    Returned by any command requiring special channel 
-    privileges (eg. channel operator) to indicate 
-    the operation was unsuccessful
-	*/
-}
-
 User*	Wagner::findClient(std::string name)
 {
 	t_clients::iterator	it = _clients.begin();
@@ -234,8 +111,3 @@ User*	Wagner::findClient(std::string name)
 	}
 	return (NULL);
 }
-
-// void	Wagner::cmd_mode(void)
-// {
-// 	DEBUG_CALL_WAGNER
-// }
