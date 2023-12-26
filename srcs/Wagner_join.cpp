@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:15:57 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 17:40:38 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,30 +122,7 @@ void	Wagner::cmd_join(void)
 			if (channel->topic.get().size())
 				user->setSendCache(RPL_TOPIC(channel->name.get(), channel->topic.get()));
 			user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
-			// BRAODCAST a msg sur les chann.
+			user->setSendCache(RPL_NAMREPLY(user->nick_name.get(), channel));
 		}
 	}
-	/*
-	std::vector< std::pair<std::string, available<std::string> > >	m;
-	std::pair<std::string, available<std::string> >					new_pair;
-	std::string														name;
-	available<std::string>											password;
-	size_t															index;
-
-	for (index = 0; index < request->params.size(); index++)
-	{
-		name = request->params[index];
-		if (name[0] != '#' && name[0] != '&')
-			break ;
-		new_pair.first = name.substr(1);
-		m.push_back(new_pair);
-	}
-
-	for (size_t i = 0; i < m.size() && index < request->params.size(); i++)
-		m[i].second(request->params[index++]);
-
-	for (size_t i = 0; i < m.size(); i++)
-		_channel_map.find_or_create(m[i].first)->join(user, "usr_password");
-
-	*/
 }

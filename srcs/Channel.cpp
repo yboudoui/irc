@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:06:30 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:10:59 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ std::string Channel::getUserList()
 	t_users_map::iterator	it;
 	t_users_map::iterator	ite = _users_map.end();
 	std::string	list = "";
-	//User * user;
+	User * user;
 	for ( it = _users_map.begin() ; it != ite ; it++)
 	{
 		if (it->second != INVITED)
@@ -220,9 +220,8 @@ std::string Channel::getUserList()
 				list.append("@");
 			else
 				list.append("+");
-			//user = *it->first();
-			//list.append(user->getNickname());
-
+			user = it->first;
+			list.append(user->nick_name.get());
 			list.append(" ");
 		}
 	}

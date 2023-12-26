@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:37:45 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:12:24 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 	requests << user->getReadCache();
 	Message::color(GREEN);
 
-	reply.setUser(user);
-	reply.setHostName(_hostname);
 
 	while (!requests.empty() && user->is_alive())
 	{
@@ -82,19 +80,18 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 			PRINT_DEBUG_MESSAGE(CYAN, "WTF");
 			continue;
 		}
-		reply.setRequest(request);
 		t_cmd_map::iterator	it = _cmd.find(request->command.name);
 		if (it != _cmd.end())
 			(this->*(it->second))();
 		else
-			cmd_notFound();
+			cmd_notFound(request->command.name);
 	}
 }
 
-void	Wagner::cmd_notFound	(void)
+void	Wagner::cmd_notFound	(std::string name)
 {
 	DEBUG_CALL_WAGNER
-	reply(Response::_263);
+	user->setSendCache(RPL_TRYAGAIN(name));
 }
 
 User*	Wagner::findClient(std::string name)

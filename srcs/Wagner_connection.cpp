@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:19:50 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:03:53 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,14 @@ void	Wagner::cmd_nick(void)
 					return (user->setSendCache(ERR_NICKNAMEINUSE(nickname)));
 			}
 		}
+		std::string oldnick = user->nick_name.get();
 		user->nick_name.set(nickname);
-		user->connectionStep();
+		if (user->isConnected())
+		{
+			//user->setSendCache(NICK(oldnick, nickname));
+		}
+		else
+			user->connectionStep();
 	}
 }
 
