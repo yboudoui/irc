@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:38:56 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:10:42 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ l ->
 */
 
 enum ChannelModes {
-    INVITE_ONLY     = 1 << 0,   // 00001
-    TOPIC_ONLY_OP   = 1 << 1,   // 00010
-    KEY_PROTECTED   = 1 << 2,   // 00100
-    USER_LIMIT		= 1 << 3    // 01000
+	INVITE_ONLY     = 1 << 0,   // 00001
+	TOPIC_ONLY_OP   = 1 << 1,   // 00010
+	KEY_PROTECTED   = 1 << 2,   // 00100
+	USER_LIMIT		= 1 << 3    // 01000
 };
 
 

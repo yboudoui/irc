@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:18:24 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:11:35 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ class User : public SocketConnection
 		bool	isConnected() const;
 		void	connectionStep();
 		void	sendToAllChannels();
-/*------------------*/
 
 		void	join(Channel* channel, std::string password);
 		void	quit(Channel* channel);
