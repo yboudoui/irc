@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:47:49 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:52:49 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,13 @@ void	Wagner::cmd_join(void)
 		if (!s_channel.empty() && s_channel[0] == '#')
 			s_channel = s_channel.substr(1);
 		//3. pour chaque channel (canJoin)
-		hasJoin = _channel_map.find_or_create(s_channel)->join(user, userPassword);
+		hasJoin = find_or_create_channel(s_channel)->join(user, userPassword);
 		if (hasJoin)
 		{
-			Channel * channel = _channel_map.find(s_channel);
-			if (channel->getTopic().size())
-				user->setSendCache(RPL_TOPIC(channel->getName(), channel->getTopic()));
-			user->setSendCache(RPL_CHANNELMODEIS(user->getNickname(), channel));
+			Channel * channel = find_channel(s_channel);
+			if (channel->topic.get().size())
+				user->setSendCache(RPL_TOPIC(channel->name.get(), channel->topic.get()));
+			user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
 			// BRAODCAST a msg sur les chann.
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:46:58 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:55:20 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,6 @@ void	Channel::send(std::string senderNickname, std::string message)
 	}
 }
 
-int	Channel::getLimit(void)
-{
-	return _userLimit;
-}
 
 void	Channel::remove(User* user)
 {
@@ -122,11 +118,6 @@ void Channel::setKey(std::string pass)
     _key = pass;
 }
 
-void Channel::setLimit(int limit)
-{
-    _userLimit = limit;
-}
-
 bool Channel::isOperator(User* user)
 {
 	t_users_map::iterator	it = _users_map.begin();
@@ -172,18 +163,18 @@ bool Channel::canJoin(User* user, std::string usr_password)
 {
 	if (getMode(KEY_PROTECTED))
 	{
-		if (usr_password != _key)
+		if (_key && usr_password != _key())
 		{
-			user->setSendCache(ERR_BADCHANNELKEY(getName()));
+			user->setSendCache(ERR_BADCHANNELKEY(name.get()));
 			return false;
 		}
 	}
 	if (getMode(USER_LIMIT))
 	{
-		int nb_user = countUser();
-		if (nb_user >= _userLimit)
+		size_t nb_user = countUser();
+		if (nb_user >= limit.get())
 		{
-			user->setSendCache(ERR_CHANNELISFULL(getName()));
+			user->setSendCache(ERR_CHANNELISFULL(name.get()));
 			return false;
 		}
 	}

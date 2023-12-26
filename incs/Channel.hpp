@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:46:21 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:53:05 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ class Channel
 		Channel(std::string name);
 		~Channel();
 
-		void		join(User* user, std::string usr_password);
+		bool		join(User* user, std::string usr_password);
 		void		remove(User* user);
 		void		send(std::string senderNickname, std::string message);
 		

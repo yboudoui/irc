@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:25:44 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 16:58:58 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,12 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                         params.pop_front();
                         if (s_limit.find_first_not_of("0123456789"))
                         {
-                            int limit;
+                            size_t _limit;
                             std::stringstream ss;
                             ss << s_limit;
-                            ss >> limit;
+                            ss >> _limit;
                             this->setMode(op, USER_LIMIT);
-                            this->setLimit(limit);
+                            this->limit.set(_limit);
                         }
                         else 
                             user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type a numeric user limit (+l)"));
@@ -134,8 +134,8 @@ void	Wagner::cmd_mode(void)
     {
         if (!findClient(s_channel))
             user->setSendCache(ERR_NOSUCHCHANNEL(user->nick_name.get(), s_channel));
-        else
-            user->setSendCache(ERR_UMODEUNKNOWNFLAG(user->nick_name.get()));
+//        else
+ //           user->setSendCache(ERR_UMODEUNKNOWNFLAG(user->nick_name.get()));
         return ;
     }
     if (!channel->isInChannel(user))
