@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:03:53 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 19:05:14 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,7 @@ void	Wagner::cmd_nick(void)
 		std::string oldnick = user->nick_name.get();
 		user->nick_name.set(nickname);
 		if (user->isConnected())
-		{
-			//user->setSendCache(NICK(oldnick, nickname));
-		}
+			user->setSendCache(NICK(oldnick, nickname));
 		else
 			user->connectionStep();
 	}

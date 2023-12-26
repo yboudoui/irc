@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:10:50 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:16:32 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ std::string	ERR_CHANNELISFULL(std::string channel, std::string reason = "channel
 std::string	ERR_BANNEDFROMCHAN(std::string channel, std::string reason = "banned ... #sorry");
 
 std::string	RPL_NAMREPLY(std::string nickname, Channel *channel);
+std::string	NICK(std::string old, std::string newnick);
 
 #endif
