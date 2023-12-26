@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageQueue.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:18:56 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 12:11:59 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 21:28:04 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ MessageQueue::MessageQueue()
 
 MessageQueue::~MessageQueue()
 {
-
+	
 }
 
 void	MessageQueue::clear(void)

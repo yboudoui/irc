@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 19:05:14 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 22:01:29 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	Wagner::cmd_nick(void)
 		/* STEP #2 : check if the new nickname is already in use */
 		for (t_clients::iterator it = _clients.begin(); it != _clients.end(); it++)
 		{
-//			std::cout << "TODO : le bug est ici :" << std::endl; QUEL BUG?
 			if ((*it)->is_alive() && *it != user)
 			{
 				if ((*it)->nick_name.get() == nickname)

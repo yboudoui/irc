@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:12:24 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 22:07:39 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,25 @@ Wagner::Wagner(std::string host, std::string pass)
 Wagner::~Wagner()
 {
 	DEBUG_CALL_WAGNER
-	// delete [] _events_list;
+	{
+		t_channel_map::iterator	it = _channel_map.begin();
+		t_channel_map::iterator	ite = _channel_map.end();
+
+		for ( ; it != ite ; it++)
+			delete it->second;
+	}
+	{
+		t_clients::iterator	it = _clients.begin();
+		t_clients::iterator	ite = _clients.end();
+		
+		// TOTO delete User *
+		for ( ; it != ite ; it++)
+		{
+			//delete it;
+		}
+	}
 	/*
+	TODO // send error_message 
 	Command: ERROR
 	Parameters: <reason>
 
@@ -82,9 +99,12 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 		}
 		t_cmd_map::iterator	it = _cmd.find(request->command.name);
 		if (it != _cmd.end())
+		{
 			(this->*(it->second))();
+		}
 		else
 			cmd_notFound(request->command.name);
+		delete request;
 	}
 }
 

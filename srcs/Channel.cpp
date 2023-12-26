@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:17:35 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 22:08:18 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	Channel::remove(User* user)
 	//_users_map.remove >>
 }
 
-// TODO ??? 
+// TODO : 
 /*
 bool		ChannelMap::sendToAllChannelOfUser(User* user, std::string message)
 {
@@ -162,20 +162,6 @@ bool Channel::canJoin(User* user, std::string usr_password)
 			return true;
 		return false;
 	}
-	// TODO check if the user can join the channel,
-	// check channel mode INVITE_ONLY
-	// check channel mode KEY_PROTECTED & password 
-	// if true, check if the user has been invited by
-	// an operator
-
-	// 475 cannot join Channel () (KEY_PROTECTED)
-	// 473 cannot join Channel () (INVITE_ONLY)
-	// 464 bad channel key	(KEY_PROTECTED && usr_password != key)
-
-	// check aslo channel user limit
-	// !! delete user from user_map when he QUIT
-	(void)user;
-	(void)usr_password;
 	return true;
 }
 

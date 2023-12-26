@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 16:16:47 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 22:08:24 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	main(int argc, char *argv[])
 	std::stringstream ss;
 	ss << argv[0];
 	ss >> port;
-	// TODO CHECK SS >> return ERROR std::cerr
+	// TODO : CHECK SS >> return ERROR std::cerr
 	// https://www.alien.net.au/irc/irc2numerics.html
 	password = argv[1];
 
@@ -71,6 +71,7 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 
+	// TODO : delete sock 
 	SocketBind*	sock = new SocketBind(_wagner, queue, port);
 
 	std::cout << "localhost:" << port << std::endl;

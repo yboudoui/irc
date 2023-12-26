@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/26 18:08:41 by yboudoui         ###   ########.fr        #
+#    Updated: 2023/12/26 21:22:26 by sethomas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,7 +82,7 @@ DEPS				:=	$(OBJS:%.o=%.d)
 
 #-----------------------------------------------------------------------------#
 
-CXX					=	clang++
+CXX					:= c++
 
 CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG# -fsanitize=address
 
@@ -94,6 +94,9 @@ $(OBJS_DIR)/%.o: %.cpp
 
 $(NAME):	$(OBJS)
 	$(CXX) $(CXXFLAGS) $(addprefix -I, $(INCS)) $(OBJS) -o $(NAME) $(LIBS)
+
+test: all
+	valgrind -q --track-fds=yes --leak-check=full --show-leak-kinds=all --show-leak-kinds=all ./${NAME} 8080 555
 
 all:		$(NAME)
 

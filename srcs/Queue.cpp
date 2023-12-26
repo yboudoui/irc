@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 11:17:03 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 22:08:04 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ Queue::Queue(IOrchestrator& orchestrator, size_t max_events)
 	_epoll_instance = epoll_create(_max_events);	/* for backward compatibility */
 	if (_epoll_instance < 0)
 		throw std::runtime_error("Fatal error when creating the monitoring socket instance");
+	// TODO : delete _events_list
 	_events_list = new struct epoll_event [_max_events];
 }
 
@@ -84,5 +85,6 @@ void	Queue::stop(int sig_value)
 {
 	(void)sig_value;
 	_stop = true;
+
 }
 

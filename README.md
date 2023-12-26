@@ -24,7 +24,7 @@
 		i.e. it must send either the successful Message of the Day numerics or the ERR_NOMOTD (422) numeric.
 
 
-		TODO =>
+		
 		RPL_WELCOME		(001) :Welcome to the Internet Relay Network <nick>!<user>@<host>
 		RPL_YOURHOST	(002) :Your host is <servername>, running version <version> 
 		RPL_CREATED		(003) :This server was created <date>

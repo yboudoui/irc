@@ -21,3 +21,44 @@ ISOLDE;Törigen Zürnens eitles Dräun!
 TRISTAN;Isolde!
 ISOLDE;Tristan!
 TRISTAN;Süßeste Maid!
+
+ISOLDE;/JOIN invite_only
+ISOLDE;/MODE +i
+TRISTAN;/JOIN invite_only
+TRISTAN;je peux parler ??? 
+ISOLDE;non !!!
+
+ISOLDE;/JOIN invite_only_2
+ISOLDE;/MODE +i
+ISOLDE;/INVITE tristan
+TRISTAN;/JOIN invite_only_2
+ISOLDE;tu es la ?
+TRISTAN;oui merci pour l'invitation
+
+ISOLDE;/JOIN keyprotected1
+ISOLDE;/MODE +k pass
+TRISTAN;/JOIN keyprotected1
+TRISTAN;je peux parler ??? 
+ISOLDE;non !!!
+
+ISOLDE;/JOIN keyprotected2
+ISOLDE;/MODE +k pass
+TRISTAN;/JOIN keyprotected2 pass
+ISOLDE;tu es connecte ?
+ISOLDE;oui merci pour le password
+
+ISOLDE;/JOIN limited
+ISOLDE;/MODE +l 1
+TRISTAN;/JOIN limited
+
+ISOLDE;/JOIN topic_only_op
+ISOLDE;/MODE +t
+ISOLDE;/TOPIC the topic of the channel
+TRISTAN;/JOIN topic_only_op
+TRISTAN;/TOPIC try to add a topic
+TRISTAN;/TOPIC the topic of the channel
+ISOLDE;/MODE +o Tristan
+TRISTAN;/TOPIC enfin, un nouveau topic
+ISOLDE;/TOPIC
+TRISTAN;/TOPIC
+

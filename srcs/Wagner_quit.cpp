@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:50:46 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 21:57:16 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ Numeric Replies: None.
 void	Wagner::cmd_quit(void)
 {
 	DEBUG_CALL_WAGNER
-	// TODO : envoyer message d'info aux autres utilisateurs
+	//  : envoyer message d'info aux autres utilisateurs
 	// TODO : supprimer le user de toutes les channels
 
 	std::string	message = "default message quit";
