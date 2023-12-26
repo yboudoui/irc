@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 09:31:02 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 11:54:55 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,15 @@ void	Channel::join(User* user, std::string usr_password)
 	}
 }
 
-void	Channel::send(User* user, Response reply)
+void	Channel::send(std::string senderNickname, std::string message)
 {
-	reply.setChannel(this);
+	(void)senderNickname;
+	(void)message;
 	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
 	{
-		if (it->first == user)
+		if (it->first->getNickname() == senderNickname)
 			continue;
-		reply.setUser(it->first);
-		reply(Response::PRIVMSG);
+		it->first->setSendCache(message);
 	}
 }
 
@@ -93,18 +93,20 @@ void	ChannelMap::remove(Channel* channel)
 //	_bimap.remove(channel);
 }
 
-bool		ChannelMap::send(std::string name, User* user, Response reply)
+bool		ChannelMap::send(std::string channelName, std::string senderNickname, std::string message)
 {
-	Channel*	channel = find(name);
+	Channel*	channel = find(channelName);
 	if (channel)
-		return (channel->send(user, reply), true);
+		return (channel->send(senderNickname, message), true);
 	return (false);
 }
 
-bool		ChannelMap::sendToAllChannelOfUser(User* user, Response reply)
+// TODO ??? 
+//bool		ChannelMap::sendToAllChannelOfUser(User* user, Response reply)
+bool		ChannelMap::sendToAllChannelOfUser(User* user, std::string message)
 {
 	(void)user;
-	(void)reply;
+	(void)message;
 	return (true);
 }
 

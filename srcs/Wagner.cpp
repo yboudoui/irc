@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 09:30:31 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 10:41:23 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,3 +111,4 @@ User*	Wagner::findClient(std::string name)
 	}
 	return (NULL);
 }
+

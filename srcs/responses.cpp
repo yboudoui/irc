@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 09:07:06 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 12:18:37 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,10 @@
 Response::Response(void)
 {
 	_pfonc_map[5]	= &Response::__263;
-	_pfonc_map[6]	= &Response::_RPL_WHOISUSER;
 	_pfonc_map[7]	= &Response::_ERR_NONICKNAMEGIVEN;
 	_pfonc_map[8]	= &Response::_ERR_ERRONEUSNICKNAME;
 	_pfonc_map[9]	= &Response::_ERR_NICKNAMEINUSE;
 	_pfonc_map[10]	= &Response::_ERR_NEEDMOREPARAMS;
-	_pfonc_map[12]	= &Response::_PONG;
-	_pfonc_map[13]	= &Response::_PRIVMSG;
 	_pfonc_map[14]	= &Response::_QUIT;
 
 }
@@ -548,41 +545,152 @@ std::string	RPL_TOPIC(std::string channel, std::string topic)
 	return (output.str());
 }
 
-
-std::string	Response::_PONG(void)
+std::string	PONG()
 {
 	std::stringstream	output;
 
-	output << ":" << _hostname;
+	output << ":" << HOSTNAME;
 	output << " PONG ";
-	output << _hostname;
+	output << HOSTNAME;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 
-std::string	Response::_RPL_WHOISUSER(void)
+std::string	RPL_WHOISUSER(User * _user)
 {
 	std::stringstream	output;
 
-	output << ":" << _hostname;
+	output << ":" << HOSTNAME;
 	output << " 311 ";
 	output << _user->getNickname() << " ";
 	output << _user->getNickname() << " ";
 	output << _user->getUsername() << " ";
 	output << _user->getHostname() << " ";
 	output << _user->getRealname() << " ";
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 
-std::string	Response::_PRIVMSG(void)
+/*
+PRIVMSG
+*/
+std::string	PRIVMSG(std::string sender, std::string channel, std::string message)
 {
 	std::stringstream	output;
 
-	output << ":" <<  _user->getNickname();
+	output << ":" <<  sender;
 	output << " PRIVMSG ";
-	output << "#" << _channel->getName();
-	output << " " << _message;
+	output << "#" << channel;
+	output << " :" << message;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
+
+/*
+ERR_NORECIPIENT (411)
+:<reason>
+Returned when no recipient is given with a command
+*/
+std::string	ERR_NORECIPIENT(std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 411";
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+ERR_NOTEXTTOSEND (412)
+:<reason>
+Returned when NOTICE/PRIVMSG is used with no message given
+*/
+std::string	ERR_NOTEXTTOSEND(std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 412";
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+
+/*
+ERR_CANNOTSENDTOCHAN (404)
+<channel> :<reason>	
+Sent to a user who does not have the rights
+to send a message to a channel
+*/
+std::string	ERR_CANNOTSENDTOCHAN(std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 404";
+	output << " " << channel;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+ERR_TOOMANYTARGETS (407)
+<target> :<reason> 
+The given target(s) for a
+command are ambiguous in that they relate to too many targets
+*/
+std::string	ERR_TOOMANYTARGETS(std::string target, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 407";
+	output << " " << target;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+ERR_NOSUCHNICK (401)
+<nick> :<reason> 
+Used to indicate the nickname
+parameter supplied to a command is currently unused
+*/
+std::string	ERR_NOSUCHNICK(std::string nick, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 401";
+	output << " " << nick;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+ERR_NOTOPLEVEL (413) ??? ON NE GERE PAS LES MASQUES ?
+<mask> :<reason>
+Used when a message is being sent 
+to a mask without being limited to a top-level 
+domain (i.e. * instead of *.au)
+
+ERR_WILDTOPLEVEL (414)
+<mask> :<reason>
+Used when a message is being sent
+to a mask with a wild-card for a top level domain (i.e. *.*)
+*/
+
+
 
 std::string	Response::_QUIT(void)
 {

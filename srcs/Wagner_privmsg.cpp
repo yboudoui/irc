@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 09:19:54 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 12:37:54 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ PRIVMSG is used to send private messages between users.  <receiver>
 is the nickname of the receiver of the message.  <receiver> can also
 be a list of names or channels separated with commas.
 The <receiver> parameter may also me a host mask  (#mask)  or  server
-mask  ($mask).   In  both cases the server will only send the PRIVMSG
+mask  ($mask).
+
+In  both cases the server will only send the PRIVMSG
 to those who have a server or host matching the mask.  The mask  must
 have at  least  1  (one)  "."  in it and no wildcards following the
 last ".".  This requirement exists to prevent people sending messages
@@ -29,32 +31,54 @@ to  "#*"  or "$*",  which  would  broadcast  to  all  users; from
 experience, this is abused more than used responsibly and properly.
 Wildcards are  the  '*' and  '?'   characters.   This  extension  to
 the PRIVMSG command is only available to Operators.
-
-Numeric Replies:
-
-ERR_NORECIPIENT
-ERR_NOTEXTTOSEND
-ERR_CANNOTSENDTOCHAN
-ERR_NOTOPLEVEL
-ERR_WILDTOPLEVEL
-ERR_TOOMANYTARGETS
-ERR_NOSUCHNICK
-RPL_AWAY
+RPL_AWAY (301) // qq comandes non gerees // idem mask
+<nick> :<message>
 */
 void	Wagner::cmd_privmsg(void)
 {
 	DEBUG_CALL_WAGNER
+	std::string	s_target, message, response, senderNickname;
 
-	std::string	receiver, message = request->params.back();
-	request->params.pop_back();
+	// 1. verifier qu'il y a un destinataire
+	if (!request->params.size())
+		return(user->setSendCache(ERR_NORECIPIENT()));
+    s_target = *request->params.begin();
+    request->params.pop_front();
 
-	reply.setMessage(message);
-	while (!request->params.empty())
+	// 2. verifier qu'il y a un message a envoyer
+	if (!request->params.size())
+		return(user->setSendCache(ERR_NOTEXTTOSEND()));
+	message = *request->params.begin();
+	request->params.pop_front();
+	// supprime le : si necessaire du message
+	if (!message.empty() && message[0] == ':')
+		message = message.substr(1);
+
+	// supprime le # si necessaire de la cible
+	if (!s_target.empty() && s_target[0] == '#')
+		s_target = s_target.substr(1);
+
+	// 3. verifier qu'il n'y a pas d'ambiguite (channel.name et unser.nickname)
+	Channel * target_channel = _channel_map.find(s_target);
+	User * target_user = findClient(s_target);
+	if (target_channel && target_user)
+		return(user->setSendCache(ERR_TOOMANYTARGETS(s_target)));
+
+
+	response = PRIVMSG(user->getNickname(), s_target, message);
+	if (target_channel)
 	{
-		receiver = request->params.front().substr(1);
-		request->params.pop_front();
-		//_channel(user).send(Response::QUIT).toChannel(receiver);
-		if (_channel_map.send(receiver, user, reply) == false)
-			continue; // but still an error or message to someone
+		// 4. verifier que user appartient au channel
+		if (target_channel->isInChannel(user))
+			return(target_channel->send(user->getNickname(), response));
+		else
+			return(user->setSendCache(ERR_CANNOTSENDTOCHAN(s_target)));
 	}
+	else if (target_user)
+	{
+		
+		return(target_user->setSendCache(response));
+
+	}
+	return(user->setSendCache(ERR_NOSUCHNICK(s_target)));
 }

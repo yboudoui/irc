@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 09:25:21 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 09:55:39 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,5 @@ forwarded there.
 void	Wagner::cmd_ping(void)
 {
 	DEBUG_CALL_WAGNER
-	reply(Response::PONG);
+	user->setSendCache(PONG());
 }

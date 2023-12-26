@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 14:34:21 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 12:11:47 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ class Wagner: public IOrchestrator
 		void	cmd_topic		(void);
 		void	cmd_notFound	(void);
 
-		User*	findClient(std::string name);
+		User*		findClient(std::string name);
 };
 #define SELEN_ERR_NEEDMOREPARAMS(cmd, reason)       "localhost 461 " + cmd + " :" + reason
 

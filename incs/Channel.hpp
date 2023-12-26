@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 09:30:09 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 10:52:43 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,12 +101,13 @@ class Channel
 		~Channel();
 
 		void		join(User* user, std::string usr_password);
-		void		send(User* user, Response response);
+		//void		send(User* user, Response response);
+		void		send(std::string senderNickname, std::string message);
 		std::string	getName(void);
 		std::string	getTopic(void);
 
-		bool getMode(enum ChannelModes mode);
 		std::string getChannelModes();
+		bool getMode(enum ChannelModes mode);
 		void setMode(char op, enum ChannelModes mode);
 		void setKey(std::string pass);
 		void setTopic(std::string topic);
@@ -116,7 +117,6 @@ class Channel
 		User* findUser(std::string nick);
 
 		bool		canJoin(User* user, std::string usr_password);
-
 		void		ProcessModeCmd(User* user, const std::string& command,t_params& params);
 };
 
@@ -135,8 +135,11 @@ class ChannelMap
 	public:
 		ChannelMap();
 		~ChannelMap();
-		bool		send(std::string name, User* user, Response reply);
-		bool		sendToAllChannelOfUser(User* user, Response reply);
+
+		bool		send(std::string channelName, std::string senderNickname, std::string message);
+		//bool		sendToAllChannelOfUser(User* user, Response reply);
+		bool		sendToAllChannelOfUser(User* user, std::string message);
+
 		Channel*	find(std::string name);
 		Channel*	find_or_create(std::string name);
 };

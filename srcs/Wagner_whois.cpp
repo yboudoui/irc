@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 09:14:32 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 11:05:43 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 4.5.2 Whois query
 Command: WHOIS
 Parameters: [<server>] <nickmask>[,<nickmask>[,...]]
-This message is used to query information about particular user.  The
-server will answer this message with several numeric messages
+This message is used to query information about particular user.
+
+The server will answer this message with several numeric messages
 indicating different statuses of each user which matches the nickmask
 (if you are entitled to see them).  If no wildcard is present in the
 <nickmask>, any information about that nick which you are allowed to
@@ -43,8 +44,9 @@ RPL_WHOISIDLE
 ERR_NOSUCHNICK
 RPL_ENDOFWHOIS
 */
+
 void	Wagner::cmd_whois(void)
 {
 	DEBUG_CALL_WAGNER
-	reply(Response::RPL_WHOISUSER);
+	user->setSendCache(RPL_WHOISUSER(user));
 }
