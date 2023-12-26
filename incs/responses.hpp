@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:15:13 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:05:54 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,24 @@ std::string	ERR_BANNEDFROMCHAN(std::string channel, std::string reason = "banned
 std::string	RPL_NAMREPLY(std::string nickname, Channel *channel);
 
 
+
+
+/*
+ERR_INVITEONLYCHAN (473) //canJoin
+<channel> :<reason>
+Returned when attempting to join a channel which is invite only without an invitation
+
+ERR_BADCHANNELKEY (475) //canJoin
+<channel> :<reason>
+Returned when attempting to join a key-locked
+channel either without a key or with the wrong key
+
+ERR_CHANNELISFULL (471) // canJoin
+<channel> :<reason>
+Returned when attempting to join
+a channel which is set +l and is already full
+
+*/
 
 
 class Response

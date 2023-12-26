@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:12:23 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/26 17:37:45 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,10 @@ Channel*	Wagner::find_or_create_channel(std::string name)
 
 	it = _channel_map.find(name);
 	if (it == _channel_map.end())
-		it = _channel_map.insert(std::make_pair(name, new Channel(name))).first;
+	{
+		Channel*	new_channel = new Channel();
+		new_channel->name.set(name);
+		it = _channel_map.insert(std::make_pair(name, new_channel)).first;
+	}
 	return (it->second);
 }

@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/26 09:30:18 by sethomas         ###   ########.fr        #
+#    Updated: 2023/12/26 18:08:41 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,42 @@ SRCS				=	main.cpp\
 						srcs/IQueueEventListener.cpp \
 						srcs/SocketBind.cpp \
 						srcs/SocketConnection.cpp \
-						srcs/extractor.cpp
+						srcs/extractor.cpp \
+						srcs/responses/ERR_ALREADYREGISTERED.cpp \
+						srcs/responses/ERR_BADCHANNELKEY.cpp \
+						srcs/responses/ERR_BANNEDFROMCHAN.cpp \
+						srcs/responses/ERR_CANNOTSENDTOCHAN.cpp \
+						srcs/responses/ERR_CHANNELISFULL.cpp \
+						srcs/responses/ERR_CHANOPRIVSNEEDED.cpp \
+						srcs/responses/ERR_ERRONEUSNICKNAME.cpp \
+						srcs/responses/ERR_INVITEONLYCHAN.cpp \
+						srcs/responses/ERR_KEYSET.cpp \
+						srcs/responses/ERR_NEEDMOREPARAMS.cpp \
+						srcs/responses/ERR_NICKNAMEINUSE.cpp \
+						srcs/responses/ERR_NONICKNAMEGIVEN.cpp \
+						srcs/responses/ERR_NORECIPIENT.cpp \
+						srcs/responses/ERR_NOSUCHCHANNEL.cpp \
+						srcs/responses/ERR_NOSUCHNICK.cpp \
+						srcs/responses/ERR_NOTEXTTOSEND.cpp \
+						srcs/responses/ERR_NOTONCHANNEL.cpp \
+						srcs/responses/ERR_PASSWDMISMATCH.cpp \
+						srcs/responses/ERR_TOOMANYTARGETS.cpp \
+						srcs/responses/ERR_UMODEUNKNOWNFLAG.cpp \
+						srcs/responses/ERR_UNKNOWNMODE.cpp \
+						srcs/responses/ERR_USERONCHANNEL.cpp \
+						srcs/responses/PONG.cpp \
+						srcs/responses/PRIVMSG.cpp \
+						srcs/responses/RPL_CHANNELMODEIS.cpp \
+						srcs/responses/RPL_CREATED.cpp \
+						srcs/responses/RPL_INVITING.cpp \
+						srcs/responses/RPL_MYINFO.cpp \
+						srcs/responses/RPL_NAMREPLY.cpp \
+						srcs/responses/RPL_NOTOPIC.cpp \
+						srcs/responses/RPL_TOPIC.cpp \
+						srcs/responses/RPL_WELCOME.cpp \
+						srcs/responses/RPL_WHOISUSER.cpp \
+						srcs/responses/RPL_YOURHOST.cpp
+
 
 INCS				=	./incs \
 

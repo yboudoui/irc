@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:14:59 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 17:38:56 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,10 @@ class Channel
 {
 	private:
 		available<std::string>		_key;
-
 		int							_modes;
 
 		typedef	std::map<User*, t_user_right>	t_users_map;
-
-		t_users_map	_users_map;
+		t_users_map								_users_map;
 
 	public:
 		get_set<std::string>	name;
@@ -102,7 +100,6 @@ class Channel
 		get_set<size_t>			limit;
 
 		Channel();
-		Channel(std::string name);
 		~Channel();
 
 		bool		join(User* user, std::string usr_password);
@@ -110,8 +107,8 @@ class Channel
 		void		send(std::string senderNickname, std::string message);
 		
 		// getters
-		std::string getChannelModes();
-		bool		getMode(enum ChannelModes mode);
+		std::string		getChannelModes();
+		bool			getMode(enum ChannelModes mode);
 		std::string		getUserList();
 	
 		// setters 

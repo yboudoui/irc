@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:14:39 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:06:30 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,6 @@ Channel::Channel()
 {
 	_modes = 0;
 	DEBUG_CALL_CHANNEL
-}
-
-Channel::Channel(std::string name)
-	: _modes(0)
-{
-	DEBUG_CALL_CHANNEL
-	this->name.set(name);
 }
 
 Channel::~Channel()
@@ -99,7 +92,8 @@ bool Channel::getMode(enum ChannelModes mode) {
     return (_modes & mode) != 0;
 }
 
-std::string Channel::getChannelModes() {
+std::string Channel::getChannelModes()
+{
 	std::string modes;
 
 	if(this->getMode(INVITE_ONLY))
@@ -110,7 +104,7 @@ std::string Channel::getChannelModes() {
 		modes.append("k");
 	if(this->getMode(USER_LIMIT))
 		modes.append("l");
-    return  modes;
+	return (modes);
 }
 
 void Channel::setKey(std::string pass)
@@ -142,23 +136,6 @@ bool Channel::isInChannel(User* user)
 	return true;
 }
 
-
-/*
-ERR_INVITEONLYCHAN (473) //canJoin
-<channel> :<reason>
-Returned when attempting to join a channel which is invite only without an invitation
-
-ERR_BADCHANNELKEY (475) //canJoin
-<channel> :<reason>
-Returned when attempting to join a key-locked
-channel either without a key or with the wrong key
-
-ERR_CHANNELISFULL (471) // canJoin
-<channel> :<reason>
-Returned when attempting to join
-a channel which is set +l and is already full
-
-*/
 bool Channel::canJoin(User* user, std::string usr_password)
 {
 	if (getMode(KEY_PROTECTED))

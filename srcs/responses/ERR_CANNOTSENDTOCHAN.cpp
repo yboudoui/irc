@@ -1,0 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ERR_CANNOTSENDTOCHAN.cpp                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/26 17:58:34 by yboudoui          #+#    #+#             */
+/*   Updated: 2023/12/26 17:58:49 by yboudoui         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "responses.hpp"
+
+/*
+ERR_CANNOTSENDTOCHAN (404)
+<channel> :<reason>	
+Sent to a user who does not have the rights
+to send a message to a channel
+*/
+std::string	ERR_CANNOTSENDTOCHAN(std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 404";
+	output << " " << channel;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}

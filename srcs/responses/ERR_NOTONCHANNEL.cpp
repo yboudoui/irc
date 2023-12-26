@@ -1,0 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ERR_NOTONCHANNEL.cpp                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/26 17:47:59 by yboudoui          #+#    #+#             */
+/*   Updated: 2023/12/26 17:48:22 by yboudoui         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "responses.hpp"
+
+/*
+ERR_NOTONCHANNEL (442)
+<channel> :<reason>   Returned by the server 
+whenever a client tries to perform a channel 
+effecting command for which the client is not a member
+*/
+std::string	ERR_NOTONCHANNEL(std::string nickname, std::string channel, std::string reason)
+{
+	std::stringstream	output;
+
+	(void)reason;
+	output << ":" << HOSTNAME;
+	output << " 442 #" << channel;
+	output << " " << nickname;
+	output << " :" << reason;
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
