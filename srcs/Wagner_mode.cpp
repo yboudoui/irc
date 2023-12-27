@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 15:35:46 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:24:31 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	Wagner::cmd_mode(void)
 		return (user->setSendCache(ERR_NOTREGISTERED()));
 
 	if (request->params.size() < 1 )
-        return (user->setSendCache(ERR_NEEDMOREPARAMS("", "MODE")));
+		return (user->setSendCache(ERR_NEEDMOREPARAMS("", "MODE")));
     
     std::string s_channel, s_modes;
     s_channel = *request->params.begin();
