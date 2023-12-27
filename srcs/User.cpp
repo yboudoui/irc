@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 17:38:40 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:20:31 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	User::join(Channel* channel, std::string password)
 	if (channel == NULL)
 		return ;
 	channel->join(this, password);
-	_channels.insert(std::make_pair(channel->name.get(), channel));
+	_channels.insert(std::make_pair(channel->name, channel));
 }
 
 void	User::quit(Channel* channel)
@@ -48,7 +48,15 @@ void	User::quit(Channel* channel)
 	if (channel == NULL)
 		return ;
 	channel->remove(this);
-	_channels.erase(channel->name.get());
+	_channels.erase(channel->name);
+}
+
+void	User::sendToAllChannels(std::string message)
+{
+	t_channels::iterator it = _channels.begin();
+
+	for (; it != _channels.end(); it++)
+		it->second->send(nick_name.get(), message);
 }
 
 bool	User::send(std::string channelName, std::string message)
@@ -61,12 +69,12 @@ bool	User::send(std::string channelName, std::string message)
 	return (false);
 }
 
-void	User::sendToAllChannels(std::string message)
+void	User::sendTo(Channel* channel, std::string msg)
 {
-	t_channels::iterator it = _channels.begin();
-
-	for (; it != _channels.end(); it++)
-		it->second->send(nick_name.get(), message);
+	if (channel == NULL)
+		return ;
+	if (_channels.find(channel->name) != _channels.end())
+		channel->sendToAllUsers(msg, this);
 }
 
 bool	User::operator () (User* to_compare)

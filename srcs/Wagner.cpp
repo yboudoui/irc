@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 22:07:39 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:41:26 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 
 void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 {
+	MessageQueue	requests;
+
 	user = dynamic_cast<User*>(listener);
 	if (user == NULL)
 		throw std::runtime_error("Bad EventListener");
@@ -147,7 +149,7 @@ Channel*	Wagner::find_or_create_channel(std::string name)
 	if (it == _channel_map.end())
 	{
 		Channel*	new_channel = new Channel();
-		new_channel->name.set(name);
+		new_channel->name = name;
 		it = _channel_map.insert(std::make_pair(name, new_channel)).first;
 	}
 	return (it->second);

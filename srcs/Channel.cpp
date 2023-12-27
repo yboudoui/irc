@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 18:13:40 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:20:08 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 Channel::Channel()
 {
-	_modes = 0;
+	modes = 0;
 	DEBUG_CALL_CHANNEL
 }
 
@@ -63,7 +63,6 @@ void	Channel::send(std::string senderNickname, std::string message)
 	}
 }
 
-
 void	Channel::remove(User* user)
 {
 	if (user == NULL)
@@ -71,64 +70,32 @@ void	Channel::remove(User* user)
 	//_users_map.remove >>
 }
 
-// TODO : 
-/*
-bool		ChannelMap::sendToAllChannelOfUser(User* user, std::string message)
+std::string	Channel::getChannelModes()
 {
-	(void)user;
-	(void)message;
-	return (true);
-}
-*/
-void Channel::setMode(char op, enum ChannelModes mode)
-{
-    if (op == '+')
-        _modes |= mode;
-    else
-        _modes &= ~mode;
-}
+	std::string	output;
 
-bool Channel::getMode(enum ChannelModes mode)
-{
-	return (_modes & mode) != 0;
+	if(modes & INVITE_ONLY)
+		output.append("i");
+	if(modes & TOPIC_ONLY_OP)
+		output.append("t");
+	if(modes & KEY_PROTECTED)
+		output.append("k");
+	if(modes & USER_LIMIT)
+		output.append("l");
+	if (output.size())
+		output.insert(0, "+");
+	return (output);
 }
 
-std::string Channel::getChannelModes()
+bool		Channel::isOperator(User* user)
 {
-	std::string modes;
+	t_users_map::iterator	found = _users_map.find(user);
+	t_users_map::iterator	end = _users_map.end();
 
-	if(this->getMode(INVITE_ONLY))
-		modes.append("i");
-	if(this->getMode(TOPIC_ONLY_OP))
-		modes.append("t");
-	if(this->getMode(KEY_PROTECTED))
-		modes.append("k");
-	if(this->getMode(USER_LIMIT))
-		modes.append("l");
-	if (modes.size())
-		modes.insert(0, "+");
-	return (modes);
+	return ((found != end) && (found->second & OPERATOR));
 }
 
-void Channel::setKey(std::string pass)
-{
-    _key = pass;
-}
-
-bool Channel::isOperator(User* user)
-{
-	t_users_map::iterator	it = _users_map.begin();
-	t_users_map::iterator	ite = _users_map.end();
-
-	it = _users_map.find(user);
-	if (it == ite)
-		return false;
-	if (it->second == OPERATOR)
-		return true;
-	return false;
-}
-
-bool Channel::isInChannel(User* user)
+bool		Channel::isInChannel(User* user)
 {
 	t_users_map::iterator	it = _users_map.begin();
 	t_users_map::iterator	ite = _users_map.end();
@@ -139,26 +106,26 @@ bool Channel::isInChannel(User* user)
 	return true;
 }
 
-bool Channel::canJoin(User* user, std::string usr_password)
+bool	Channel::canJoin(User* user, std::string usr_password)
 {
-	if (getMode(KEY_PROTECTED))
+	if (modes & KEY_PROTECTED)
 	{
-		if (_key && usr_password != _key())
+		if (password && usr_password != password())
 		{
-			user->setSendCache(ERR_BADCHANNELKEY(name.get()));
-			return false;
+			user->setSendCache(ERR_BADCHANNELKEY(name));
+			return (false);
 		}
 	}
-	if (getMode(USER_LIMIT))
+	if (modes & USER_LIMIT)
 	{
 		size_t nb_user = countUser();
-		if (nb_user >= limit.get())
+		if (nb_user >= limit)
 		{
-			user->setSendCache(ERR_CHANNELISFULL(name.get()));
+			user->setSendCache(ERR_CHANNELISFULL(name));
 			return false;
 		}
 	}
-	if (getMode(INVITE_ONLY))
+	if (modes & INVITE_ONLY)
 	{
 		t_users_map::iterator it = _users_map.find(user);
 		if (it != _users_map.end() && it->second == INVITED)
@@ -221,10 +188,14 @@ std::string Channel::getUserList()
 	return list;
 }
 
-void	Channel::sendToAllUsers(std::string msg)
+void	Channel::sendToAllUsers(std::string msg, User* user)
 {
 	t_users_map::iterator	it;
 
 	for (it = _users_map.begin(); it != _users_map.end(); it++)
+	{
+		if (it->first == user)
+			continue ;
 		it->first->setSendCache(msg);
+	}
 }

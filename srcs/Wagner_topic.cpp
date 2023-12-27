@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 15:36:43 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:22:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,11 @@ void	Wagner::cmd_topic(void)
 {
 	DEBUG_CALL_WAGNER
 
-	std::string	channel_name;
 	std::string	user_nick_name = user->nick_name.get();
 	size_t		params_count = request->params.size();
 
-//1. check si au moins 2 params
-	if (params_count < 2)
+//1. check si au moins 1 params
+	if (params_count < 1)
 	{
 		user->setSendCache(ERR_NEEDMOREPARAMS("", "TOPIC"));
 		return ;
@@ -47,31 +46,30 @@ void	Wagner::cmd_topic(void)
 		return ;
 	}
 
-
 //3. verifier que user est sur la channel avec :
 	available<t_client>	current_client = channel->find_by(*user);
 	if (current_client == false)
 	{
-		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel_name));
+		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel->name));
 		return ;
 	}
 
-/*
-//4. si il y a un param <topic> verifier si le topic n'est modificable que par les op avec.
-	if (channel.getMode(TOPIC_ONLY_OP))
+//4. si il y a un parametre renvoyer le topic a l'utilisateur.
+	if (params_count == 1)
 	{
-		if  (channel.isOperator(user))
-			channel.setTopic(<topic>)
+		if (channel->topic)
+			user->setSendCache(RPL_TOPIC(channel->name, channel->topic()));
 		else
-			user->setSendCache(ERR_CHANOPRIVSNEEDED(user->getNickname(), <channelName>)));
+			user->setSendCache(RPL_NOTOPIC(channel->name));
+		return ;
 	}
-	else
-		channel.setTopic(<topic>)
 
-//5. Envoyer :
-	if (channel.getTopic().size())
-		RPL_TOPIC(channel.getName(), channel.getTopic());
-	else
-		RPL_NOTOPIC(channel.getName());
-*/
+//5. si il y a deux parameter verifier si le topic n'est modificable que par les operateurs.
+	if ((channel->modes & TOPIC_ONLY_OP) && (current_client().second & OPERATOR) == false)
+	{
+		user->setSendCache(ERR_CHANOPRIVSNEEDED(user_nick_name, channel->name));
+		return ;
+	}
+	channel->topic(request->params[1]);
+	user->sendTo(channel, RPL_TOPIC(channel->name, request->params[1]));
 }

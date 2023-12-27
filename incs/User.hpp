@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 15:35:02 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:17:51 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ class User
 		void	join(Channel* channel, std::string password);
 		void	quit(Channel* channel);
 		bool	send(std::string channelName, std::string message);
+		void	sendTo(Channel* channel, std::string msg);
 		bool	operator () (User*);
 };
 

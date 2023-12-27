@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 16:10:47 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:08:18 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,16 +90,16 @@ typedef std::pair<User*, t_user_right>	t_client;
 class Channel
 {
 	private:
-		available<std::string>		_key;
-		int							_modes;
 
 		typedef	std::map<User*, t_user_right>	t_users_map;
 		t_users_map								_users_map;
 
 	public:
-		get_set<std::string>	name;
-		get_set<std::string>	topic;
-		get_set<size_t>			limit;
+		available<std::string>	password;
+		std::string				name;
+		t_available_string		topic;
+		size_t					limit;
+		int						modes;
 
 		Channel();
 		~Channel();
@@ -110,13 +110,8 @@ class Channel
 		
 		// getters
 		std::string		getChannelModes();
-		bool			getMode(enum ChannelModes mode);
 		std::string		getUserList();
-	
-		// setters 
-		void	setMode(char op, enum ChannelModes mode);
-		void	setKey(std::string pass);
-		
+
 		// checkers
 		bool	isOperator(User* user);
 		bool	isInChannel(User* user);
@@ -127,7 +122,7 @@ class Channel
 		available<t_client>	find_by(predicate<User*>& predicate);
 
 		void	ProcessModeCmd(User* user, const std::string& command,t_params& params);
-		void	sendToAllUsers(std::string msg);
+		void	sendToAllUsers(std::string msg, User* user = NULL);
 };
 
 #endif

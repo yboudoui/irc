@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 17:29:45 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:21:40 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	Wagner::cmd_kick(void)
 	if (!user->isConnected())
 		return (user->setSendCache(ERR_NOTREGISTERED()));
 
-	std::string	channel_name;
 	std::string	user_nick_name = user->nick_name.get();
 	size_t		params_count = request->params.size();
 
@@ -48,25 +47,23 @@ void	Wagner::cmd_kick(void)
 		return ;
 	}
 
-	channel_name = channel->name.get();
-
 	available<t_client>	current_client = channel->find_by(*user);
 	if (current_client == false)
 	{
-		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel_name));
+		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel->name));
 		return ;
 	}
 
 	if ((current_client().second & INVITED) == false)
 	{
-		user->setSendCache(ERR_CHANOPRIVSNEEDED(user_nick_name, channel_name));
+		user->setSendCache(ERR_CHANOPRIVSNEEDED(user_nick_name, channel->name));
 		return ;
 	}
 
 	available<t_client>	client = channel->find_by(nickName(request->params[1]));
 	if (client == false)
 	{
-		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel_name));
+		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel->name));
 		return ;
 	}
 

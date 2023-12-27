@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 18:00:31 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:18:06 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ class Wagner: public IOrchestrator
 // Context
 		User*			user;
 		Message*		request;
-		MessageQueue	requests;
 
 		void	cmd_pass		(void);
 		void	cmd_cap			(void);

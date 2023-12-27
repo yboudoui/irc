@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 17:30:07 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:22:04 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,20 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                     op = c;
                     break;
                 case 'i':
-                    this->setMode(op, INVITE_ONLY);
+					modes = (op == '+') ? modes | INVITE_ONLY : modes & ~INVITE_ONLY;
                     break;
                 case 't':
-                     this->setMode(op, TOPIC_ONLY_OP);
+					modes = (op == '+') ? modes | TOPIC_ONLY_OP : modes & ~TOPIC_ONLY_OP;
                     break;
                 case 'k':
                     if (params.empty() && op == '+')
                     {
-                        user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type a password (+k)"));
+                        user->setSendCache(ERR_NEEDMOREPARAMS(name, "MODE", "please type a password (+k)"));
                        break;
                     }
-                    if (this->getMode(KEY_PROTECTED) && op == '+')
+                    if ((modes & KEY_PROTECTED) && op == '+')
                     {
-                        user->setSendCache(ERR_KEYSET(user->nick_name.get(), name.get()));
+                        user->setSendCache(ERR_KEYSET(user->nick_name.get(), name));
                        break;  
                     }
                     if (op == '+')
@@ -50,19 +50,19 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                         params.pop_front();
                         if (pass.find_first_not_of("abcdefghijklmnopqrstuvwxyz01234A56789"))
                         {
-                            this->setMode(op, KEY_PROTECTED);
-                            this->setKey(pass);
+							modes = (op == '+') ? modes | KEY_PROTECTED : modes & ~KEY_PROTECTED;
+							password(pass);
                         }
-                        else 
-                            user->setSendCache(ERR_KEYSET(user->nick_name.get(), name.get(), "please type an alnum password"));
+                        else
+                            user->setSendCache(ERR_KEYSET(user->nick_name.get(), name, "please type an alnum password"));
                     }
                     else
-                        this->setMode(op, KEY_PROTECTED);
+						modes = (op == '+') ? modes | KEY_PROTECTED : modes & ~KEY_PROTECTED;
                     break;
                 case 'l' :
                     if (params.empty() && op == '+')
                     {
-                        user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type user limit (+l)"));
+                        user->setSendCache(ERR_NEEDMOREPARAMS(name, "MODE", "please type user limit (+l)"));
                        break;
                     }
                     if (op == '+')
@@ -75,21 +75,19 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                             std::stringstream ss;
                             ss << s_limit;
                             ss >> _limit;
-                            this->setMode(op, USER_LIMIT);
-                            this->limit.set(_limit);
+							modes = (op == '+') ? modes | USER_LIMIT : modes & ~USER_LIMIT;
+                            limit = _limit;
                         }
                         else 
-                            user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type a numeric user limit (+l)"));
+                            user->setSendCache(ERR_NEEDMOREPARAMS(name, "MODE", "please type a numeric user limit (+l)"));
                     }
-                    else 
-                    {
-                        this->setMode(op, USER_LIMIT);
-                    }
+                    else
+						modes = (op == '+') ? modes | USER_LIMIT : modes & ~USER_LIMIT;
                     break;
                 case 'o':
                     if (params.empty())
                     {
-                        user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type a nickname (o)"));
+                        user->setSendCache(ERR_NEEDMOREPARAMS(name, "MODE", "please type a nickname (o)"));
                         break;
                     }
 					{
@@ -98,7 +96,7 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
 
 					available<t_client>	client = find_by(nickName(s_ChannelUser));
 					if (client == false)
-						user->setSendCache(ERR_NOSUCHNICK(name.get(), s_ChannelUser));
+						user->setSendCache(ERR_NOSUCHNICK(name, s_ChannelUser));
 					else
 					{
 						if (client().first == user)
@@ -109,7 +107,7 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                     break;
                 
                 default:
-                    user->setSendCache(ERR_UNKNOWNMODE(name.get(), c));
+                    user->setSendCache(ERR_UNKNOWNMODE(name, c));
                     break;
             }
         
