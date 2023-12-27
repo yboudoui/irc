@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 17:23:27 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:29:34 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ channel operator on the given channel.
 void	Wagner::cmd_invite(void)
 {
 	DEBUG_CALL_WAGNER
+	if (!user->isConnected())
+		return (user->setSendCache(ERR_NOTREGISTERED()));
 
 	std::string	channelName;
 	std::string	nickToInvite;

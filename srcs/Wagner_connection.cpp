@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 14:43:47 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:59:01 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,15 @@ void	Wagner::cmd_cap(void)
 void	Wagner::cmd_pass(void)
 {
 	DEBUG_CALL_WAGNER
+
 	if (user->isConnected())
 		return(user->setSendCache(ERR_ALREADYREGISTRED(user->nick_name.get())));
 	if (request->params.empty())
 		return(user->setSendCache(ERR_NEEDMOREPARAMS("", "PASS", "please type a password" )));
-	if (request->params.front() != _pass)
-		return(user->setSendCache(ERR_PASSWDMISMATCH(user->nick_name.get())));
-	return (user->connectionStep());
+	
+	std::string password = request->params.front();
+	request->params.pop_front();	
+	user->connection_password.set(password);
 }
 
 void	Wagner::cmd_nick(void)
@@ -36,6 +38,7 @@ void	Wagner::cmd_nick(void)
 	if (request->params.empty())
 		return (user->setSendCache(ERR_NONICKNAMEGIVEN()));
 	std::string nickname = request->params.front();
+	request->params.pop_front();
 	if (nickname == "anonymous" || nickname == "localhost" || nickname.find_first_of("<>?/\\!%#@&$") != std::string::npos)
 		return (user->setSendCache(ERR_ERRONEUSNICKNAME(nickname)));
 	else
@@ -85,6 +88,12 @@ void	Wagner::cmd_user(void)
 			}
 		}
 		user->connectionStep();
+	}
+	if (user->connection_password.get() != _pass)
+	{
+		user->setSendCache(ERR_PASSWDMISMATCH(user->nick_name.get()));
+		user->is_alive(false);
+		return ;
 	}
 	if (user->isConnected())
 	{

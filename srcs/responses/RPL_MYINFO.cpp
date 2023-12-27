@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL_MYINFO.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:45:21 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:45:46 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:07:33 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ std::string	RPL_MYINFO()
 
 	output << ":" << HOSTNAME;
 	output << " 004 ";
-	output << ": <server_name> <version> <user_modes> <chan_modes>";
+	output << ": " << SERVERNAME << " " << VERSION << " o itlk";
 	output << "\r\n";
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());

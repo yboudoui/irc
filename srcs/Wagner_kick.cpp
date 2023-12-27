@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 15:35:23 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:29:45 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ Il est possible d'étendre les paramètres de la commande KICK ainsi :
 void	Wagner::cmd_kick(void)
 {
 	DEBUG_CALL_WAGNER
+	if (!user->isConnected())
+		return (user->setSendCache(ERR_NOTREGISTERED()));
 
 	std::string	channel_name;
 	std::string	user_nick_name = user->nick_name.get();

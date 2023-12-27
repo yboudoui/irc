@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 17:22:37 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:08:39 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@
 # include "User.hpp"
 # include "Channel.hpp"
 # include "MessageQueue.hpp"
+
 # define HOSTNAME "localhost"
+# define SERVERNAME "SuperServeur"
+# define VERSION "1.0"
+# define CREATION_DATE "2023/12/10"
 
 class User;
 class Channel;

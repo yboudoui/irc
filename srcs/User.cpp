@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 16:08:32 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:38:40 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 User::User(IQueue &queue, int fd)
 	: SocketConnection(queue, fd)
-	, _connection_complete(3)
+	, _connection_complete(2)
 {
 	DEBUG_CALL_USER
 }

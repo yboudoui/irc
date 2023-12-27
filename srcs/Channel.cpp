@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 16:08:14 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:13:40 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ std::string Channel::getChannelModes()
 		modes.append("k");
 	if(this->getMode(USER_LIMIT))
 		modes.append("l");
+	if (modes.size())
+		modes.insert(0, "+");
 	return (modes);
 }
 
