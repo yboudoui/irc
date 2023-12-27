@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 22:08:24 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 23:46:22 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,8 @@ int	main(int argc, char *argv[])
 	// https://www.alien.net.au/irc/irc2numerics.html
 	password = argv[1];
 
-	Wagner		_wagner(hostname, password);
-	
-	Queue	queue = Queue(_wagner);
+	Queue	queue = Queue();
+	Wagner	wagner(hostname, password);
 
 	struct sigaction	signals[2] = {};
 	signals[0].sa_handler = queue.stop;
@@ -71,12 +70,12 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 
-	// TODO : delete sock 
 	SocketBind*	sock = new SocketBind(_wagner, queue, port);
 
 	std::cout << "localhost:" << port << std::endl;
 
-	while (queue.event_loop());
+	//TODO allocate Wagner then delete it
+	while (queue.event_loop(wagner));
 	IQueue::IEventListener::free(sock);
 	return (0);
 }

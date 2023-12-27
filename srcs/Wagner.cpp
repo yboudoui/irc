@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 17:41:26 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 23:39:08 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,16 @@ Wagner::Wagner(std::string host, std::string pass)
 
 Wagner::~Wagner()
 {
-	DEBUG_CALL_WAGNER
-	{
-		t_channel_map::iterator	it = _channel_map.begin();
-		t_channel_map::iterator	ite = _channel_map.end();
+	t_channel_map::iterator	chan;
 
-		for ( ; it != ite ; it++)
-			delete it->second;
-	}
-	{
-		t_clients::iterator	it = _clients.begin();
-		t_clients::iterator	ite = _clients.end();
-		
-		// TOTO delete User *
-		for ( ; it != ite ; it++)
-		{
-			//delete it;
-		}
-	}
+	chan = _channel_map.begin();
+	for ( ; chan != _channel_map.end() ; chan++)
+		delete chan->second;
+
+	t_clients::iterator	it = _clients.begin();
+	for ( ; it != _clients.end() ; it++)
+		IQueue::IEventListener::free(*it);
+
 	/*
 	TODO // send error_message 
 	Command: ERROR
@@ -66,6 +58,7 @@ Wagner::~Wagner()
 	This MUST only be used to report fatal errors.
 	Regular errors should use the appropriate numerics or the IRCv3 standard replies framework.
 	*/
+	DEBUG_CALL_WAGNER
 }
 
 void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
@@ -77,6 +70,16 @@ void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 	_clients.insert(user);
 }
 
+void	Wagner::removeEventListener(IQueue::IEventListener* listener)
+{
+	User*	user = dynamic_cast<User*>(listener);
+	t_clients::iterator it = _clients.find(user);
+	if (it == _clients.end())
+		return ;
+	_clients.erase(it);
+	IQueue::IEventListener::free(user);
+}
+
 void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 {
 	MessageQueue	requests;
@@ -85,8 +88,6 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 	if (user == NULL)
 		throw std::runtime_error("Bad EventListener");
 	Message::color(BLUE);
-	if (user->getReadCache().size())
-		std::cout << std::endl << RED << user->getReadCache() << std::endl << std::endl;
 	requests << user->getReadCache();
 	Message::color(GREEN);
 

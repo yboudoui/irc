@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 22:08:04 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 23:36:05 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,12 @@
 
 bool	Queue::_stop = false;
 
-Queue::Queue(IOrchestrator& orchestrator, size_t max_events)
+Queue::Queue(size_t max_events)
 	: _max_events(max_events)
-	, _orchestrator(orchestrator)
 {
 	_epoll_instance = epoll_create(_max_events);	/* for backward compatibility */
 	if (_epoll_instance < 0)
 		throw std::runtime_error("Fatal error when creating the monitoring socket instance");
-	// TODO : delete _events_list
 	_events_list = new struct epoll_event [_max_events];
 }
 
@@ -31,7 +29,7 @@ void	Queue::subscribe(int fd, IQueue::IEventListener* listener)
 
 	struct epoll_event ev;
 
-	ev.events	=	EPOLLIN | EPOLLOUT;// | EPOLLET;
+	ev.events	=	EPOLLIN | EPOLLOUT;
 	ev.data.ptr	=	listener;
 	epoll_ctl(_epoll_instance, EPOLL_CTL_ADD, fd, &ev);
 }
@@ -43,7 +41,7 @@ void	Queue::unsubscribe(int fd)
 	epoll_ctl(_epoll_instance, EPOLL_CTL_DEL, fd, NULL);
 }
 
-bool	Queue::event_loop(void)
+bool	Queue::event_loop(IOrchestrator& orchestrator)
 {
 	int	num_events;
 
@@ -52,7 +50,7 @@ bool	Queue::event_loop(void)
 	num_events = epoll_wait(_epoll_instance, _events_list, _max_events, 0);
 	if (num_events < 0)
 	{
-		std::cout << "Big error.." << std::endl;
+		std::cout << "Big error.." << std::endl; //TODO patch this
 		return (false);
 	}
 	for (int i = 0; i < num_events; i++)
@@ -60,14 +58,14 @@ bool	Queue::event_loop(void)
 		IQueue::IEventListener* listener = (IQueue::IEventListener*)_events_list[i].data.ptr;
 		if (listener->is_alive() == false)
 		{
-			IQueue::IEventListener::free(listener);
+			orchestrator.removeEventListener(listener);
 			continue ;
 		}
 		if (_events_list[i].events & EPOLLIN)
 			listener->read();
 		if (_events_list[i].events & EPOLLOUT)
 		{
-			_orchestrator.treatEventListener(listener);
+			orchestrator.treatEventListener(listener);
 			listener->write();
 		}
 	}

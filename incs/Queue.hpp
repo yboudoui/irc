@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:07:28 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/22 16:14:03 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 23:35:50 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,15 @@ class Queue : public IQueue {
 		int					_epoll_instance;
 		struct epoll_event	*_events_list;
 		size_t				_max_events;
-		IOrchestrator		&_orchestrator;
 		static bool			_stop;
 
 	public:
-		Queue(IOrchestrator& orchestrator, size_t nevents = MAX_EVENTS);
+		Queue(size_t nevents = MAX_EVENTS);
 		~Queue();
 
 		void	subscribe(int fd, IQueue::IEventListener* listener);
 		void	unsubscribe(int fd);
-		bool	event_loop(void);
+		bool	event_loop(IOrchestrator& orchestrator);
 		static void	stop(int);
 };
 #endif

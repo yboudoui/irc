@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 18:18:06 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 23:33:08 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class Wagner: public IOrchestrator
 
 		void	addEventListener(IQueue &queue, int fd_socketBind);
 		void	treatEventListener(IQueue::IEventListener* listener);
+		void	removeEventListener(IQueue::IEventListener* listener);
 
 	private:
 		typedef void (Wagner::*pfonc)(void);

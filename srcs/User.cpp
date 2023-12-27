@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 18:20:31 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 23:39:43 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,13 @@ User::User(IQueue &queue, int fd)
 
 User::~User()
 {
+	t_channels::iterator	it = _channels.begin();
+
+	for (; it != _channels.end(); it++)
+	{
+		it->second->remove(this);
+		_channels.erase(it);
+	}
 	DEBUG_CALL_USER
 }
 
