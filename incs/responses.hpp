@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:16:32 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 12:12:51 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ std::string	RPL_NOTOPIC(std::string channel, std::string info = "no topic is set
 std::string	RPL_TOPIC(std::string channel, std::string topic);
 
 // PING
-std::string	PONG();
+std::string	PONG(std::string server);
 
 // WHOIS
 std::string	RPL_WHOISUSER(User * _user);
@@ -82,5 +82,9 @@ std::string	ERR_BANNEDFROMCHAN(std::string channel, std::string reason = "banned
 
 std::string	RPL_NAMREPLY(std::string nickname, Channel *channel);
 std::string	NICK(std::string old, std::string newnick);
+
+//PING PONG
+std::string	ERR_NOORIGIN();
+std::string	ERR_NOSUCHSERVER(std::string server);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:16:14 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 12:09:10 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,3 +43,37 @@ std::string	NICK(std::string old, std::string newnick)
 	return (output.str());
 }
 
+/*
+ERR_NOORIGIN (409)
+:<reason> 
+PING or PONG message missing the originator parameter
+which is required since these commands must work without 
+valid prefixes
+*/
+std::string	ERR_NOORIGIN()
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 409";
+	output << " :message missing the originator parameter";
+	output << "\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}
+/*
+ERR_NOSUCHSERVER (402)
+<server> :<reason>      
+Used to indicate the server name given currently doesn't exist
+*/
+std::string	ERR_NOSUCHSERVER(std::string server)
+{
+	std::stringstream	output;
+
+	output << ":" << HOSTNAME;
+	output << " 402 ";
+	output << server;
+	output << " :the server name given currently doesn't exis\r\n";
+	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	return (output.str());
+}

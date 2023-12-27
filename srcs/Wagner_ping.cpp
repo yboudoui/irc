@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 19:06:29 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 13:16:14 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,18 @@ forwarded there.
 void	Wagner::cmd_ping(void)
 {
 	DEBUG_CALL_WAGNER
-	user->setSendCache(PONG());
+	if (!request->params.size())
+                user->setSendCache(ERR_NOORIGIN());
+    
+        std::string server;
+        while (request->params.size())
+        {
+                server = *request->params.begin();
+                request->params.pop_front();
+                
+                if (server != HOSTNAME)
+                        user->setSendCache(ERR_NOSUCHSERVER(server));
+                else
+                        user->setSendCache(PONG(server));
+        }
 }
