@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 16:08:01 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:35:02 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ class User
 		get_set<std::string>	server_name;
 		get_set<std::string>	real_name;
 		get_set<std::string>	nick_name;
+		get_set<std::string>	connection_password;
 
 		bool	isConnected() const;
 		void	connectionStep();

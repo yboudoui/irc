@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 15:15:08 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:35:46 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
 void	Wagner::cmd_mode(void)
 {
 	DEBUG_CALL_WAGNER
+	if (!user->isConnected())
+		return (user->setSendCache(ERR_NOTREGISTERED()));
 
 	if (request->params.size() < 1 )
         return (user->setSendCache(ERR_NEEDMOREPARAMS("", "MODE")));

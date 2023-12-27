@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 16:29:55 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:34:11 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,5 +85,7 @@ std::string	NICK(std::string old, std::string newnick);
 //PING PONG
 std::string	ERR_NOORIGIN();
 std::string	ERR_NOSUCHSERVER(std::string server);
+
+std::string	ERR_NOTREGISTERED(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:21:16 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 14:57:18 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ RPL_AWAY (301) // qq comandes non gerees // idem mask
 void	Wagner::cmd_privmsg(void)
 {
 	DEBUG_CALL_WAGNER
+	if (!user->isConnected())
+		return (user->setSendCache(ERR_NOTREGISTERED()));
 	std::string	s_target, message, response, senderNickname;
 
 	// 1. verifier qu'il y a un destinataire

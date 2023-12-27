@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:40:38 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 14:56:11 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ Erreurs non gerees
 void	Wagner::cmd_join(void)
 {
 	DEBUG_CALL_WAGNER
-
+	if (!user->isConnected())
+		return (user->setSendCache(ERR_NOTREGISTERED()));
 	//1. verifier qu'il y a au moins 1 param
 	if (request->params.empty())
 		return (user->setSendCache(ERR_NEEDMOREPARAMS("", "JOIN")));

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 22:01:29 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 14:43:47 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	Wagner::cmd_nick(void)
 	if (request->params.empty())
 		return (user->setSendCache(ERR_NONICKNAMEGIVEN()));
 	std::string nickname = request->params.front();
-	if (nickname == "anonymous" || nickname.find_first_of("<>?/\\!%#@&$") != std::string::npos)
+	if (nickname == "anonymous" || nickname == "localhost" || nickname.find_first_of("<>?/\\!%#@&$") != std::string::npos)
 		return (user->setSendCache(ERR_ERRONEUSNICKNAME(nickname)));
 	else
 	{
@@ -49,12 +49,14 @@ void	Wagner::cmd_nick(void)
 					return (user->setSendCache(ERR_NICKNAMEINUSE(nickname)));
 			}
 		}
-		std::string oldnick = user->nick_name.get();
-		user->nick_name.set(nickname);
+		std::string oldnick;
 		if (user->isConnected())
-			user->setSendCache(NICK(oldnick, nickname));
+			oldnick = user->nick_name.get();
 		else
-			user->connectionStep();
+			oldnick = nickname;
+		user->nick_name.set(nickname);
+		user->setSendCache(NICK(oldnick, nickname));
+		user->connectionStep();
 	}
 }
 
@@ -63,6 +65,9 @@ void	Wagner::cmd_user(void)
 	DEBUG_CALL_WAGNER
 	size_t			size = request->params.size();
 	std::string		params;
+
+	if (user->isConnected())
+		return(user->setSendCache(ERR_ALREADYREGISTRED(user->nick_name.get())));
 
 	if (size == 0 || size < 4)
 		return(user->setSendCache(ERR_NEEDMOREPARAMS("", "user")));

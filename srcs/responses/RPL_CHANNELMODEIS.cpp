@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL_CHANNELMODEIS.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:49:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:49:24 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:06:10 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ std::string	RPL_CHANNELMODEIS(std::string nickname, Channel* channel)
 	(void)nickname;
 	output << ":" << HOSTNAME;
 	output << " 324";
-	output << " " << nickname;
 	output << " #" << channel->name.get();
 	output << " " << channel->getChannelModes();
 	output << "\r\n";
