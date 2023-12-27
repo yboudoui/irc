@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 12:12:51 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:29:55 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ std::string	ERR_PASSWDMISMATCH(std::string nick, std::string reason = "A Passwor
 // INVITE
 std::string	ERR_USERONCHANNEL(std::string nick, std::string channel, std::string reason = "user is already on the channel");
 std::string	RPL_INVITING(std::string nick, std::string channel);
-
 
 // TOPIC
 std::string	RPL_NOTOPIC(std::string channel, std::string info = "no topic is set");

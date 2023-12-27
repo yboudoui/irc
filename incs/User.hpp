@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:11:35 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:08:01 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "User.hpp"
 # include "SocketConnection.hpp"
 # include "getset.hpp"
+# include "predicate.hpp"
 # include "Channel.hpp"
 # include <string>
 # include <vector>
@@ -24,7 +25,9 @@
 class Channel;
 # define DEBUG_CALL_USER PRINT_DEBUG_CALL(YELLOW, User)
 
-class User : public SocketConnection
+class User
+	: public SocketConnection
+	, public predicate<User*>
 {
 	private:
 		int										_connection_complete;
@@ -43,11 +46,14 @@ class User : public SocketConnection
 
 		bool	isConnected() const;
 		void	connectionStep();
-		void	sendToAllChannels();
+		void	sendToAllChannels(std::string message);
 
 		void	join(Channel* channel, std::string password);
 		void	quit(Channel* channel);
 		bool	send(std::string channelName, std::string message);
+		bool	operator () (User*);
 };
+
+predicate<User*>&	nickName(std::string);
 
 #endif

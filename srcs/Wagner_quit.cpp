@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 12:01:07 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:30:06 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	Wagner::cmd_quit(void)
 		request->params.pop_back();
 	}
 
+	user->sendToAllChannels(message);
 	user->is_alive(false);
 }
 

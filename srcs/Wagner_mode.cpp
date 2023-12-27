@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 16:58:58 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:15:08 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,20 +92,20 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                         user->setSendCache(ERR_NEEDMOREPARAMS(name.get(), "MODE", "please type a nickname (o)"));
                         break;
                     }
-                    {
-                    std::string s_ChannelUser;      
-                    User*       ChannelUser;
+					{
+					std::string	s_ChannelUser = params.front();
+					params.pop_front();
 
-                    s_ChannelUser = *params.begin();
-                    ChannelUser = findUser(s_ChannelUser);
-                    params.pop_front();
-                    if (ChannelUser == user)
-                        break;
-                    if(ChannelUser)
-                        (_users_map.find(ChannelUser))->second = OPERATOR;
-                    else
-                        user->setSendCache(ERR_NOSUCHNICK(name.get(), s_ChannelUser));
-                    }
+					available<t_client>	client = find_by(nickName(s_ChannelUser));
+					if (client == false)
+						user->setSendCache(ERR_NOSUCHNICK(name.get(), s_ChannelUser));
+					else
+					{
+						if (client().first == user)
+							break;
+						_users_map.find(client().first)->second = OPERATOR;
+					}
+					}
                     break;
                 
                 default:

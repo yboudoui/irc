@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:13:31 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:08:32 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,29 @@ bool	User::send(std::string channelName, std::string message)
 		return (it->second->send(nick_name.get(), message), true);
 	return (false);
 }
-/*
-void	sendToAllChannels(std::string senderNickname, std::string message)
+
+void	User::sendToAllChannels(std::string message)
 {
-	(void)senderNickname;
-	(void)message;
-	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
-	{
-		if (it->first->getNickname() == senderNickname)
-			continue;
-		it->first->setSendCache(message);
-	}
-}*/
+	t_channels::iterator it = _channels.begin();
+
+	for (; it != _channels.end(); it++)
+		it->second->send(nick_name.get(), message);
+}
+
+bool	User::operator () (User* to_compare)
+{
+	return (to_compare == this);
+}
+
+predicate<User*>&	nickName(std::string nick_name)
+{
+	static std::string	_nick_name = nick_name;
+	static struct : predicate<User*> {
+		public:
+			bool	operator () (User *input)
+			{
+				return (input && input->nick_name.get() == _nick_name);
+			}
+	}	predicate;
+	return (predicate);
+}

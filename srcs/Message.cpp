@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/19 15:31:49 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 12:49:41 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ t_prefixe	Message::parse_prefixe(Extractor &str)
 	std::cout << RED << str << std::endl;
 	if (str.size() < 2 || str[0] != ':')
 		return (output);
-//	if (str[1] == ' ')
-//		throw std::runtime_error("Bad prefix format");
+// TODO : on le garde?
+	if (str[1] == ' ')
+		throw std::runtime_error("Bad prefix format");
 	str.erase(0, 1);
 
 	_substr = str.extract_to(" ");
@@ -165,3 +166,4 @@ std::string& operator << (std::string& str, Message* message)
 		str << (*message);
 	return (str);
 }
+

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 12:42:54 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:10:08 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,39 +30,60 @@ void	Wagner::cmd_invite(void)
 {
 	DEBUG_CALL_WAGNER
 
-/*
-1. check si au moins 2 params
-user->setSendCache(ERR_NEEDMOREPARAMS("", "IVITE")));
+	std::string	channelName;
+	std::string	nickToInvite;
+	std::string	userNickName = user->nick_name.get();
+	size_t		paramsCount = request->params.size();
 
-2. prendre le param #1 - verifier que la channel existe
-user->setSendCache(ERR_NOSUCHCHANNEL(user->getNickname(), <param#1>)));
+//1. check si au moins 2 params
+	if (paramsCount < 2)
+	{
+		user->setSendCache(ERR_NEEDMOREPARAMS("", "IVITE"));
+		return ;
+	}
 
-3. verifier que user est sur la channel avec :
-channel.isInChannel(user)
-user->setSendCache(ERR_NOTONCHANNEL(user->getNickname(), <channelName>)));
+	nickToInvite = request->params[0];
+	channelName = request->params[1];
+	Channel	*channel = find_channel(channelName);
 
-4. verifier les droits operateurs de user avec :
-channel.isOperator(user)
-user->setSendCache(ERR_CHANOPRIVSNEEDED(user->getNickname(), <channelName>)));
+//2. prendre le param #1 - verifier que la channel existe
+	if (channel == NULL)
+	{
+		user->setSendCache(ERR_NOSUCHCHANNEL(userNickName, channelName));
+		return ;
+	}
 
-5. verifier que la personne à invite est dans la base t_client avec
-User* UserToInvite = findClient(nickToInvite);
-user->setSendCache(ERR_NOSUCHNICK(<channelName>, nickToInvite)));
+//3. verifier que user est sur la channel avec :
+	available<t_client>	current_client = channel->find_by(*user);
+	if (current_client == false)
+	{
+		user->setSendCache(ERR_NOTONCHANNEL(userNickName, channelName));
+		return ;
+	}
 
-6. verifier si la personne à invite est deja dans le channel avec
-User* UserToInvite = findUser(nickToInvite);
-user->setSendCache(ERR_USERONCHANNEL(<channelName>, nickToInvite)));
+//4. verifier les droits operateurs de user avec :
+	if ((current_client().second & OPERATOR) == false)
+	{
+		user->setSendCache(ERR_CHANOPRIVSNEEDED(userNickName, channelName));
+		return ;
+	}
 
-7. si tout est OK :
-	- ajouter le user à la channel / set user mode to INVITED
-	(je crois que c'est inutile de faire un vector d'invites )
-user->setSendCache(RPL_INVITING(<nickToInvite>, channel)));
+//5. verifier que la personne à invite est dans la base t_client avec
+	available<t_client>	client = channel->find_by(nickName(nickToInvite));
+	if (client == false)
+	{
+		user->setSendCache(ERR_NOSUCHNICK(channelName, nickToInvite));
+		return ;
+	}
 
+//6. verifier si la personne à invite est deja dans le channel avec
+	if ((client().second & INVITED) == false)
+	{
+		user->setSendCache(ERR_USERONCHANNEL(channelName, nickToInvite));
+		return ;
+	}
 
-RPL_AWAY (301) ??? on ne gere pas le mode away
-<nick> :<message>
-Used in reply to a command directed at a user who is marked as away
-*/
-
+//	channel->invite(client.first);
+	user->setSendCache(RPL_INVITING(nickToInvite, channelName));
 }
 

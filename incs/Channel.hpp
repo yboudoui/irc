@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:10:42 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:10:47 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <map>
 # include "available.hpp"
+# include "predicate.hpp"
 # include "responses.hpp"
 # include "Message.hpp"
 # include "User.hpp"
@@ -84,6 +85,7 @@ typedef enum e_user_right {
 	INVITED,
 }	t_user_right;
 
+typedef std::pair<User*, t_user_right>	t_client;
 
 class Channel
 {
@@ -122,9 +124,10 @@ class Channel
 
 		// others
 		int		countUser();
-		User*	findUser(std::string nick);
+		available<t_client>	find_by(predicate<User*>& predicate);
 
 		void	ProcessModeCmd(User* user, const std::string& command,t_params& params);
+		void	sendToAllUsers(std::string msg);
 };
 
 #endif

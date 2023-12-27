@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 22:08:18 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:08:14 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,9 @@ void Channel::setMode(char op, enum ChannelModes mode)
         _modes &= ~mode;
 }
 
-bool Channel::getMode(enum ChannelModes mode) {
-    return (_modes & mode) != 0;
+bool Channel::getMode(enum ChannelModes mode)
+{
+	return (_modes & mode) != 0;
 }
 
 std::string Channel::getChannelModes()
@@ -179,17 +180,21 @@ int  Channel::countUser()
 	return nb;
 }
 
-User*	Channel::findUser(std::string nick)
+available<t_client>	Channel::find_by(predicate<User*>& predicate)
 {
+	available<t_client>		output;
 	t_users_map::iterator	it = _users_map.begin();
-	t_users_map::iterator	ite = _users_map.end();
+	t_users_map::iterator	end = _users_map.end();
 
-	for ( ; it != ite ; it++)
+	for (; it != end; it++)
 	{
-		if ((it->first)->nick_name.get() == nick)
-			return it->first;
+		if (predicate(it->first))
+		{
+			output(*it);
+			return (output);
+		}
 	}
-	return NULL;
+	return (output);
 }
 
 std::string Channel::getUserList()
@@ -214,3 +219,10 @@ std::string Channel::getUserList()
 	return list;
 }
 
+void	Channel::sendToAllUsers(std::string msg)
+{
+	t_users_map::iterator	it;
+
+	for (it = _users_map.begin(); it != _users_map.end(); it++)
+		it->first->setSendCache(msg);
+}
