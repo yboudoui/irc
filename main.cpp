@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 23:46:22 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 10:18:33 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 
-	SocketBind*	sock = new SocketBind(_wagner, queue, port);
+	SocketBind*	sock = new SocketBind(wagner, queue, port);
 
 	std::cout << "localhost:" << port << std::endl;
 

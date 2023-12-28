@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL_WELCOME.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:42:38 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:43:11 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 11:57:57 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,16 @@ RPL_WELCOME (001)
 :Welcome to the Internet Relay Network <nick>!<user>@<host>
 */
 
-std::string	RPL_WELCOME(User * user)
+std::string	RPL_WELCOME(User * user, std::string channel, std::string message)
 {
 	std::stringstream	output;
 
 	output << ":" << HOSTNAME;
 	output << " 001 ";
 	output << user->nick_name.get();
-	output << " :Welcome to the Internet Relay Network ";
+	if (channel.size())
+		output << " #" << channel;
+	output << " :" << message;
 	output << user->nick_name.get() << "!" << user->user_name.get();
 	output << "@"+ user->host_name.get();
 	output << "\r\n";

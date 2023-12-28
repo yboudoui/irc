@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 18:08:18 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 10:20:38 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ class Channel
 		
 		// getters
 		std::string		getChannelModes();
+		std::string		getChannelModesParams();
 		std::string		getUserList();
 
 		// checkers

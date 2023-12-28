@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 18:08:39 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 11:57:00 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class Channel;
 // MODE
 std::string	RPL_TRYAGAIN(std::string command, std::string info = "command not found");
 
-std::string	RPL_WELCOME(User * user);
+std::string	RPL_WELCOME(User * user, std::string channel = "", std::string msg = "Welcome to the Internet Relay Network ");
 std::string	RPL_YOURHOST();
 std::string	RPL_CREATED();
 std::string	RPL_MYINFO();
@@ -84,6 +84,7 @@ std::string	ERR_CHANNELISFULL(std::string channel, std::string reason = "channel
 std::string	ERR_BANNEDFROMCHAN(std::string channel, std::string reason = "banned ... #sorry");
 
 std::string	RPL_NAMREPLY(std::string nickname, Channel *channel);
+std::string	RPL_ENDOFNAMES(std::string nickname, Channel *channel);
 std::string	NICK(std::string old, std::string newnick);
 
 //PING PONG

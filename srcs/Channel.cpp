@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 23:39:24 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 10:47:25 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,20 @@ std::string	Channel::getChannelModes()
 		output.insert(0, "+");
 	return (output);
 }
+std::string Channel::getChannelModesParams()
+{
+	std::string modeparams;
+	std::stringstream ss;
 
+	if(modes & KEY_PROTECTED)
+		modeparams.append(password() + " ");
+	if(modes & USER_LIMIT)
+	{
+		ss << limit;
+		modeparams.append(ss.str());
+	}
+	return (modeparams);
+}
 bool		Channel::isOperator(User* user)
 {
 	t_users_map::iterator	found = _users_map.find(user);
@@ -186,9 +199,13 @@ std::string Channel::getUserList()
 				list.append("+");
 			user = it->first;
 			list.append(user->nick_name.get());
+			
 			list.append(" ");
 		}
 	}
+
+				list.erase(list.size() - 1);
+
 	return list;
 }
 
