@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 23:39:43 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 13:35:04 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,9 @@ User::~User()
 
 	for (; it != _channels.end(); it++)
 	{
+//		it->second->sendToAllChannels("quit", this);
 		it->second->remove(this);
-		_channels.erase(it);
+//		_channels.erase(it);
 	}
 	DEBUG_CALL_USER
 }
@@ -54,7 +55,7 @@ void	User::quit(Channel* channel)
 {
 	if (channel == NULL)
 		return ;
-	channel->remove(this);
+//	channel->remove(this);
 	_channels.erase(channel->name);
 }
 

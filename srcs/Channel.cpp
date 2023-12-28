@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 10:47:25 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:41:10 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ Channel::Channel()
 
 Channel::~Channel()
 {
-	sendToAllUsers("QUIT :The channel is closed\r\n");
+	std::string	quit("QUIT :The channel is closed\r\n");
+	sendToAllUsers(quit);
+	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
+		remove(it->first);
 	DEBUG_CALL_CHANNEL
 }
 
@@ -71,6 +74,7 @@ void	Channel::remove(User* user)
 	t_users_map::iterator	it = _users_map.find(user);
 	if (it == _users_map.end())
 		return ;
+	user->quit(this);
 	_users_map.erase(it);
 }
 

@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 15:54:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/13 15:50:15 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 13:15:54 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,18 @@
 # define BOLD		"\033[1m"
 
 # define PRINT_MESSAGE(color, message)\
-	std::cout << color << message << RESET << "\n";
+	std::cout << color << message << RESET;
 
 # ifdef DEBUG
 
 # define PRINT_DEBUG_MESSAGE(color, message)\
-	PRINT_MESSAGE(color, message)
+	PRINT_MESSAGE(color, message << "\n")
+
+# define PRINT_DEBUG_CALL_MESSAGE(color, class_name, message)\
+	PRINT_MESSAGE(color, #class_name << "::" << __FUNCTION__ << message)
 
 # define PRINT_DEBUG_CALL(color, class_name)\
-	PRINT_DEBUG_MESSAGE(color, #class_name << "::" << __FUNCTION__)
+	PRINT_DEBUG_CALL_MESSAGE(color, class_name, "\n")
 
 # else
 # define PRINT_DEBUG_MESSAGE(color, message)

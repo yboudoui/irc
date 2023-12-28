@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 17:04:24 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 13:19:11 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 # include <unistd.h>
 
 # define BUFFER_LEN	512
+
+# include "Colors.hpp"
+# define DEBUG_CALL_SOCKET_CONNECTION \
+	PRINT_DEBUG_CALL_MESSAGE(CYAN, SocketConnection, "")
 
 class SocketConnection : public IQueue::IEventListener
 {

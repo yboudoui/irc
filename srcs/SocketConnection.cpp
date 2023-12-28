@@ -6,13 +6,11 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 23:17:36 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 13:19:03 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SocketConnection.hpp"
-#include "Colors.hpp"
-#include <iostream>
 
 SocketConnection::SocketConnection(IQueue &queue, int fd_socketBind)
 	: _queue(queue)
@@ -23,12 +21,14 @@ SocketConnection::SocketConnection(IQueue &queue, int fd_socketBind)
 	if (_fd < 0)
 		throw std::runtime_error("Fatal error when accepting a new connection");
 	_queue.subscribe(_fd, this);
+	DEBUG_CALL_SOCKET_CONNECTION
 }
 
 SocketConnection::~SocketConnection()
 {
 	_queue.unsubscribe(_fd);
 	close(_fd);
+	DEBUG_CALL_SOCKET_CONNECTION
 }
 
 void	SocketConnection::read(void)
@@ -39,6 +39,8 @@ void	SocketConnection::read(void)
 
 void	SocketConnection::setSendCache(std::string message)
 {
+	if (message.empty())
+		return ;
 	_write_cache.append(message);
 }
 

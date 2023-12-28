@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 10:18:33 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:40:51 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,13 @@ NB : les reponses sont toujours prefixees du nom du serveur
 // 
 // output >> ":" >> nickname >> "!" >> username >> "@" >> userhost;
 
+static bool _stop_loop = false;
+static void	stop_loop(int sig_value)
+{
+	(void)sig_value;
+	_stop_loop = true;
+}
+
 int	main(int argc, char *argv[])
 {
 	int			port;
@@ -61,7 +68,7 @@ int	main(int argc, char *argv[])
 	Wagner	wagner(hostname, password);
 
 	struct sigaction	signals[2] = {};
-	signals[0].sa_handler = queue.stop;
+	signals[0].sa_handler = stop_loop;
 	signals[1].sa_handler = SIG_IGN;
 
 	if (sigaction(SIGINT, &signals[0], NULL) == -1 && sigaction(SIGINT, &signals[1], NULL) == -1)
@@ -75,7 +82,7 @@ int	main(int argc, char *argv[])
 	std::cout << "localhost:" << port << std::endl;
 
 	//TODO allocate Wagner then delete it
-	while (queue.event_loop(wagner));
+	while (queue.event_loop(wagner) && !_stop_loop );
 	IQueue::IEventListener::free(sock);
 	return (0);
 }

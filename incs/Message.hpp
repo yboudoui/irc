@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 12:35:15 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 11:54:07 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <sys/socket.h>
 # include <deque>
 # include "extractor.hpp"
-# include "Colors.hpp"
 
 typedef std::deque<std::string>	t_params;
 
@@ -40,6 +39,7 @@ typedef struct s_message {
 	t_params	params;
 }	t_message;
 
+# include "Colors.hpp"
 # define DEBUG_CALL_MESSAGE PRINT_DEBUG_CALL(YELLOW, Message)
 
 class Message

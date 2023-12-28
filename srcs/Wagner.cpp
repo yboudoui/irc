@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 23:39:08 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:35:51 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,13 @@ Wagner::~Wagner()
 	chan = _channel_map.begin();
 	for ( ; chan != _channel_map.end() ; chan++)
 		delete chan->second;
-
+/*
 	t_clients::iterator	it = _clients.begin();
 	for ( ; it != _clients.end() ; it++)
-		IQueue::IEventListener::free(*it);
+	{
+		removeEventListener(*it);
+	}
+*/
 
 	/*
 	TODO // send error_message 
@@ -91,20 +94,14 @@ void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 	requests << user->getReadCache();
 	Message::color(GREEN);
 
-
 	while (!requests.empty() && user->is_alive())
 	{
 		request = requests.getLastMessage();
 		if (request == NULL)
-		{
-			PRINT_DEBUG_MESSAGE(CYAN, "WTF");
-			continue;
-		}
+			continue ;
 		t_cmd_map::iterator	it = _cmd.find(request->command.name);
 		if (it != _cmd.end())
-		{
 			(this->*(it->second))();
-		}
 		else
 			cmd_notFound(request->command.name);
 		delete request;
