@@ -6,8 +6,8 @@ random_pass=$(shuf -i 111-999 -n 1)
 writeSpeed=5
 
 #ctrl+V ctrl+M  retrun (\r\n)
-# Commande pour ouvrir un terminal et lancer webserve
-gnome-terminal --geometry=140x100+0+0 --title="FT_IRC" -- bash -c "./webserve $random_port $random_pass; exec bash"
+# Commande pour ouvrir un terminal et lancer ircserv
+gnome-terminal --geometry=140x100+0+0 --title="FT_IRC" -- bash -c "./ircserv $random_port $random_pass; exec bash"
 sleep 0.5
 
 gnome-terminal --geometry=140x34+1280+0  --title="IRSSI_TRISTAN" -- bash -c "nc 127.0.0.1 $random_port "

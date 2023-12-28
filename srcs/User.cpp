@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 13:35:04 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:50:20 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,23 @@ void	User::connectionStep()
 		_connection_complete--;
 }
 
-void	User::join(Channel* channel, std::string password)
+
+void	User::join(Channel* channel)
 {
 	if (channel == NULL)
 		return ;
-	channel->join(this, password);
 	_channels.insert(std::make_pair(channel->name, channel));
+}
+
+
+void	User::quitAllChannels(void)
+{
+	t_channels::iterator it = _channels.begin();
+	for (; it != _channels.end(); it++)
+	{
+		it->second->remove(this);
+		//_channels.erase(it->second->name);
+	}
 }
 
 void	User::quit(Channel* channel)
@@ -63,8 +74,14 @@ void	User::sendToAllChannels(std::string message)
 {
 	t_channels::iterator it = _channels.begin();
 
+	std::string privmsg;
+
 	for (; it != _channels.end(); it++)
-		it->second->send(nick_name.get(), message);
+	{	
+		privmsg = PRIVMSG(nick_name.get(), it->second->name, message);
+		std::cout << WHITE << privmsg << std::endl;
+		it->second->send(nick_name.get(), privmsg);
+	}
 }
 
 bool	User::send(std::string channelName, std::string message)

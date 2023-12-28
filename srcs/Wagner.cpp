@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 14:35:51 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:50:39 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,12 @@ void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 void	Wagner::removeEventListener(IQueue::IEventListener* listener)
 {
 	User*	user = dynamic_cast<User*>(listener);
+	/*
 	t_clients::iterator it = _clients.find(user);
 	if (it == _clients.end())
 		return ;
 	_clients.erase(it);
+	*/
 	IQueue::IEventListener::free(user);
 }
 

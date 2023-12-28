@@ -2,16 +2,16 @@
 random_port=$(shuf -i 1024-65535 -n 1)
 random_pass=$(shuf -i 111-999 -n 1)
 
-writeSpeed=50
+writeSpeed=10
 
-# Commande pour ouvrir un terminal et lancer webserve
-gnome-terminal --geometry=140x100+0+0 --title="FT_IRC" -- bash -c "./webserve $random_port $random_pass; exec bash"
+# Commande pour ouvrir un terminal et lancer ircserv
+gnome-terminal --geometry=140x100+0+0 --title="FT_IRC" -- bash -c "./ircserv $random_port $random_pass; exec bash"
 sleep 1
 
-gnome-terminal --geometry=140x34+1280+0  --title="IRSSI_TRISTAN" -- bash -c "irssi -c localhost --port=$random_port --password=$random_pass; exec bash"
+gnome-terminal --geometry=140x34+1280+0  --title="IRSSI_TRISTAN" -- bash -c "irssi; exec bash"
 WID_TRISTAN=`xdotool search --name "IRSSI_TRISTAN" `
 
-gnome-terminal --geometry=140x34+1280+720  --title="IRSSI_ISOLDE" -- bash -c "irssi -c localhost --port=$random_port --password=$random_pass; exec bash"
+gnome-terminal --geometry=140x34+1280+720  --title="IRSSI_ISOLDE" -- bash -c "irssi; exec bash"
 WID_ISOLDE=`xdotool search --name "IRSSI_ISOLDE" `
 
 xdotool windowfocus $WID_TRISTAN type --delay $writeSpeed "/set nick tristan" && xdotool key "Return" 

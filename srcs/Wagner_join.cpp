@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 11:56:42 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 13:51:01 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,10 +123,9 @@ void	Wagner::cmd_join(void)
 		if (hasJoin)
 		{
 			Channel * channel = find_channel(s_channel);
+			user->join(channel);
 			if (channel->topic)
-				user->setSendCache(RPL_TOPIC(channel->name, channel->topic()));
-			
-			
+				user->setSendCache(RPL_TOPIC(channel->name, channel->topic()));			
 			user->setSendCache(RPL_WELCOME(user, channel->name, "Welcome ! You've join the channel "));
 			user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
 			user->setSendCache(RPL_NAMREPLY(user->nick_name.get(), channel));
