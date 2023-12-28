@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 18:21:40 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 17:04:30 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,15 @@ void	Wagner::cmd_kick(void)
 		user->setSendCache(ERR_NEEDMOREPARAMS("", "KICK"));
 		return ;
 	}
-
-	Channel*	channel = find_channel(request->params[0]);
+	std::string channelName = request->params[0];
+    if (!channelName.empty() && channelName[0] == '#')
+	{
+		channelName = channelName.substr(1);
+	}
+	Channel*	channel = find_channel(channelName);
 	if (channel == NULL)
 	{
-		user->setSendCache(ERR_NOSUCHCHANNEL(user_nick_name, request->params[0]));
+		user->setSendCache(ERR_NOSUCHCHANNEL(user_nick_name, channelName));
 		return ;
 	}
 

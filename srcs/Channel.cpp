@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 14:41:10 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 17:53:41 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@ Channel::Channel()
 
 Channel::~Channel()
 {
-	std::string	quit("QUIT :The channel is closed\r\n");
-	sendToAllUsers(quit);
-	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
-		remove(it->first);
+	// FIXSEGFAULT
+	//std::string	quit("QUIT :The channel is closed\r\n");
+	//sendToAllUsers(quit);
+	//for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
+	//	remove(it->first);
 	DEBUG_CALL_CHANNEL
 }
 
@@ -74,7 +75,8 @@ void	Channel::remove(User* user)
 	t_users_map::iterator	it = _users_map.find(user);
 	if (it == _users_map.end())
 		return ;
-	user->quit(this);
+	// FIXSEGFAULT 
+	// user->quit(this);
 	_users_map.erase(it);
 }
 
@@ -207,9 +209,7 @@ std::string Channel::getUserList()
 			list.append(" ");
 		}
 	}
-
-				list.erase(list.size() - 1);
-
+	list.erase(list.size() - 1);
 	return list;
 }
 
@@ -223,4 +223,14 @@ void	Channel::sendToAllUsers(std::string msg, User* user)
 			continue ;
 		it->first->setSendCache(msg);
 	}
+}
+
+User *	Channel::findUser(std::string nickname)
+{
+	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
+	{
+		if (it->first->nick_name.get() == nickname)
+			return it->first;
+	}
+	return NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 11:57:00 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 17:13:09 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ std::string	ERR_USERONCHANNEL(std::string nick, std::string channel, std::string
 std::string	RPL_INVITING(std::string nick, std::string channel);
 
 // TOPIC
-std::string	RPL_NOTOPIC(std::string channel, std::string info = "no topic is set");
-std::string	RPL_TOPIC(std::string channel, std::string topic);
+std::string	RPL_NOTOPIC(std::string nickname, std::string channel, std::string info = "no topic is set");
+std::string	RPL_TOPIC(std::string nickname, std::string channel, std::string topic);
 
 // PING
 std::string	PONG(std::string server);

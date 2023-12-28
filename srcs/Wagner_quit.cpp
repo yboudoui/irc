@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 14:48:31 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:57:34 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,9 @@ void	Wagner::cmd_quit(void)
 		message = request->params.back();
 		request->params.pop_back();
 	}
-	user->quitAllChannels();
 	user->sendToAllChannels(message);
+	user->quitAllChannels();
+	
 	user->is_alive(false);
 }
 

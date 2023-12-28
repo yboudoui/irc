@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 18:22:04 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/28 17:52:17 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,18 +91,26 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                         break;
                     }
 					{
-					std::string	s_ChannelUser = params.front();
-					params.pop_front();
-
-					available<t_client>	client = find_by(nickName(s_ChannelUser));
-					if (client == false)
-						user->setSendCache(ERR_NOSUCHNICK(name, s_ChannelUser));
-					else
-					{
-						if (client().first == user)
-							break;
-						_users_map.find(client().first)->second = OPERATOR;
-					}
+                        std::string	s_ChannelUser = params.front();
+                        params.pop_front();
+                        std::cout << "try to make operator : " <<  s_ChannelUser << std::endl;
+                        
+                        User * s_User = findUser(s_ChannelUser);
+                        if (!s_User)
+                            user->setSendCache(ERR_NOSUCHNICK(name, s_ChannelUser));
+                        else
+                        {
+                           if (s_User == user)
+                           {
+                            std::cout << "yourself ? " << std::endl;
+                            break;
+                           }
+                                
+                            if (op == '+')
+                                _users_map.find(s_User)->second = OPERATOR;
+                            else 
+                                _users_map.find(s_User)->second = NONE;
+                        }
 					}
                     break;
                 
@@ -154,7 +162,9 @@ void	Wagner::cmd_mode(void)
         request->params.pop_front();
         channel->ProcessModeCmd(user, s_modes, request->params);
     }
-    user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
+	user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
+	user->setSendCache(RPL_NAMREPLY(user->nick_name.get(), channel));
+	user->setSendCache(RPL_ENDOFNAMES(user->nick_name.get(), channel));
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 14:50:39 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 16:58:19 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,19 @@ Wagner::~Wagner()
 {
 	t_channel_map::iterator	chan;
 
-	chan = _channel_map.begin();
-	for ( ; chan != _channel_map.end() ; chan++)
-		delete chan->second;
-/*
+
+
 	t_clients::iterator	it = _clients.begin();
 	for ( ; it != _clients.end() ; it++)
 	{
-		removeEventListener(*it);
+		delete *it;
+		// FIXSEGFAULT removeEventListener(*it);
 	}
-*/
+
+	chan = _channel_map.begin();
+	for ( ; chan != _channel_map.end() ; chan++)
+		delete chan->second;
+
 
 	/*
 	TODO // send error_message 
@@ -73,17 +76,18 @@ void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 	_clients.insert(user);
 }
 
+
 void	Wagner::removeEventListener(IQueue::IEventListener* listener)
 {
 	User*	user = dynamic_cast<User*>(listener);
-	/*
+
 	t_clients::iterator it = _clients.find(user);
 	if (it == _clients.end())
 		return ;
 	_clients.erase(it);
-	*/
 	IQueue::IEventListener::free(user);
 }
+
 
 void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 {

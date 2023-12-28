@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 17:29:34 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 17:55:08 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ void	Wagner::cmd_invite(void)
 
 	nickToInvite = request->params[0];
 	channelName = request->params[1];
+    if (!channelName.empty() && channelName[0] == '#')
+	{
+		channelName = channelName.substr(1);
+	}
 	Channel	*channel = find_channel(channelName);
 
 //2. prendre le param #1 - verifier que la channel existe
@@ -57,6 +61,7 @@ void	Wagner::cmd_invite(void)
 
 //3. verifier que user est sur la channel avec :
 	available<t_client>	current_client = channel->find_by(*user);
+	
 	if (current_client == false)
 	{
 		user->setSendCache(ERR_NOTONCHANNEL(userNickName, channelName));

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 10:20:38 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 17:53:15 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ class Channel
 		// others
 		int		countUser();
 		available<t_client>	find_by(predicate<User*>& predicate);
+		User *		findUser(std::string nickname);
 
 		void	ProcessModeCmd(User* user, const std::string& command,t_params& params);
 		void	sendToAllUsers(std::string msg, User* user = NULL);

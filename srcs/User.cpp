@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 14:50:20 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 15:36:21 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,7 @@ User::User(IQueue &queue, int fd)
 
 User::~User()
 {
-	t_channels::iterator	it = _channels.begin();
-
-	for (; it != _channels.end(); it++)
-	{
-//		it->second->sendToAllChannels("quit", this);
-		it->second->remove(this);
-//		_channels.erase(it);
-	}
+	quitAllChannels();
 	DEBUG_CALL_USER
 }
 
@@ -54,20 +47,32 @@ void	User::join(Channel* channel)
 
 void	User::quitAllChannels(void)
 {
-	t_channels::iterator it = _channels.begin();
-	for (; it != _channels.end(); it++)
+	if (_channels.size())
 	{
-		it->second->remove(this);
-		//_channels.erase(it->second->name);
+		std::cout << "01 - " << std::endl;
+		t_channels::iterator it;
+		t_channels::iterator ite = _channels.end();
+		for (it = _channels.begin(); it != ite; it++)
+		{
+			std::cout << "\tquit channel : " << it->second->name << std::endl;
+			if (it->second)
+				it->second->remove(this);
+		}
+			std::cout << "02 - " << std::endl;
 	}
 }
 
 void	User::quit(Channel* channel)
 {
+			std::cout << "03 - " << std::endl;
+
 	if (channel == NULL)
 		return ;
-//	channel->remove(this);
+			std::cout << "04 - " << std::endl;
 	_channels.erase(channel->name);
+			std::cout << "05 - " << std::endl;
+	channel->remove(this);
+			std::cout << "06 - " << std::endl;
 }
 
 void	User::sendToAllChannels(std::string message)
