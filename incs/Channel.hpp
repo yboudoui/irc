@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 17:53:15 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/29 08:49:16 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ class Channel
 
 		// checkers
 		bool	isOperator(User* user);
+		bool	isInvited(User* user);
 		bool	isInChannel(User* user);
 		bool	canJoin(User* user, std::string usr_password);
 
@@ -122,6 +123,7 @@ class Channel
 		int		countUser();
 		available<t_client>	find_by(predicate<User*>& predicate);
 		User *		findUser(std::string nickname);
+		void	invite(User* user);
 
 		void	ProcessModeCmd(User* user, const std::string& command,t_params& params);
 		void	sendToAllUsers(std::string msg, User* user = NULL);

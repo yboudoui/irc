@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 17:55:08 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/29 08:47:37 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,37 +60,36 @@ void	Wagner::cmd_invite(void)
 	}
 
 //3. verifier que user est sur la channel avec :
-	available<t_client>	current_client = channel->find_by(*user);
-	
-	if (current_client == false)
+	User * test = channel->findUser(userNickName);
+	if (!test)
 	{
 		user->setSendCache(ERR_NOTONCHANNEL(userNickName, channelName));
 		return ;
 	}
 
 //4. verifier les droits operateurs de user avec :
-	if ((current_client().second & OPERATOR) == false)
+	if (!channel->isOperator(user))
 	{
 		user->setSendCache(ERR_CHANOPRIVSNEEDED(userNickName, channelName));
 		return ;
 	}
 
 //5. verifier que la personne à invite est dans la base t_client avec
-	available<t_client>	client = channel->find_by(nickName(nickToInvite));
-	if (client == false)
+	User * userToInvite = findClient(nickToInvite);
+	if (!userToInvite)
 	{
 		user->setSendCache(ERR_NOSUCHNICK(channelName, nickToInvite));
 		return ;
 	}
-
+	userToInvite = channel->findUser(nickToInvite);
 //6. verifier si la personne à invite est deja dans le channel avec
-	if ((client().second & INVITED) == false)
+	if (userToInvite && !channel->isInvited(userToInvite))
 	{
 		user->setSendCache(ERR_USERONCHANNEL(channelName, nickToInvite));
 		return ;
 	}
 
-//	channel->invite(client.first);
+	channel->invite(userToInvite);
 	user->setSendCache(RPL_INVITING(nickToInvite, channelName));
 }
 

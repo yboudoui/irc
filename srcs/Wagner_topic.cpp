@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 17:20:15 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/29 08:09:45 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void	Wagner::cmd_topic(void)
 	}
 
 //3. verifier que user est sur la channel avec :
-	available<t_client>	current_client = channel->find_by(*user);
-	if (current_client == false)
+    User * s_User = channel->findUser(user->nick_name.get());
+	if (!s_User)
 	{
 		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel->name));
 		return ;
@@ -70,7 +70,7 @@ void	Wagner::cmd_topic(void)
 	}else{
 		
 	//5. si il y a deux parameter verifier si le topic n'est modificable que par les operateurs.
-		if ((channel->modes & TOPIC_ONLY_OP) && (current_client().second & OPERATOR) == false)
+		if ((channel->modes & TOPIC_ONLY_OP) && !channel->isOperator(user))
 		{
 			user->setSendCache(ERR_CHANOPRIVSNEEDED(user_nick_name, channel->name));
 			return ;

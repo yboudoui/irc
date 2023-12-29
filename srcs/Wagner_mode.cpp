@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 17:52:17 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/28 12:36:16 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                         {
                            if (s_User == user)
                            {
-                            std::cout << "yourself ? " << std::endl;
                             break;
                            }
                                 

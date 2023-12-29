@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 17:53:41 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/29 08:48:52 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ Channel::~Channel()
 	//	remove(it->first);
 	DEBUG_CALL_CHANNEL
 }
-
+void	Channel::invite(User* user)
+{
+	_users_map.insert(std::make_pair(user, INVITED));
+}
 bool	Channel::join(User* user, std::string usr_password)
 {
 	if (user == NULL)
@@ -55,6 +58,7 @@ bool	Channel::join(User* user, std::string usr_password)
 		return false;
 	return true;
 }
+
 
 void	Channel::send(std::string senderNickname, std::string message)
 {
@@ -116,6 +120,14 @@ bool		Channel::isOperator(User* user)
 	t_users_map::iterator	end = _users_map.end();
 
 	return ((found != end) && (found->second & OPERATOR));
+}
+
+bool		Channel::isInvited(User* user)
+{
+	t_users_map::iterator	found = _users_map.find(user);
+	t_users_map::iterator	end = _users_map.end();
+
+	return ((found != end) && (found->second & INVITED));
 }
 
 bool		Channel::isInChannel(User* user)
@@ -234,3 +246,4 @@ User *	Channel::findUser(std::string nickname)
 	}
 	return NULL;
 }
+
