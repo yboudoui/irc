@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 15:36:21 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:12:40 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ User::User(IQueue &queue, int fd)
 User::~User()
 {
 	quitAllChannels();
-	DEBUG_CALL_USER
+	DEBUG_CALL_USER_DESTRUCTOR
 }
 
 bool	User::isConnected() const

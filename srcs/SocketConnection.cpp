@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 15:49:01 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:22:54 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ SocketConnection::SocketConnection(IQueue &queue, int fd_socketBind)
 	if (_fd < 0)
 		throw std::runtime_error("Fatal error when accepting a new connection");
 	_queue.subscribe(_fd, this);
-	DEBUG_CALL_SOCKET_CONNECTION
+	DEBUG_CALL_SOCKET_CONNECTION_CONSTRUCTOR
 }
 
 SocketConnection::~SocketConnection()
 {
+	DEBUG_CALL_SOCKET_CONNECTION_DESTRUCTOR
 	_queue.unsubscribe(_fd);
 	close(_fd);
-	DEBUG_CALL_SOCKET_CONNECTION
 }
 
 void	SocketConnection::read(void)

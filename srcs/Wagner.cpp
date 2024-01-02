@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 16:58:19 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/02 18:00:01 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ Wagner::~Wagner()
 {
 	t_channel_map::iterator	chan;
 
-
-
 	t_clients::iterator	it = _clients.begin();
 	for ( ; it != _clients.end() ; it++)
 	{
@@ -69,7 +67,7 @@ Wagner::~Wagner()
 
 void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 {
-	DEBUG_CALL_WAGNER
+	PRINT_DEBUG_CALL_MESSAGE(YELLOW, "", Wagner, RESET << " -> ")
 	User*	user = new User(queue, fd_socketBind);
 	if (user == NULL)
 		return ; // error
@@ -79,6 +77,7 @@ void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 
 void	Wagner::removeEventListener(IQueue::IEventListener* listener)
 {
+	PRINT_DEBUG_CALL_MESSAGE(YELLOW, "", Wagner, RESET << " -> ")
 	User*	user = dynamic_cast<User*>(listener);
 
 	t_clients::iterator it = _clients.find(user);

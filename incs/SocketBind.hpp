@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/17 17:04:05 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/02 17:43:52 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@
 # include "SocketConnection.hpp"
 # include <stdexcept>
 # include <unistd.h>
+
+# include "Colors.hpp"
+# define DEBUG_CALL_SOCKET_BIND_CONSTRUCTOR \
+	PRINT_DEBUG_CALL_MESSAGE(BOLD << CYAN, "", SocketBind, "\n")
+
+# define DEBUG_CALL_SOCKET_BIND_DESTRUCTOR \
+	PRINT_DEBUG_CALL_MESSAGE(BOLD << CYAN, "", SocketBind, RESET << " -> ")
 
 class SocketBind : public IQueue::IEventListener {
 	private:

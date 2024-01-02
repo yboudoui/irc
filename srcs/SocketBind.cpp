@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 16:57:40 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/02 17:43:51 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@ SocketBind::SocketBind(IOrchestrator& orchestrator, IQueue &queue, int port, int
 	if (::listen(_fd, backlog) < 0)
 		throw std::runtime_error("Fatal error when listening the new socket");
 	_queue.subscribe(_fd, this);
+	DEBUG_CALL_SOCKET_BIND_CONSTRUCTOR
 }
 
 SocketBind::~SocketBind()
 {
+	DEBUG_CALL_SOCKET_BIND_DESTRUCTOR
 	_queue.unsubscribe(_fd);
 	close(_fd);
 }

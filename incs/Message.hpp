@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 11:54:07 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/02 17:31:56 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,9 @@ struct	s_prefixe {
 
 typedef available<struct s_prefixe>	t_prefixe;
 
-typedef struct s_message {
-	t_prefixe	prefixe;
-	t_command	command;
-	t_params	params;
-}	t_message;
-
 # include "Colors.hpp"
-# define DEBUG_CALL_MESSAGE PRINT_DEBUG_CALL(YELLOW, Message)
+# define DEBUG_CALL_MESSAGE \
+	PRINT_DEBUG_CALL(YELLOW, Message)
 
 class Message
 {
@@ -55,8 +50,6 @@ class Message
 		t_prefixe	prefixe;
 		t_command	command;
 		t_params	params;
-
-	//	t_message	message;
 
 		Message(std::string raw_message);
 		Message(Message const& other);

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:07:28 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 13:12:03 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:16:32 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ extern "C" {
 # define MAX_EVENTS 32
 
 # include "Colors.hpp"
-# define DEBUG_CALL_QUEUE PRINT_DEBUG_CALL(YELLOW, Queue)
+# define DEBUG_CALL_QUEUE PRINT_DEBUG_CALL(MAGENTA, Queue)
+
+# define DEBUG_CALL_QUEUE_UNSUBSCRIBE \
+	PRINT_DEBUG_CALL_MESSAGE(MAGENTA, "", Queue, RESET << " -> ")
 
 class Queue : public IQueue {
 	private:

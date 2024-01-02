@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/29 08:48:52 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/02 14:58:11 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ Channel::~Channel()
 	//	remove(it->first);
 	DEBUG_CALL_CHANNEL
 }
+
 void	Channel::invite(User* user)
 {
 	_users_map.insert(std::make_pair(user, INVITED));
 }
+
 bool	Channel::join(User* user, std::string usr_password)
 {
 	if (user == NULL)

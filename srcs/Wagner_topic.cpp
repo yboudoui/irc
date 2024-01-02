@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/29 08:09:45 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/02 15:07:00 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,10 @@ void	Wagner::cmd_topic(void)
 		else
 			user->setSendCache(RPL_NOTOPIC(user->nick_name.get(), channel->name));
 		return ;
-	}else{
-		
-	//5. si il y a deux parameter verifier si le topic n'est modificable que par les operateurs.
+	}
+	else
+	{
+//5. si il y a deux parameter verifier si le topic n'est modificable que par les operateurs.
 		if ((channel->modes & TOPIC_ONLY_OP) && !channel->isOperator(user))
 		{
 			user->setSendCache(ERR_CHANOPRIVSNEEDED(user_nick_name, channel->name));
@@ -79,8 +80,6 @@ void	Wagner::cmd_topic(void)
 		if (!newTopic.empty() && newTopic[0] == ':')
 			newTopic = newTopic.substr(1);
 		channel->topic(newTopic);
-		
-		
 		user->sendTo(channel, RPL_TOPIC(user->nick_name.get(), channel->name, newTopic));
 	}
 }

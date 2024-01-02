@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 15:52:27 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:17:02 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Queue::Queue(size_t max_events)
 
 void	Queue::subscribe(int fd, IQueue::IEventListener* listener)
 {
-	DEBUG_CALL_QUEUE
+	DEBUG_CALL_QUEUE_UNSUBSCRIBE
 
 	struct epoll_event ev;
 

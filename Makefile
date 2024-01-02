@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2023/12/27 11:18:30 by sethomas         ###   ########.fr        #
+#    Updated: 2024/01/02 17:47:56 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,9 +82,9 @@ DEPS				:=	$(OBJS:%.o=%.d)
 
 #-----------------------------------------------------------------------------#
 
-CXX					:=	c++
+CXX					:=	g++
 
-CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG# -fsanitize=address
+CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG   -fsanitize=address#-fanalyzer#
 
 RM					=	rm -f
 

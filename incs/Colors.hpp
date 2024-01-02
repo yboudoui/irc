@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 15:54:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 13:15:54 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:08:35 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,19 @@
 # define WHITE		"\033[37m"
 # define BOLD		"\033[1m"
 
-# define PRINT_MESSAGE(color, message)\
-	std::cout << color << message << RESET;
+# define PRINT_MESSAGE(color, before, message, after)\
+	std::cout << before << color << message << after << RESET;
 
 # ifdef DEBUG
 
 # define PRINT_DEBUG_MESSAGE(color, message)\
-	PRINT_MESSAGE(color, message << "\n")
+	PRINT_MESSAGE(color, "", message , "\n")
 
-# define PRINT_DEBUG_CALL_MESSAGE(color, class_name, message)\
-	PRINT_MESSAGE(color, #class_name << "::" << __FUNCTION__ << message)
+# define PRINT_DEBUG_CALL_MESSAGE(color, before, class_name, after)\
+	PRINT_MESSAGE(color, before, #class_name << "::" << __FUNCTION__, after)
 
 # define PRINT_DEBUG_CALL(color, class_name)\
-	PRINT_DEBUG_CALL_MESSAGE(color, class_name, "\n")
+	PRINT_DEBUG_CALL_MESSAGE(color, "", class_name, "\n")
 
 # else
 # define PRINT_DEBUG_MESSAGE(color, message)

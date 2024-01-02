@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 16:59:04 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/02 17:32:52 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ int	main(int argc, char *argv[])
 
 	std::cout << "localhost:" << port << std::endl;
 
-	//TODO allocate Wagner then delete it
 	while (queue.event_loop(wagner) && !_stop_loop );
 	IQueue::IEventListener::free(sock);
 	return (0);

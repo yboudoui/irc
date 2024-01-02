@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 16:56:15 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:26:29 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@
 # include <vector>
 
 class Channel;
-# define DEBUG_CALL_USER PRINT_DEBUG_CALL(YELLOW, User)
+# define DEBUG_CALL_USER PRINT_DEBUG_CALL(RED, User)
+
+# define DEBUG_CALL_USER_DESTRUCTOR \
+	PRINT_DEBUG_CALL_MESSAGE(RED, "", User, RESET << " -> ")
 
 class User
 	: public SocketConnection
