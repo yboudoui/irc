@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 16:17:02 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 13:06:26 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,7 @@ bool	Queue::event_loop(IOrchestrator& orchestrator)
 
 	num_events = epoll_wait(_epoll_instance, _events_list, _max_events, 0);
 	if (num_events < 0)
-	{
-		std::cout << "Big error.." << std::endl; //TODO patch this
-		return (false);
-	}
+		throw std::runtime_error("The event loop abort");
 	for (int i = 0; i < num_events; i++)
 	{
 		IQueue::IEventListener* listener = (IQueue::IEventListener*)_events_list[i].data.ptr;

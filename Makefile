@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2024/01/03 12:42:44 by sethomas         ###   ########.fr        #
+#    Updated: 2024/01/03 14:45:36 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ NAME				=	ircserv
 #-----------------------------------------------------------------------------#
 
 SRCS				=	main.cpp\
+						srcs/signal_handler.cpp \
 						srcs/Message.cpp \
 						srcs/MessageQueue.cpp \
 						srcs/responses.cpp \
@@ -86,7 +87,7 @@ DEPS				:=	$(OBJS:%.o=%.d)
 
 CXX					:=	g++
 
-CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG   -fsanitize=address#-fanalyzer#
+CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG #  -fsanitize=address#-fanalyzer#
 
 RM					=	rm -f
 
@@ -97,8 +98,10 @@ $(OBJS_DIR)/%.o: %.cpp
 $(NAME):	$(OBJS)
 	$(CXX) $(CXXFLAGS) $(addprefix -I, $(INCS)) $(OBJS) -o $(NAME) $(LIBS)
 
+PORT	= 8080
+
 test: all
-	valgrind -q --track-fds=yes --leak-check=full --show-leak-kinds=all --show-leak-kinds=all ./${NAME} 8080 555
+	valgrind -q --track-fds=yes --leak-check=full --show-leak-kinds=all ./${NAME} ${PORT} 555
 
 all:		$(NAME)
 

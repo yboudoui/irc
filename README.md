@@ -57,3 +57,27 @@
 		}
 	}
 	*/
+
+
+
+
+
+
+/*
+nc -C 127.0.0.1 8080
+
+RFC1459 (FR)
+http://abcdrfc.free.fr/rfc-vf/rfc1459.html#23
+RFC1459 (EN)
+https://datatracker.ietf.org/doc/html/rfc1459#section-6
+RETURN CODES 
+https://www.alien.net.au/irc/irc2numerics.html
+
+https://modern.ircdocs.horse/
+
+QUESTIONS :
+NB : les reponses sont toujours prefixees du nom du serveur 
+	info a retrouver sur :
+	http://chi.cs.uchicago.edu/chirc/irc.html#message-format
+*/
+

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 18:00:01 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 13:32:36 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 # include "Wagner.hpp"
 # include <vector>
 
-Wagner::Wagner(std::string host, std::string pass)
-	: _hostname(host)
-	, _pass(pass)
+Wagner::Wagner(std::string pass)
+	: _pass(pass)
 {
 	DEBUG_CALL_WAGNER
 	_cmd.insert(std::make_pair("CAP",		&Wagner::cmd_cap));

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 15:05:37 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 12:35:59 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	Wagner::cmd_quit(void)
 	DEBUG_CALL_WAGNER
 	// TODO : supprimer le user de toutes les channels
 
+	std::cout << RED << "[" << request << "]" << RESET << std::endl;
 	std::string	message = "leaving";
 	if (request->params.empty() == false)
 	{

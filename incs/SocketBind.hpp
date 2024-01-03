@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 17:43:52 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 13:40:01 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ class SocketBind : public IQueue::IEventListener {
 		struct sockaddr_in				_sin;
 		IQueue							&_queue;
 		IOrchestrator					&_orchestrator;
-		~SocketBind();
 
 	public:
 		SocketBind(IOrchestrator &orchestrator, IQueue &queue, int port, int backlog = 5);
+		~SocketBind();
 		void	read(void);
 		void	write(void);
 };

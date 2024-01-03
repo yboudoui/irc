@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 11:12:44 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 13:40:14 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,20 @@ SocketBind::SocketBind(IOrchestrator& orchestrator, IQueue &queue, int port, int
 	: _queue(queue)
 	, _orchestrator(orchestrator)
 {
-	_fd = ::socket(AF_INET, SOCK_STREAM /*| SOCK_NONBLOCK */, 0);
+	_fd = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (_fd < 0)
-		throw std::runtime_error("Fatal error when creating a new socket");
+		throw std::runtime_error("unable to create a new binding socket");
 	_sin.sin_family			= AF_INET;
 	_sin.sin_port			= htons(port);
 	_sin.sin_addr.s_addr	= htonl(INADDR_ANY);
 	if (::bind(_fd, (struct sockaddr *)&_sin, sizeof (_sin)) < 0)
 	{
 		close(_fd);
-		throw std::runtime_error("Fatal error when binding the new socket");
-
+		throw std::runtime_error("unable to bind the new socket");
 	}
 	if (::listen(_fd, backlog) < 0){
 		close(_fd);
-		throw std::runtime_error("Fatal error when listening the new socket");
+		throw std::runtime_error("unable to listen the new socket");
 	}
 
 	_queue.subscribe(_fd, this);

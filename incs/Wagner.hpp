@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 17:47:03 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 13:32:34 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 class Wagner: public IOrchestrator
 {
 	public:
-		Wagner(std::string host, std::string pass);
+		Wagner(std::string pass);
 		~Wagner();
 
 		void	addEventListener(IQueue &queue, int fd_socketBind);
@@ -40,7 +40,6 @@ class Wagner: public IOrchestrator
 		t_cmd_map								_cmd;
 		t_clients								_clients;
 		t_channel_map							_channel_map;
-		std::string 							_hostname;
 		std::string 							_pass;
 
 // Context
