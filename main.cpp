@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 14:43:55 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 18:10:53 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ t_input_params	parse_input(int argc, char* argv[])
 		throw std::runtime_error("This software require only number for argument <port>");
 	ss << argv[0];
 	ss >> output.port;
-	output.password = argv[1];
+	if (output.port < 1024 || output.port > 65536)
+		throw std::runtime_error("This software require a valide <port> [1024:65536]");
+	output.password = argv[1]:
 	return (output);
 }
 
