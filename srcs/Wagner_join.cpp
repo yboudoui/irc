@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 11:13:01 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 12:53:26 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,18 @@ void	Wagner::cmd_join(void)
 		{
 			Channel * channel = find_channel(s_channel);
 			user->join(channel);
-			if (channel->topic)
-				user->setSendCache(RPL_TOPIC(user->nick_name.get(), channel->name, channel->topic()));
-			user->setSendCache(RPL_WELCOME(user, channel->name, "Welcome ! You've join the channel "));
-			user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
-			user->setSendCache(RPL_NAMREPLY(user->nick_name.get(), channel));
-			user->setSendCache(RPL_ENDOFNAMES(user->nick_name.get(), channel));
+			
+			std::string	reply = JOIN(user->nick_name.get(), s_channel);
+			channel->sendToAllUsers(reply);
+
+			reply = RPL_NAMREPLY(user->nick_name.get(), channel);
+			channel->sendToAllUsers(reply);
+			//if (channel->topic)
+			//	user->setSendCache(RPL_TOPIC(user->nick_name.get(), channel->name, channel->topic()));
+			
+			//user->setSendCache(RPL_WELCOME(user, channel->name, "Welcome ! You've join the channel "));
+			//user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
+			//user->setSendCache(RPL_ENDOFNAMES(user->nick_name.get(), channel));
 		}
 	}
 }

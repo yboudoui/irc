@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 18:01:38 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 10:59:21 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 12:57:33 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ std::string	RPL_ENDOFNAMES(std::string nickname, Channel *channel)
 	output << ":" << HOSTNAME;
 	output << " 366";
 	output << " " << nickname;
+
 	output << " #" << channel->name;
+	output << " " << nickname;
+
 	output << " :End of /NAMES list";
 	output << "\r\n";
 	

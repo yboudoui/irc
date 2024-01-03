@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2024/01/03 11:12:12 by sethomas         ###   ########.fr        #
+#    Updated: 2024/01/03 12:42:44 by sethomas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ SRCS				=	main.cpp\
 						srcs/responses/ERR_UMODEUNKNOWNFLAG.cpp \
 						srcs/responses/ERR_UNKNOWNMODE.cpp \
 						srcs/responses/ERR_USERONCHANNEL.cpp \
+						srcs/responses/JOIN.cpp \
 						srcs/responses/KICK.cpp \
 						srcs/responses/PONG.cpp \
 						srcs/responses/PRIVMSG.cpp \
