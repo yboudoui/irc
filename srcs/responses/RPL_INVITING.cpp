@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:53:52 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/29 09:35:31 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 17:39:16 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@ std::string	RPL_INVITING(std::string userNick, std::string invitedNick, std::str
 {
 	std::stringstream	output;
 
+	(void)userNick;
 	output << ":" << HOSTNAME;
 	output << " 341";
 	output << " " << userNick;
-	output << " #" << channel;
 	output << " " << invitedNick;
+	output << " #" << channel;
 	output << "\r\n";
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());

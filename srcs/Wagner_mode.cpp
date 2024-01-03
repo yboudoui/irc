@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 16:29:18 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 18:11:01 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,7 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                     }
 					{
                         std::string	s_ChannelUser = params.front();
-                        params.pop_front();
-                        std::cout << "try to make operator : " <<  s_ChannelUser << std::endl;
-                        
+                        params.pop_front();                       
                         User * s_User = findUser(s_ChannelUser);
                         if (!s_User)
                             user->setSendCache(ERR_NOSUCHNICK(user->nick_name.get(), name, s_ChannelUser));
@@ -129,7 +127,6 @@ void	Wagner::cmd_mode(void)
     std::stringstream   ss_reply;
     ss_reply << request;
     reply = ":" + user->nick_name.get() + " " + ss_reply.str() + "\r\n";
-    std::cout << RED << reply << std::endl;
     
 	if (!user->isConnected())
 		return (user->setSendCache(ERR_NOTREGISTERED()));

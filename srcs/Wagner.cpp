@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 13:32:36 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 17:53:47 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,9 @@ Wagner::~Wagner()
 
 	chan = _channel_map.begin();
 	for ( ; chan != _channel_map.end() ; chan++)
-		delete chan->second;
-
+	{
+		delete chan->second;	
+	}
 
 	/*
 	TODO // send error_message 

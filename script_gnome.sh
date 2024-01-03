@@ -2,7 +2,7 @@
 random_port=$(shuf -i 1024-65535 -n 1)
 random_pass=$(shuf -i 111-999 -n 1)
 
-writeSpeed=50
+writeSpeed=30
 
 # Commande pour ouvrir un terminal et lancer ircserv
 gnome-terminal --geometry=140x100+0+0 --title="FT_IRC" -- bash -c "valgrind --track-fds=yes --leak-check=full --show-leak-kinds=all --show-leak-kinds=all ./ircserv $random_port $random_pass; exec bash"

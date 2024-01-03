@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 16:12:40 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 18:10:51 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,30 +49,22 @@ void	User::quitAllChannels(void)
 {
 	if (_channels.size())
 	{
-		std::cout << "01 - " << std::endl;
 		t_channels::iterator it;
 		t_channels::iterator ite = _channels.end();
 		for (it = _channels.begin(); it != ite; it++)
 		{
-			std::cout << "\tquit channel : " << it->second->name << std::endl;
 			if (it->second)
 				it->second->remove(this);
 		}
-			std::cout << "02 - " << std::endl;
 	}
 }
 
 void	User::quit(Channel* channel)
 {
-			std::cout << "03 - " << std::endl;
-
 	if (channel == NULL)
 		return ;
-			std::cout << "04 - " << std::endl;
 	_channels.erase(channel->name);
-			std::cout << "05 - " << std::endl;
 	channel->remove(this);
-			std::cout << "06 - " << std::endl;
 }
 
 void	User::sendToAllChannels(std::string message)

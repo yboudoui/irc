@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/30 09:05:42 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 17:30:44 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ void	Wagner::cmd_invite(void)
 	}
 	if (!userToInvite)
 		channel->invite(wagner_userToInvite);
-	user->setSendCache(RPL_INVITING(user->nick_name.get(), nickToInvite, channelName));
+
+	std::string	reply = RPL_INVITING(user->nick_name.get(), nickToInvite, channelName);
+	channel->sendToAllUsers(reply);
 }
 

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 16:50:05 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 18:10:41 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,13 @@ Channel::~Channel()
 
 void	Channel::invite(User* user)
 {
-	std::cout << "invite : " << user->nick_name.get() << std::endl;
 	_users_map.insert(std::make_pair(user, INVITED));
-	std::cout << "user status :" << _users_map.find(user)->second << std::endl;
 }
 
 bool	Channel::join(User* user, std::string usr_password)
 {
 	if (user == NULL)
 		return true;
-	std::cout << "JOIN" << std::endl;
 	t_users_map::iterator it = _users_map.find(user);
 	if (it != _users_map.end() 
 		&& (it->second == NONE || it->second == OPERATOR))
@@ -55,7 +52,6 @@ bool	Channel::join(User* user, std::string usr_password)
 			_users_map.insert(std::make_pair(user, NONE));
 		else
 		{
-			std::cout << "convert user status" << std::endl;
 			it->second = NONE;
 			// modifier les droits user INVITED >> none
 		}
@@ -74,7 +70,8 @@ void	Channel::send(std::string senderNickname, std::string message)
 	{
 		if (it->first->nick_name.get() == senderNickname)
 			continue;
-		it->first->setSendCache(message);
+		if (it->second != INVITED)
+			it->first->setSendCache(message);
 	}
 }
 
@@ -149,7 +146,6 @@ bool		Channel::isInChannel(User* user)
 
 bool	Channel::canJoin(User* user, std::string usr_password)
 {
-		std::cout << user->nick_name.get() << " can Join ?" << std::endl;
 	if (modes & KEY_PROTECTED)
 	{
 		if (password && usr_password != password())
@@ -170,14 +166,12 @@ bool	Channel::canJoin(User* user, std::string usr_password)
 	if (modes & INVITE_ONLY)
 	{
 		t_users_map::iterator it = _users_map.find(user);
-		User * test = findUser(user->nick_name.get());
+		User * test = findInvitedUser(user->nick_name.get());
 		if (!test)
 		{
 			user->setSendCache(ERR_INVITEONLYCHAN(user->nick_name.get(), name));
 			return false;
 		}
-		std::cout << "INVITE_ONLY  >> " << user->nick_name.get() << std::endl;
-		std::cout << (it->first)->nick_name.get() << "it->second >> " << it->second << std::endl;
 		if (it != _users_map.end() && it->second == INVITED)
 			return true;
 		else
@@ -186,6 +180,18 @@ bool	Channel::canJoin(User* user, std::string usr_password)
 	}
 	return true;
 }
+
+
+User *	Channel::findInvitedUser(std::string nickname)
+{
+	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
+	{
+		if (it->first->nick_name.get() == nickname && it->second == INVITED)
+			return it->first;
+	}
+	return NULL;
+}
+
 
 int  Channel::countUser()
 {
