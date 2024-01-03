@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 18:10:51 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 18:24:14 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	User::sendToAllChannels(std::string message)
 	for (; it != _channels.end(); it++)
 	{	
 		privmsg = PRIVMSG(nick_name.get(), it->second->name, message);
-		std::cout << WHITE << privmsg << std::endl;
 		it->second->send(nick_name.get(), privmsg);
 	}
 }
