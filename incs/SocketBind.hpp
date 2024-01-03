@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 13:40:01 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 15:46:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "SocketConnection.hpp"
 # include <stdexcept>
 # include <unistd.h>
+# include <sys/socket.h>
 
 # include "Colors.hpp"
 # define DEBUG_CALL_SOCKET_BIND_CONSTRUCTOR \

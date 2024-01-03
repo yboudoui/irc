@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 13:40:14 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 15:37:06 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ SocketBind::SocketBind(IOrchestrator& orchestrator, IQueue &queue, int port, int
 	_fd = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (_fd < 0)
 		throw std::runtime_error("unable to create a new binding socket");
+	const int enable = 1;
+	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+	{
+		close(_fd);
+		throw std::runtime_error("unable to make reusable socket");
+	}
 	_sin.sin_family			= AF_INET;
 	_sin.sin_port			= htons(port);
 	_sin.sin_addr.s_addr	= htonl(INADDR_ANY);

@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 15:54:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 16:08:35 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 15:03:08 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@
 # define WHITE		"\033[37m"
 # define BOLD		"\033[1m"
 
-# define PRINT_MESSAGE(color, before, message, after)\
-	std::cout << before << color << message << after << RESET;
 
 # ifdef DEBUG
+# define PRINT_MESSAGE(color, before, message, after)\
+	std::cout << before << color << message << after << RESET;
 
 # define PRINT_DEBUG_MESSAGE(color, message)\
 	PRINT_MESSAGE(color, "", message , "\n")
@@ -41,7 +41,9 @@
 	PRINT_DEBUG_CALL_MESSAGE(color, "", class_name, "\n")
 
 # else
+# define PRINT_MESSAGE(color, before, message, after)
 # define PRINT_DEBUG_MESSAGE(color, message)
+# define PRINT_DEBUG_CALL_MESSAGE(color, before, class_name, after)
 # define PRINT_DEBUG_CALL(color, class_name)
 # endif
 

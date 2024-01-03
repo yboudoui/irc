@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2024/01/03 14:45:36 by yboudoui         ###   ########.fr        #
+#    Updated: 2024/01/03 17:27:45 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,106 +14,129 @@ NAME				=	ircserv
 
 #-----------------------------------------------------------------------------#
 
-SRCS				=	main.cpp\
-						srcs/signal_handler.cpp \
-						srcs/Message.cpp \
-						srcs/MessageQueue.cpp \
-						srcs/responses.cpp \
-						srcs/User.cpp \
-						srcs/Wagner.cpp \
-						srcs/Wagner_connection.cpp \
-						srcs/Wagner_mode.cpp \
-						srcs/Wagner_kick.cpp \
-						srcs/Wagner_invite.cpp \
-						srcs/Wagner_topic.cpp \
-						srcs/Wagner_whois.cpp \
-						srcs/Wagner_quit.cpp \
-						srcs/Wagner_privmsg.cpp \
-						srcs/Wagner_join.cpp \
-						srcs/Wagner_ping.cpp \
-						srcs/Channel.cpp \
-						srcs/Queue.cpp \
-						srcs/IQueueEventListener.cpp \
-						srcs/SocketBind.cpp \
-						srcs/SocketConnection.cpp \
-						srcs/extractor.cpp \
-						srcs/responses/ERR_ALREADYREGISTERED.cpp \
-						srcs/responses/ERR_BADCHANNELKEY.cpp \
-						srcs/responses/ERR_BANNEDFROMCHAN.cpp \
-						srcs/responses/ERR_CANNOTSENDTOCHAN.cpp \
-						srcs/responses/ERR_CHANNELISFULL.cpp \
-						srcs/responses/ERR_CHANOPRIVSNEEDED.cpp \
-						srcs/responses/ERR_ERRONEUSNICKNAME.cpp \
-						srcs/responses/ERR_INVITEONLYCHAN.cpp \
-						srcs/responses/ERR_KEYSET.cpp \
-						srcs/responses/ERR_NEEDMOREPARAMS.cpp \
-						srcs/responses/ERR_NICKNAMEINUSE.cpp \
-						srcs/responses/ERR_NONICKNAMEGIVEN.cpp \
-						srcs/responses/ERR_NORECIPIENT.cpp \
-						srcs/responses/ERR_NOSUCHCHANNEL.cpp \
-						srcs/responses/ERR_NOSUCHNICK.cpp \
-						srcs/responses/ERR_NOTEXTTOSEND.cpp \
-						srcs/responses/ERR_NOTONCHANNEL.cpp \
-						srcs/responses/ERR_PASSWDMISMATCH.cpp \
-						srcs/responses/ERR_TOOMANYTARGETS.cpp \
-						srcs/responses/ERR_UMODEUNKNOWNFLAG.cpp \
-						srcs/responses/ERR_UNKNOWNMODE.cpp \
-						srcs/responses/ERR_USERONCHANNEL.cpp \
-						srcs/responses/JOIN.cpp \
-						srcs/responses/KICK.cpp \
-						srcs/responses/PONG.cpp \
-						srcs/responses/PRIVMSG.cpp \
-						srcs/responses/RPL_CHANNELMODEIS.cpp \
-						srcs/responses/RPL_CREATED.cpp \
-						srcs/responses/RPL_INVITING.cpp \
-						srcs/responses/RPL_MYINFO.cpp \
-						srcs/responses/RPL_NAMREPLY.cpp \
-						srcs/responses/RPL_NOTOPIC.cpp \
-						srcs/responses/RPL_TOPIC.cpp \
-						srcs/responses/RPL_WELCOME.cpp \
-						srcs/responses/RPL_WHOISUSER.cpp \
-						srcs/responses/RPL_YOURHOST.cpp
+SRCS_RESPONSES		= \
+					ERR_ALREADYREGISTERED.cpp \
+					ERR_BADCHANNELKEY.cpp \
+					ERR_BANNEDFROMCHAN.cpp \
+					ERR_CANNOTSENDTOCHAN.cpp \
+					ERR_CHANNELISFULL.cpp \
+					ERR_CHANOPRIVSNEEDED.cpp \
+					ERR_ERRONEUSNICKNAME.cpp \
+					ERR_INVITEONLYCHAN.cpp \
+					ERR_KEYSET.cpp \
+					ERR_NEEDMOREPARAMS.cpp \
+					ERR_NICKNAMEINUSE.cpp \
+					ERR_NONICKNAMEGIVEN.cpp \
+					ERR_NORECIPIENT.cpp \
+					ERR_NOSUCHCHANNEL.cpp \
+					ERR_NOSUCHNICK.cpp \
+					ERR_NOTEXTTOSEND.cpp \
+					ERR_NOTONCHANNEL.cpp \
+					ERR_PASSWDMISMATCH.cpp \
+					ERR_TOOMANYTARGETS.cpp \
+					ERR_UMODEUNKNOWNFLAG.cpp \
+					ERR_UNKNOWNMODE.cpp \
+					ERR_USERONCHANNEL.cpp \
+					JOIN.cpp \
+					KICK.cpp \
+					PONG.cpp \
+					PRIVMSG.cpp \
+					RPL_CHANNELMODEIS.cpp \
+					RPL_CREATED.cpp \
+					RPL_INVITING.cpp \
+					RPL_MYINFO.cpp \
+					RPL_NAMREPLY.cpp \
+					RPL_NOTOPIC.cpp \
+					RPL_TOPIC.cpp \
+					RPL_WELCOME.cpp \
+					RPL_WHOISUSER.cpp \
+					RPL_YOURHOST.cpp
+
+SRCS				= \
+					signal_handler.cpp \
+					Message.cpp \
+					MessageQueue.cpp \
+					responses.cpp \
+					User.cpp \
+					Wagner.cpp \
+					Wagner_connection.cpp \
+					Wagner_mode.cpp \
+					Wagner_kick.cpp \
+					Wagner_invite.cpp \
+					Wagner_topic.cpp \
+					Wagner_whois.cpp \
+					Wagner_quit.cpp \
+					Wagner_privmsg.cpp \
+					Wagner_join.cpp \
+					Wagner_ping.cpp \
+					Channel.cpp \
+					Queue.cpp \
+					IQueueEventListener.cpp \
+					SocketBind.cpp \
+					SocketConnection.cpp \
+					extractor.cpp \
+					$(addprefix responses/, ${SRCS_RESPONSES} )
 
 
-INCS				=	./incs \
+SOURCES				=	main.cpp \
+						$(addprefix srcs/, ${SRCS})
+
+
+INCLUDES			=	./incs
 
 OBJS_DIR			=	./objs
 
-OBJS				:=	$(SRCS:%.cpp=$(OBJS_DIR)/%.o)
+OBJECTS				:=	$(SOURCES:%.cpp=$(OBJS_DIR)/%.o)
 
-DEPS				:=	$(OBJS:%.o=%.d)
+DEPS				:=	$(OBJECTS:%.o=%.d)
 
 #-----------------------------------------------------------------------------#
 
-CXX					:=	g++
+CXX					:=	c++
 
-CXXFLAGS			=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -DDEBUG #  -fsanitize=address#-fanalyzer#
+CXXFLAGS			+=	-Wall -Wextra -Werror -std=c++98
 
 RM					=	rm -f
 
+#-----------------------------------------------------------------------------#
+
 $(OBJS_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) $(addprefix -I, $(INCS)) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(addprefix -I, $(INCLUDES)) -c $< -o $@
 
-$(NAME):	$(OBJS)
-	$(CXX) $(CXXFLAGS) $(addprefix -I, $(INCS)) $(OBJS) -o $(NAME) $(LIBS)
+$(NAME):	$(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(addprefix -I, $(INCLUDES)) $(OBJECTS) -o $(NAME) $(LIBS)
 
-PORT	= 8080
+#-----------------------------------------------------------------------------#
 
-test: all
-	valgrind -q --track-fds=yes --leak-check=full --show-leak-kinds=all ./${NAME} ${PORT} 555
-
-all:		$(NAME)
+all:	$(NAME)
 
 clean:
 	$(RM) -r $(OBJS_DIR)
 
-fclean:		clean
+fclean:	clean
 	$(RM) $(NAME)
 	$(RM) -r $(PATH_BUILD)
 	$(RM) -r $(PATH_LIB)
 
-re:			fclean
-	make all
+re:	fclean all
+
+#-----------------------------------------------------------------------------#
+
+port			= 8080
+password		= password
+
+VALGRIND_PARAMS	+=	--track-fds=yes
+VALGRIND_PARAMS	+=	--leak-check=full
+VALGRIND_PARAMS	+=	--show-leak-kinds=all
+
+test: CXXFLAGS += -g3 -DDEBUG
+test: re
+	valgrind -q \
+		${VALGRIND_PARAMS} \
+		./${NAME} \
+		${port} ${password}
+
+#-----------------------------------------------------------------------------#
 
 .PHONY:		all clean fclean re
