@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 17:32:52 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 11:11:55 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,22 @@ int	main(int argc, char *argv[])
 		std::cerr << "Unable to set sigaction handler" << std::endl;
 		return (1);
 	}
+	try
+	{
+		SocketBind*	sock = new SocketBind(wagner, queue, port);
 
-	SocketBind*	sock = new SocketBind(wagner, queue, port);
+		std::cout << "localhost:" << port << std::endl;
 
-	std::cout << "localhost:" << port << std::endl;
-
-	while (queue.event_loop(wagner) && !_stop_loop );
-	IQueue::IEventListener::free(sock);
+		//TODO allocate Wagner then delete it
+		while (queue.event_loop(wagner) && !_stop_loop );
+		IQueue::IEventListener::free(sock);
+		return (0);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		return (1);
+	}
+	
 	return (0);
 }

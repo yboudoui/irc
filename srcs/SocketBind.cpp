@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 17:43:51 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 11:12:44 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,16 @@ SocketBind::SocketBind(IOrchestrator& orchestrator, IQueue &queue, int port, int
 	_sin.sin_port			= htons(port);
 	_sin.sin_addr.s_addr	= htonl(INADDR_ANY);
 	if (::bind(_fd, (struct sockaddr *)&_sin, sizeof (_sin)) < 0)
+	{
+		close(_fd);
 		throw std::runtime_error("Fatal error when binding the new socket");
-	if (::listen(_fd, backlog) < 0)
+
+	}
+	if (::listen(_fd, backlog) < 0){
+		close(_fd);
 		throw std::runtime_error("Fatal error when listening the new socket");
+	}
+
 	_queue.subscribe(_fd, this);
 	DEBUG_CALL_SOCKET_BIND_CONSTRUCTOR
 }

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 12:36:16 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 11:06:12 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                         
                         User * s_User = findUser(s_ChannelUser);
                         if (!s_User)
-                            user->setSendCache(ERR_NOSUCHNICK(name, s_ChannelUser));
+                            user->setSendCache(ERR_NOSUCHNICK(user->nick_name.get(), name, s_ChannelUser));
                         else
                         {
                            if (s_User == user)

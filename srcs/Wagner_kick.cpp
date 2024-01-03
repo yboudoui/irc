@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 17:04:30 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 10:47:00 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,29 +51,35 @@ void	Wagner::cmd_kick(void)
 		return ;
 	}
 
-	available<t_client>	current_client = channel->find_by(*user);
-	if (current_client == false)
+    User * s_User = channel->findUser(user_nick_name);
+	if (!s_User)
 	{
 		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel->name));
 		return ;
 	}
 
-	if ((current_client().second & INVITED) == false)
+
+	if (!channel->isOperator(s_User))
 	{
 		user->setSendCache(ERR_CHANOPRIVSNEEDED(user_nick_name, channel->name));
 		return ;
 	}
 
-	available<t_client>	client = channel->find_by(nickName(request->params[1]));
-	if (client == false)
+    User * userToKick = channel->findUser(request->params[1]);
+	if (!userToKick)
 	{
-		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel->name));
+		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel->name, request->params[1] + " is not on channel"));
 		return ;
 	}
+	std::string	reason = "";
+	if (params_count == 3)
+	{
+		reason = request->params[2];
+	}
+	std::string	reply = KICK(user_nick_name, channelName, userToKick->nick_name.get(), reason);
+	//userToKick->setSendCache(ERR_NOSUCHCHANNEL(userToKick->nick_name.get(), channel->name, "you have been kicked from the channel"));
 
-	std::string	reply;
-	reply << *request;
-	client().first->setSendCache(reply);
-	channel->remove(client().first);
 	channel->sendToAllUsers(reply);
+
+	channel->remove(userToKick);
 }

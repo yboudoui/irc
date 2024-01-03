@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ERR_BADCHANNELKEY.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 18:00:11 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 18:00:24 by yboudoui         ###   ########.fr       */
+/*   Updated: 2023/12/29 09:17:44 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ std::string	ERR_BADCHANNELKEY(std::string channel, std::string reason)
 
 	output << ":" << HOSTNAME;
 	output << " 475";
-	output << " " << channel;
+	output << " #" << channel;
 	output << " :" << reason;
 	output << "\r\n";
 	PRINT_DEBUG_MESSAGE(GREEN, output.str());

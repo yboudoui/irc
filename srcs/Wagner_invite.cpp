@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/29 08:47:37 by sethomas         ###   ########.fr       */
+/*   Updated: 2023/12/30 09:05:42 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,21 +75,21 @@ void	Wagner::cmd_invite(void)
 	}
 
 //5. verifier que la personne à invite est dans la base t_client avec
-	User * userToInvite = findClient(nickToInvite);
-	if (!userToInvite)
+	User * wagner_userToInvite = findClient(nickToInvite);
+	if (!wagner_userToInvite)
 	{
-		user->setSendCache(ERR_NOSUCHNICK(channelName, nickToInvite));
+		user->setSendCache(ERR_NOSUCHNICK(userNickName, channelName, nickToInvite));
 		return ;
 	}
-	userToInvite = channel->findUser(nickToInvite);
+	User * userToInvite = channel->findUser(nickToInvite);
 //6. verifier si la personne à invite est deja dans le channel avec
 	if (userToInvite && !channel->isInvited(userToInvite))
 	{
 		user->setSendCache(ERR_USERONCHANNEL(channelName, nickToInvite));
 		return ;
 	}
-
-	channel->invite(userToInvite);
-	user->setSendCache(RPL_INVITING(nickToInvite, channelName));
+	if (!userToInvite)
+		channel->invite(wagner_userToInvite);
+	user->setSendCache(RPL_INVITING(user->nick_name.get(), nickToInvite, channelName));
 }
 
