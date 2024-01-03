@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 11:06:12 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:29:18 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,13 @@ void	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
 void	Wagner::cmd_mode(void)
 {
 	DEBUG_CALL_WAGNER
+    
+    std::string         reply;
+    std::stringstream   ss_reply;
+    ss_reply << request;
+    reply = ":" + user->nick_name.get() + " " + ss_reply.str() + "\r\n";
+    std::cout << RED << reply << std::endl;
+    
 	if (!user->isConnected())
 		return (user->setSendCache(ERR_NOTREGISTERED()));
 
@@ -161,9 +168,10 @@ void	Wagner::cmd_mode(void)
         request->params.pop_front();
         channel->ProcessModeCmd(user, s_modes, request->params);
     }
-	user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
-	user->setSendCache(RPL_NAMREPLY(user->nick_name.get(), channel));
-	user->setSendCache(RPL_ENDOFNAMES(user->nick_name.get(), channel));
+    channel->sendToAllUsers(reply);
+	//user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
+	//user->setSendCache(RPL_NAMREPLY(user->nick_name.get(), channel));
+	//user->setSendCache(RPL_ENDOFNAMES(user->nick_name.get(), channel));
 }
 
 

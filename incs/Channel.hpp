@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/29 08:49:16 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 15:01:56 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ class Channel
 
 		void	ProcessModeCmd(User* user, const std::string& command,t_params& params);
 		void	sendToAllUsers(std::string msg, User* user = NULL);
+		void	sendNameReplyToAllUsers(User* user = NULL);
 };
 
 #endif

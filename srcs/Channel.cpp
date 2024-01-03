@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 11:12:33 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:50:05 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,8 +230,8 @@ std::string Channel::getUserList()
 		{
 			if (it->second == OPERATOR)
 				list.append("@");
-			else
-				list.append("+");
+			//else
+			//	list.append("");
 			user = it->first;
 			list.append(user->nick_name.get());
 			
@@ -251,6 +251,24 @@ void	Channel::sendToAllUsers(std::string msg, User* user)
 		if (it->first == user)
 			continue ;
 		it->first->setSendCache(msg);
+	}
+}
+
+void	Channel::sendNameReplyToAllUsers(User* user)
+{
+	t_users_map::iterator	it;
+	std::string msg;
+
+	//(void)user;
+
+	for (it = _users_map.begin(); it != _users_map.end(); it++)
+	{
+		if (it->first == user)
+			continue ;
+		msg = RPL_NAMREPLY(it->first->nick_name.get(), this);
+		it->first->setSendCache(msg);
+		it->first->setSendCache(RPL_ENDOFNAMES(it->first->nick_name.get(), this));
+
 	}
 }
 

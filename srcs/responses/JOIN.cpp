@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:56:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 12:42:27 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:40:42 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 /*
 KICK
 */
-std::string	JOIN(std::string user, std::string channel)
+std::string	JOIN(User* user, std::string channel)
 {
 	std::stringstream	output;
 
-	output << ":" <<  user;
+	output << ":" <<  user->nick_name.get();
+	output << "!" <<  user->user_name.get();
+	output << "@" <<  user->host_name.get();
 	output << " JOIN ";
 	output << "#" << channel;
 	output << "\r\n";

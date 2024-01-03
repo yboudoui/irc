@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 12:53:26 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:45:35 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,21 @@ void	Wagner::cmd_join(void)
 			Channel * channel = find_channel(s_channel);
 			user->join(channel);
 			
-			std::string	reply = JOIN(user->nick_name.get(), s_channel);
+			std::string	reply = JOIN(user, s_channel);
 			channel->sendToAllUsers(reply);
 
-			reply = RPL_NAMREPLY(user->nick_name.get(), channel);
+			/*
+			reply = RPL_NAMREPLY("+" + user->nick_name.get(), channel);
 			channel->sendToAllUsers(reply);
+			reply = RPL_ENDOFNAMES(user->nick_name.get(), channel);
+			channel->sendToAllUsers(reply);
+			*/
+			channel->sendNameReplyToAllUsers();
+			//user->setSendCache(RPL_ENDOFNAMES(user->nick_name.get(), channel));
+
+
+			//
+
 			//if (channel->topic)
 			//	user->setSendCache(RPL_TOPIC(user->nick_name.get(), channel->name, channel->topic()));
 			

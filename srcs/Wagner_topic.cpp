@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 15:07:00 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/03 17:23:22 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,9 @@ void	Wagner::cmd_topic(void)
 		if (!newTopic.empty() && newTopic[0] == ':')
 			newTopic = newTopic.substr(1);
 		channel->topic(newTopic);
-		user->sendTo(channel, RPL_TOPIC(user->nick_name.get(), channel->name, newTopic));
+		
+		std::string reply;
+		reply = RPL_TOPIC(user->nick_name.get(), channel->name, newTopic);
+		channel->sendToAllUsers(reply);
 	}
 }

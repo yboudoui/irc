@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 12:42:35 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:39:43 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,6 @@ std::string	ERR_NOTREGISTERED(void);
 
 // KICK
 std::string	KICK(std::string user, std::string channel, std::string kickedUser, std::string reason);
-std::string	JOIN(std::string user, std::string channel);
+std::string	JOIN(User* user, std::string channel);
 
 #endif
