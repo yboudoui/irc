@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 10:45:05 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:01:46 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 SocketConnection::SocketConnection(IQueue &queue, int fd_socketBind)
 	: _queue(queue)
-	, _addr()
-	, _addr_len(sizeof(_addr))
-	, _fd(accept(fd_socketBind, &_addr, &_addr_len))
 {
+	_addr = (struct sockaddr){};
+	_addr_len = sizeof(_addr);
+	_fd = accept(fd_socketBind, &_addr, &_addr_len);
 	if (_fd < 0)
 		throw std::runtime_error("Fatal error when accepting a new connection");
 	_queue.subscribe(_fd, this);
@@ -31,9 +31,16 @@ SocketConnection::~SocketConnection()
 	close(_fd);
 }
 
+int		SocketConnection::getFD(void) const
+{
+	return (_fd);
+}
+
 void	SocketConnection::read(void)
 {
 	ssize_t bytes_read = ::recv(_fd, _buffer, BUFFER_LEN, 0);
+	if (bytes_read <= 0)
+		return ((void)is_alive(false));
 	_read_cache.append(_buffer, bytes_read);
 }
 
@@ -51,7 +58,8 @@ std::string&	SocketConnection::getReadCache(void)
 
 void	SocketConnection::write(void)
 {
-	ssize_t	bytes_send;
-	bytes_send = ::send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
+	ssize_t	bytes_send = ::send(_fd, _write_cache.c_str(), _write_cache.size(), 0);
+	if (bytes_send < 0)
+		return ((void)is_alive(false));
 	_write_cache.erase(0, bytes_send);
 }

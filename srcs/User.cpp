@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 11:06:26 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:56:16 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	User::debug(User* u)
 	if (u == NULL)
 		return ;
 	_debug = u;
-	PRINT_MESSAGE(WHITE, BOLD << "[" << u->_fd << "]["<< u->nick_name<< "]\t", "", "\n");
+	PRINT_MESSAGE(WHITE, BOLD << "[" << u->getFD() << "]["<< u->nick_name<< "]\t", "", "\n");
 }
 
 bool	User::read_message(Message** msg)

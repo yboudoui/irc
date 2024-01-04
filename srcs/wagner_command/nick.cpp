@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 06:32:03 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 11:22:47 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:52:09 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ void	Wagner::cmd_nick(void)
 		if ((*it)->is_alive() && *it != user)
 		{
 			if ((*it)->nick_name == nickname)
-			{
-				//user->nick_name = nickname;
 				return (user->send_message(ERR_NICKNAMEINUSE(nickname)));
-			}
 		}
 	}
 				

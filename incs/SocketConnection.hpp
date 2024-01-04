@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 08:53:13 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:55:13 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class SocketConnection : public IQueue::IEventListener
 {
 	private:
 		IQueue					&_queue;
+		int						_fd;
 		struct sockaddr			_addr;
 		socklen_t				_addr_len;
 		char					_buffer[BUFFER_LEN];
@@ -40,7 +41,7 @@ class SocketConnection : public IQueue::IEventListener
 
 	protected:
 		~SocketConnection();
-		const int		_fd;
+		int				getFD(void)	const;
 		std::string&	getReadCache(void);
 		void			setSendCache(std::string message);
 
