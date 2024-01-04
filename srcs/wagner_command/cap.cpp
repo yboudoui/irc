@@ -1,24 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PONG.cpp                                           :+:      :+:    :+:   */
+/*   cap.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/26 17:55:49 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 08:23:58 by yboudoui         ###   ########.fr       */
+/*   Created: 2024/01/04 06:30:31 by yboudoui          #+#    #+#             */
+/*   Updated: 2024/01/04 07:16:35 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "responses.hpp"
+#include "Wagner.hpp"
 
-std::string	PONG(std::string server)
+void	Wagner::cmd_cap(void)
 {
-	std::stringstream	output;
-
-	output << ":" << HOSTNAME;
-	output << " PONG ";
-	output << server;
-	output << "\r\n";
-	return (output.str());
+	DEBUG_CALL_WAGNER_COMMAND
 }

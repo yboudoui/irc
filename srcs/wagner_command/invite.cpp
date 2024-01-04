@@ -1,15 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Wagner_invite.cpp                                  :+:      :+:    :+:   */
+/*   invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 17:30:44 by sethomas         ###   ########.fr       */
+/*   Created: 2024/01/04 06:35:25 by yboudoui          #+#    #+#             */
+/*   Updated: 2024/01/04 09:12:47 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "Wagner.hpp"
 
@@ -28,19 +27,19 @@ channel operator on the given channel.
 */
 void	Wagner::cmd_invite(void)
 {
-	DEBUG_CALL_WAGNER
+	DEBUG_CALL_WAGNER_COMMAND
 	if (!user->isConnected())
-		return (user->setSendCache(ERR_NOTREGISTERED()));
+		return (user->send_message(ERR_NOTREGISTERED()));
 
 	std::string	channelName;
 	std::string	nickToInvite;
-	std::string	userNickName = user->nick_name.get();
+	std::string	userNickName = user->nick_name;
 	size_t		paramsCount = request->params.size();
 
 //1. check si au moins 2 params
 	if (paramsCount < 2)
 	{
-		user->setSendCache(ERR_NEEDMOREPARAMS("", "IVITE"));
+		user->send_message(ERR_NEEDMOREPARAMS("", "IVITE"));
 		return ;
 	}
 
@@ -55,7 +54,7 @@ void	Wagner::cmd_invite(void)
 //2. prendre le param #1 - verifier que la channel existe
 	if (channel == NULL)
 	{
-		user->setSendCache(ERR_NOSUCHCHANNEL(userNickName, channelName));
+		user->send_message(ERR_NOSUCHCHANNEL(userNickName, channelName));
 		return ;
 	}
 
@@ -63,14 +62,14 @@ void	Wagner::cmd_invite(void)
 	User * test = channel->findUser(userNickName);
 	if (!test)
 	{
-		user->setSendCache(ERR_NOTONCHANNEL(userNickName, channelName));
+		user->send_message(ERR_NOTONCHANNEL(userNickName, channelName));
 		return ;
 	}
 
 //4. verifier les droits operateurs de user avec :
 	if (!channel->isOperator(user))
 	{
-		user->setSendCache(ERR_CHANOPRIVSNEEDED(userNickName, channelName));
+		user->send_message(ERR_CHANOPRIVSNEEDED(userNickName, channelName));
 		return ;
 	}
 
@@ -78,20 +77,20 @@ void	Wagner::cmd_invite(void)
 	User * wagner_userToInvite = findClient(nickToInvite);
 	if (!wagner_userToInvite)
 	{
-		user->setSendCache(ERR_NOSUCHNICK(userNickName, channelName, nickToInvite));
+		user->send_message(ERR_NOSUCHNICK(userNickName, channelName, nickToInvite));
 		return ;
 	}
 	User * userToInvite = channel->findUser(nickToInvite);
 //6. verifier si la personne à invite est deja dans le channel avec
 	if (userToInvite && !channel->isInvited(userToInvite))
 	{
-		user->setSendCache(ERR_USERONCHANNEL(channelName, nickToInvite));
+		user->send_message(ERR_USERONCHANNEL(channelName, nickToInvite));
 		return ;
 	}
 	if (!userToInvite)
 		channel->invite(wagner_userToInvite);
 
-	std::string	reply = RPL_INVITING(user->nick_name.get(), nickToInvite, channelName);
+	std::string	reply = RPL_INVITING(user->nick_name, nickToInvite, channelName);
 	channel->sendToAllUsers(reply);
 }
 

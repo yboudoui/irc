@@ -1,15 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Wagner_privmsg.cpp                                 :+:      :+:    :+:   */
+/*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/30 09:18:14 by sethomas         ###   ########.fr       */
+/*   Created: 2024/01/04 06:37:02 by yboudoui          #+#    #+#             */
+/*   Updated: 2024/01/04 09:14:18 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 # include "Wagner.hpp"
 
@@ -36,20 +35,20 @@ RPL_AWAY (301) // qq comandes non gerees // idem mask
 */
 void	Wagner::cmd_privmsg(void)
 {
-	DEBUG_CALL_WAGNER
+	DEBUG_CALL_WAGNER_COMMAND
 	if (!user->isConnected())
-		return (user->setSendCache(ERR_NOTREGISTERED()));
+		return (user->send_message(ERR_NOTREGISTERED()));
 	std::string	s_target, message, response, senderNickname;
 
 	// 1. verifier qu'il y a un destinataire
 	if (!request->params.size())
-		return(user->setSendCache(ERR_NORECIPIENT()));
+		return(user->send_message(ERR_NORECIPIENT()));
     s_target = *request->params.begin();
     request->params.pop_front();
 
 	// 2. verifier qu'il y a un message a envoyer
 	if (!request->params.size())
-		return(user->setSendCache(ERR_NOTEXTTOSEND()));
+		return(user->send_message(ERR_NOTEXTTOSEND()));
 	message = *request->params.begin();
 	request->params.pop_front();
 	// supprime le : si necessaire du message
@@ -65,19 +64,19 @@ void	Wagner::cmd_privmsg(void)
 	User*		target_user = findClient(s_target);
 
 	if (target_channel && target_user)
-		return(user->setSendCache(ERR_TOOMANYTARGETS(s_target)));
+		return(user->send_message(ERR_TOOMANYTARGETS(s_target)));
 
-	response = PRIVMSG(user->nick_name.get(), s_target, message);
+	response = PRIVMSG(user->nick_name, s_target, message);
 	if (target_channel)
 	{
 		// 4. verifier que user appartient au channel
 		if (target_channel->isInChannel(user))
-			return(target_channel->send(user->nick_name.get(), response));
+			return(target_channel->send(user->nick_name, response));
 		else
-			return(user->setSendCache(ERR_CANNOTSENDTOCHAN(s_target)));
+			return(user->send_message(ERR_CANNOTSENDTOCHAN(s_target)));
 	}
 	else if (target_user)
-		return(target_user->setSendCache(response));
+		return(target_user->send_message(response));
 	// TODO ajoute channel_name si necessaire.
-	return(user->setSendCache(ERR_NOSUCHNICK(user->nick_name.get(), "", s_target)));
+	return(user->send_message(ERR_NOSUCHNICK(user->nick_name, "", s_target)));
 }

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:54:19 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 17:13:23 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:26:07 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,5 @@ std::string	RPL_NOTOPIC(std::string nickname, std::string channel, std::string i
 	output << " #" << channel;
 	output << " :" << info;
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }

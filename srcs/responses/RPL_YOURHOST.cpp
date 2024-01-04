@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:44:01 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 18:03:46 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:26:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,5 @@ std::string	RPL_YOURHOST()
 	output << ": Your host is " << SERVERNAME;
 	output << ", running version " << VERSION;
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }

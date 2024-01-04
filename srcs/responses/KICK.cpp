@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:56:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 10:47:15 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:23:51 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,5 @@ std::string	KICK(std::string user, std::string channel, std::string kickedUser, 
 	output << " " << kickedUser;
 	output << " " << reason;
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }

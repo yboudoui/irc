@@ -1,15 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Wagner_topic.cpp                                   :+:      :+:    :+:   */
+/*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 17:23:22 by sethomas         ###   ########.fr       */
+/*   Created: 2024/01/04 06:37:11 by yboudoui          #+#    #+#             */
+/*   Updated: 2024/01/04 09:13:43 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 # include "Wagner.hpp"
 
@@ -26,15 +25,15 @@ channel will be changed, if the channel modes permit this action.
 
 void	Wagner::cmd_topic(void)
 {
-	DEBUG_CALL_WAGNER
+	DEBUG_CALL_WAGNER_COMMAND
 
-	std::string	user_nick_name = user->nick_name.get();
+	std::string	user_nick_name = user->nick_name;
 	size_t		params_count = request->params.size();
 
 //1. check si au moins 1 params
 	if (params_count < 1)
 	{
-		user->setSendCache(ERR_NEEDMOREPARAMS("", "TOPIC"));
+		user->send_message(ERR_NEEDMOREPARAMS("", "TOPIC"));
 		return ;
 	}
 
@@ -47,15 +46,15 @@ void	Wagner::cmd_topic(void)
 	Channel*	channel = find_channel(channelName);
 	if (channel == NULL)
 	{
-		user->setSendCache(ERR_NOSUCHCHANNEL(user_nick_name, channelName));
+		user->send_message(ERR_NOSUCHCHANNEL(user_nick_name, channelName));
 		return ;
 	}
 
 //3. verifier que user est sur la channel avec :
-    User * s_User = channel->findUser(user->nick_name.get());
+    User * s_User = channel->findUser(user->nick_name);
 	if (!s_User)
 	{
-		user->setSendCache(ERR_NOTONCHANNEL(user_nick_name, channel->name));
+		user->send_message(ERR_NOTONCHANNEL(user_nick_name, channel->name));
 		return ;
 	}
 
@@ -63,9 +62,9 @@ void	Wagner::cmd_topic(void)
 	if (params_count == 1)
 	{
 		if (channel->topic)
-			user->setSendCache(RPL_TOPIC(user->nick_name.get(), channel->name, channel->topic()));
+			user->send_message(RPL_TOPIC(user->nick_name, channel->name, channel->topic()));
 		else
-			user->setSendCache(RPL_NOTOPIC(user->nick_name.get(), channel->name));
+			user->send_message(RPL_NOTOPIC(user->nick_name, channel->name));
 		return ;
 	}
 	else
@@ -73,7 +72,7 @@ void	Wagner::cmd_topic(void)
 //5. si il y a deux parameter verifier si le topic n'est modificable que par les operateurs.
 		if ((channel->modes & TOPIC_ONLY_OP) && !channel->isOperator(user))
 		{
-			user->setSendCache(ERR_CHANOPRIVSNEEDED(user_nick_name, channel->name));
+			user->send_message(ERR_CHANOPRIVSNEEDED(user_nick_name, channel->name));
 			return ;
 		}
 		std::string newTopic = request->params[1];
@@ -82,7 +81,7 @@ void	Wagner::cmd_topic(void)
 		channel->topic(newTopic);
 		
 		std::string reply;
-		reply = RPL_TOPIC(user->nick_name.get(), channel->name, newTopic);
+		reply = RPL_TOPIC(user->nick_name, channel->name, newTopic);
 		channel->sendToAllUsers(reply);
 	}
 }

@@ -1,15 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Wagner_quit.cpp                                    :+:      :+:    :+:   */
+/*   quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 18:10:59 by sethomas         ###   ########.fr       */
+/*   Created: 2024/01/04 06:36:51 by yboudoui          #+#    #+#             */
+/*   Updated: 2024/01/04 07:18:38 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 # include "Wagner.hpp"
 
@@ -36,7 +35,7 @@ Numeric Replies: None.
 
 void	Wagner::cmd_quit(void)
 {
-	DEBUG_CALL_WAGNER
+	DEBUG_CALL_WAGNER_COMMAND
 	// TODO : supprimer le user de toutes les channels
 	std::string	message = "leaving";
 	if (request->params.empty() == false)

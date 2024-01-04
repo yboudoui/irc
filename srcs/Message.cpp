@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 23:42:04 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 07:20:33 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,25 @@ void	Message::color(const char *c)
 		_color = (char *)WHITE;
 }
 
+bool	new_message(std::string& raw_message, Message** output)
+{
+	(*output) = NULL;
+	Extractor			extractor(raw_message);
+	t_available_string	line;
+
+	line = extractor.extract_to("\r\n");
+	if (line)
+		(*output) = new Message(line());
+	raw_message = extractor.str();
+	return (true && ((*output) != NULL));
+}
+
 Message::Message(std::string raw_message)
 {
-//	DEBUG_CALL_MESSAGE
 	Extractor	_cache(raw_message);
 	prefixe	= parse_prefixe(_cache);
 	command	= parse_command(_cache);
 	params	= parse_params(_cache);
-
-	PRINT_DEBUG_MESSAGE(_color, "\t" << this)
-}
-
-Message::Message(Message const& other)
-	: prefixe(other.prefixe)
-	, command(other.command)
-	, params(other.params)
-{
-	DEBUG_CALL_MESSAGE
 }
 
 Message::~Message()

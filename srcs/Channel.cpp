@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 18:24:52 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:04:12 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ void	Channel::send(std::string senderNickname, std::string message)
 	(void)message;
 	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
 	{
-		if (it->first->nick_name.get() == senderNickname)
+		if (it->first->nick_name == senderNickname)
 			continue;
 		if (it->second != INVITED)
-			it->first->setSendCache(message);
+			it->first->send_message(message);
 	}
 }
 
@@ -150,7 +150,7 @@ bool	Channel::canJoin(User* user, std::string usr_password)
 	{
 		if (password && usr_password != password())
 		{
-			user->setSendCache(ERR_BADCHANNELKEY(user->nick_name.get(), name));
+			user->setSendCache(ERR_BADCHANNELKEY(user->nick_name, name));
 			return (false);
 		}
 	}
@@ -159,23 +159,23 @@ bool	Channel::canJoin(User* user, std::string usr_password)
 		size_t nb_user = countUser();
 		if (nb_user >= limit)
 		{
-			user->setSendCache(ERR_CHANNELISFULL(user->nick_name.get(), name));
+			user->setSendCache(ERR_CHANNELISFULL(user->nick_name, name));
 			return false;
 		}
 	}
 	if (modes & INVITE_ONLY)
 	{
 		t_users_map::iterator it = _users_map.find(user);
-		User * test = findInvitedUser(user->nick_name.get());
+		User * test = findInvitedUser(user->nick_name);
 		if (!test)
 		{
-			user->setSendCache(ERR_INVITEONLYCHAN(user->nick_name.get(), name));
+			user->send_message(ERR_INVITEONLYCHAN(user->nick_name, name));
 			return false;
 		}
 		if (it != _users_map.end() && it->second == INVITED)
 			return true;
 		else
-			user->setSendCache(ERR_INVITEONLYCHAN(user->nick_name.get(), name));
+			user->send_message(ERR_INVITEONLYCHAN(user->nick_name, name));
 		return false;
 	}
 	return true;
@@ -186,7 +186,7 @@ User *	Channel::findInvitedUser(std::string nickname)
 {
 	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
 	{
-		if (it->first->nick_name.get() == nickname && it->second == INVITED)
+		if (it->first->nick_name == nickname && it->second == INVITED)
 			return it->first;
 	}
 	return NULL;
@@ -239,7 +239,7 @@ std::string Channel::getUserList()
 			//else
 			//	list.append("");
 			user = it->first;
-			list.append(user->nick_name.get());
+			list.append(user->nick_name);
 			
 			list.append(" ");
 		}
@@ -256,7 +256,7 @@ void	Channel::sendToAllUsers(std::string msg, User* user)
 	{
 		if (it->first == user)
 			continue ;
-		it->first->setSendCache(msg);
+		it->first->send_message(msg);
 	}
 }
 
@@ -271,9 +271,9 @@ void	Channel::sendNameReplyToAllUsers(User* user)
 	{
 		if (it->first == user)
 			continue ;
-		msg = RPL_NAMREPLY(it->first->nick_name.get(), this);
-		it->first->setSendCache(msg);
-		it->first->setSendCache(RPL_ENDOFNAMES(it->first->nick_name.get(), this));
+		msg = RPL_NAMREPLY(it->first->nick_name, this);
+		it->first->send_message(msg);
+		it->first->send_message(RPL_ENDOFNAMES(it->first->nick_name, this));
 
 	}
 }
@@ -282,7 +282,7 @@ User *	Channel::findUser(std::string nickname)
 {
 	for (t_users_map::iterator it = _users_map.begin(); it != _users_map.end(); it++)
 	{
-		if (it->first->nick_name.get() == nickname && it->second != INVITED)
+		if (it->first->nick_name == nickname && it->second != INVITED)
 			return it->first;
 	}
 	return NULL;

@@ -1,15 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Wagner_whois.cpp                                   :+:      :+:    :+:   */
+/*   whois.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 11:05:43 by sethomas         ###   ########.fr       */
+/*   Created: 2024/01/04 06:37:27 by yboudoui          #+#    #+#             */
+/*   Updated: 2024/01/04 08:17:19 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 # include "Wagner.hpp"
 
@@ -47,6 +46,6 @@ RPL_ENDOFWHOIS
 
 void	Wagner::cmd_whois(void)
 {
-	DEBUG_CALL_WAGNER
-	user->setSendCache(RPL_WHOISUSER(user));
+	DEBUG_CALL_WAGNER_COMMAND
+	user->send_message(RPL_WHOISUSER(user));
 }

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:15:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 16:22:54 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:53:47 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 SocketConnection::SocketConnection(IQueue &queue, int fd_socketBind)
 	: _queue(queue)
+	, _addr()
+	, _addr_len(sizeof(_addr))
+	, _fd(accept(fd_socketBind, &_addr, &_addr_len))
 {
-	_addr = (struct sockaddr){};
-	_addr_len = sizeof(_addr);
-	_fd = accept(fd_socketBind, &_addr, &_addr_len);
 	if (_fd < 0)
 		throw std::runtime_error("Fatal error when accepting a new connection");
 	_queue.subscribe(_fd, this);

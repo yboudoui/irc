@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:42:38 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/28 11:57:57 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 09:16:42 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,12 @@ std::string	RPL_WELCOME(User * user, std::string channel, std::string message)
 
 	output << ":" << HOSTNAME;
 	output << " 001 ";
-	output << user->nick_name.get();
+	output << user->nick_name;
 	if (channel.size())
 		output << " #" << channel;
 	output << " :" << message;
-	output << user->nick_name.get() << "!" << user->user_name.get();
+	output << user->nick_name << "!" << user->user_name.get();
 	output << "@"+ user->host_name.get();
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }

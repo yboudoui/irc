@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 14:10:23 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 17:31:56 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 07:02:49 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ class Message
 		t_params	params;
 
 		Message(std::string raw_message);
-		Message(Message const& other);
 		~Message();
 };
 
@@ -63,4 +62,5 @@ std::ostream& operator<< (std::ostream& stream, const Message& message);
 std::ostream& operator<< (std::ostream& stream, const Message* message);
 std::string& operator << (std::string& str, Message& message);
 
+bool	new_message(std::string& raw_message, Message** output);
 #endif

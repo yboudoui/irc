@@ -1,15 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Wagner_join.cpp                                    :+:      :+:    :+:   */
+/*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 17:28:43 by sethomas         ###   ########.fr       */
+/*   Created: 2024/01/04 06:35:44 by yboudoui          #+#    #+#             */
+/*   Updated: 2024/01/04 08:17:46 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 # include "Wagner.hpp"
 # include "vector"
@@ -85,13 +84,13 @@ Erreurs non gerees
 // JOIN #chan1,#chan2,#chan3 password
 void	Wagner::cmd_join(void)
 {
-	DEBUG_CALL_WAGNER
+	DEBUG_CALL_WAGNER_COMMAND
 
 	if (!user->isConnected())
-		return (user->setSendCache(ERR_NOTREGISTERED()));
+		return (user->send_message(ERR_NOTREGISTERED()));
 	//1. verifier qu'il y a au moins 1 param
 	if (request->params.empty())
-		return (user->setSendCache(ERR_NEEDMOREPARAMS("", "JOIN")));
+		return (user->send_message(ERR_NEEDMOREPARAMS("", "JOIN")));
     std::string channelsToJoin = *request->params.begin();
     request->params.pop_front();
 	
@@ -134,10 +133,10 @@ void	Wagner::cmd_join(void)
 			channel->sendToAllUsers(reply);
 			*/
 			//if (channel->topic)
-			//	user->setSendCache(RPL_TOPIC(user->nick_name.get(), channel->name, channel->topic()));
-			//user->setSendCache(RPL_WELCOME(user, channel->name, "Welcome ! You've join the channel "));
-			//user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
-			//user->setSendCache(RPL_ENDOFNAMES(user->nick_name.get(), channel));
+			//	user->send_message(RPL_TOPIC(user->nick_name.get(), channel->name, channel->topic()));
+			//user->send_message(RPL_WELCOME(user, channel->name, "Welcome ! You've join the channel "));
+			//user->send_message(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
+			//user->send_message(RPL_ENDOFNAMES(user->nick_name.get(), channel));
 		}
 	}
 }

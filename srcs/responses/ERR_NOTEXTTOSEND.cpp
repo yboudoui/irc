@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:58:07 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:58:21 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:23:07 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,5 @@ std::string	ERR_NOTEXTTOSEND(std::string reason)
 	output << " 412";
 	output << " :" << reason;
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }

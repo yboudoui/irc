@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:56:58 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:57:30 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:24:03 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,5 @@ std::string	PRIVMSG(std::string sender, std::string channel, std::string message
 	output << "#" << channel;
 	output << " :" << message;
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }

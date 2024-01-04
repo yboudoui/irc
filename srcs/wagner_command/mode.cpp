@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Wagner_mode.cpp                                    :+:      :+:    :+:   */
+/*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 08:21:11 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:06:22 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                 case 'k':
                     if (params.empty() && op == '+')
                     {
-                        user->setSendCache(ERR_NEEDMOREPARAMS(name, "MODE", "please type a password (+k)"));
+                        user->send_message(ERR_NEEDMOREPARAMS(name, "MODE", "please type a password (+k)"));
                        break;
                     }
                     if ((modes & KEY_PROTECTED) && op == '+')
                     {
-                        user->setSendCache(ERR_KEYSET(user->nick_name.get(), name));
+                        user->send_message(ERR_KEYSET(user->nick_name, name));
                        break;  
                     }
                     if (op == '+')
@@ -62,7 +62,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                             this->sendToAllUsers(reply);
                         }
                         else
-                            user->setSendCache(ERR_KEYSET(user->nick_name.get(), name, "please type an alnum password"));
+                            user->send_message(ERR_KEYSET(user->nick_name, name, "please type an alnum password"));
                     }
                     else
                     {	
@@ -74,7 +74,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                 case 'l' :
                     if (params.empty() && op == '+')
                     {
-                        user->setSendCache(ERR_NEEDMOREPARAMS(name, "MODE", "please type user limit (+l)"));
+                        user->send_message(ERR_NEEDMOREPARAMS(name, "MODE", "please type user limit (+l)"));
                        break;
                     }
                     if (op == '+')
@@ -93,7 +93,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                             this->sendToAllUsers(reply);
                         }
                         else 
-                            user->setSendCache(ERR_NEEDMOREPARAMS(name, "MODE", "please type a numeric user limit (+l)"));
+                            user->send_message(ERR_NEEDMOREPARAMS(name, "MODE", "please type a numeric user limit (+l)"));
                     }
                     else
                     {
@@ -105,7 +105,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                 case 'o':
                     if (params.empty())
                     {
-                        user->setSendCache(ERR_NEEDMOREPARAMS(name, "MODE", "please type a nickname (o)"));
+                        user->send_message(ERR_NEEDMOREPARAMS(name, "MODE", "please type a nickname (o)"));
                         break;
                     }
 					{
@@ -113,7 +113,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                         params.pop_front();                       
                         User * s_User = findUser(s_ChannelUser);
                         if (!s_User)
-                            user->setSendCache(ERR_NOSUCHNICK(user->nick_name.get(), name, s_ChannelUser));
+                            user->send_message(ERR_NOSUCHNICK(user->nick_name, name, s_ChannelUser));
                         else
                         {
                            if (s_User == user)
@@ -133,7 +133,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                     break;
                 
                 default:
-                    user->setSendCache(ERR_UNKNOWNMODE(user->nick_name.get(), name, c));
+                    user->setSendCache(ERR_UNKNOWNMODE(user->nick_name, name, c));
                     break;
             }
         
@@ -143,18 +143,18 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
 
 void	Wagner::cmd_mode(void)
 {
-	DEBUG_CALL_WAGNER
+	DEBUG_CALL_WAGNER_COMMAND
     
     std::string         reply;
     std::stringstream   ss_reply;
     ss_reply << request;
-    reply = ":" + user->nick_name.get() + " " + ss_reply.str() + "\r\n";
+    reply = ":" + user->nick_name + " " + ss_reply.str() + "\r\n";
     
 	if (!user->isConnected())
-		return (user->setSendCache(ERR_NOTREGISTERED()));
+		return (user->send_message(ERR_NOTREGISTERED()));
 
 	if (request->params.size() < 1 )
-		return (user->setSendCache(ERR_NEEDMOREPARAMS("", "MODE")));
+		return (user->send_message(ERR_NEEDMOREPARAMS("", "MODE")));
     
     std::string s_channel, s_modes;
     s_channel = *request->params.begin();
@@ -166,21 +166,21 @@ void	Wagner::cmd_mode(void)
     if (!channel)
     {
         if (!findClient(s_channel))
-            user->setSendCache(ERR_NOSUCHCHANNEL(user->nick_name.get(), s_channel));
+            user->send_message(ERR_NOSUCHCHANNEL(user->nick_name, s_channel));
 //        else
- //           user->setSendCache(ERR_UMODEUNKNOWNFLAG(user->nick_name.get()));
+ //           user->send_message(ERR_UMODEUNKNOWNFLAG(user->nick_name.get()));
         return ;
     }
     if (!channel->isInChannel(user))
     {
-        user->setSendCache(ERR_NOTONCHANNEL(user->nick_name.get(), s_channel));
+        user->send_message(ERR_NOTONCHANNEL(user->nick_name, s_channel));
         return ;
     }
     if (!request->params.empty())
     {
         if (!channel->isOperator(user))
         {
-            user->setSendCache(ERR_CHANOPRIVSNEEDED(user->nick_name.get(), s_channel));
+            user->send_message(ERR_CHANOPRIVSNEEDED(user->nick_name, s_channel));
             return ;
         }
         s_modes = *request->params.begin();

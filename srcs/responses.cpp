@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:36:16 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 14:52:35 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:49:53 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ std::string	RPL_TRYAGAIN(std::string command, std::string info)
 	output << " " << command;
 	output << " :" << info;
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 
@@ -39,7 +38,6 @@ std::string	NICK(std::string old, std::string newnick)
 	output << " NICK";
 	output << " " << newnick;
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 
@@ -58,7 +56,6 @@ std::string	ERR_NOORIGIN()
 	output << " 409";
 	output << " :message missing the originator parameter";
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 /*
@@ -74,7 +71,6 @@ std::string	ERR_NOSUCHSERVER(std::string server)
 	output << " 402 ";
 	output << server;
 	output << " :the server name given currently doesn't exist\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }
 /*
@@ -90,6 +86,5 @@ std::string	ERR_NOTREGISTERED(void)
 	output << ":" << HOSTNAME;
 	output << " 451";
 	output << " :you are not registered\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }

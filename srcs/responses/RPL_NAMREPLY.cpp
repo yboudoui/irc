@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 18:01:38 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 16:37:10 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:26:01 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ std::string	RPL_NAMREPLY(std::string nickname, Channel *channel)
 	output << " " << nickname;
 	output << " = #" << channel->name;
 	output << " : " << channel->getUserList();
-	output << "\r\n";	
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
+	output << "\r\n";
 	return (output.str());
 }
 
@@ -40,11 +39,8 @@ std::string	RPL_ENDOFNAMES(std::string nickname, Channel *channel)
 	output << ":" << HOSTNAME;
 	output << " 366";
 	output << " " << nickname;
-
 	output << " #" << channel->name;
 	output << " :End of /NAMES list";
 	output << "\r\n";
-	
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }

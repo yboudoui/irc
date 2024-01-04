@@ -6,13 +6,11 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 17:53:47 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 09:54:42 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 # include "Wagner.hpp"
-# include <vector>
 
 Wagner::Wagner(std::string pass)
 	: _pass(pass)
@@ -37,19 +35,15 @@ Wagner::Wagner(std::string pass)
 
 Wagner::~Wagner()
 {
-	t_channel_map::iterator	chan;
-
-	t_clients::iterator	it = _clients.begin();
-	for ( ; it != _clients.end() ; it++)
+	for (t_clients::iterator it = _clients.begin() ; it != _clients.end() ; it++)
 	{
 		delete *it;
 		// FIXSEGFAULT removeEventListener(*it);
 	}
 
-	chan = _channel_map.begin();
-	for ( ; chan != _channel_map.end() ; chan++)
+	for (t_channel_map::iterator it = _channel_map.begin(); it != _channel_map.end() ; it++)
 	{
-		delete chan->second;	
+		delete it->second;
 	}
 
 	/*
@@ -74,7 +68,6 @@ void	Wagner::addEventListener(IQueue &queue, int fd_socketBind)
 	_clients.insert(user);
 }
 
-
 void	Wagner::removeEventListener(IQueue::IEventListener* listener)
 {
 	PRINT_DEBUG_CALL_MESSAGE(YELLOW, "", Wagner, RESET << " -> ")
@@ -87,46 +80,30 @@ void	Wagner::removeEventListener(IQueue::IEventListener* listener)
 	IQueue::IEventListener::free(user);
 }
 
-
 void	Wagner::treatEventListener(IQueue::IEventListener* listener)
 {
-	MessageQueue	requests;
-
 	user = dynamic_cast<User*>(listener);
 	if (user == NULL)
 		throw std::runtime_error("Bad EventListener");
-	Message::color(BLUE);
-	requests << user->getReadCache();
-	Message::color(GREEN);
-
-	while (!requests.empty() && user->is_alive())
+	while (user->read_message(&request))
 	{
-		request = requests.getLastMessage();
-		if (request == NULL)
-			continue ;
 		t_cmd_map::iterator	it = _cmd.find(request->command.name);
 		if (it != _cmd.end())
 			(this->*(it->second))();
 		else
-			cmd_notFound(request->command.name);
+			cmd_unknown();
 		delete request;
 	}
 }
 
-void	Wagner::cmd_notFound	(std::string name)
-{
-	DEBUG_CALL_WAGNER
-	user->setSendCache(RPL_TRYAGAIN(name));
-}
-
-User*	Wagner::findClient(std::string name)
+User*		Wagner::findClient(std::string name)
 {
 	t_clients::iterator	it = _clients.begin();
 	t_clients::iterator	ite = _clients.end();
 
 	for ( ; it != ite ; it++)
 	{
-		if ((*it)->nick_name.get() == name)
+		if ((*it)->nick_name == name)
 		{
 			return *it;
 		}

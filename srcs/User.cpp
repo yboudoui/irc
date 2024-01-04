@@ -6,11 +6,13 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 18:24:14 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 09:57:22 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "User.hpp"
+
+User*	User::_debug = NULL;
 
 User::User(IQueue &queue, int fd)
 	: SocketConnection(queue, fd)
@@ -75,8 +77,8 @@ void	User::sendToAllChannels(std::string message)
 
 	for (; it != _channels.end(); it++)
 	{	
-		privmsg = PRIVMSG(nick_name.get(), it->second->name, message);
-		it->second->send(nick_name.get(), privmsg);
+		privmsg = PRIVMSG(nick_name, it->second->name, message);
+		it->second->send(nick_name, privmsg);
 	}
 }
 
@@ -86,7 +88,7 @@ bool	User::send(std::string channelName, std::string message)
 
 	it = _channels.find(channelName);
 	if (it != _channels.end())
-		return (it->second->send(nick_name.get(), message), true);
+		return (it->second->send(nick_name, message), true);
 	return (false);
 }
 
@@ -96,6 +98,36 @@ void	User::sendTo(Channel* channel, std::string msg)
 		return ;
 	if (_channels.find(channel->name) != _channels.end())
 		channel->sendToAllUsers(msg, this);
+}
+
+void	User::debug(User* u)
+{
+	if (u == NULL)
+		return ;
+	_debug = u;
+	PRINT_MESSAGE(WHITE, BOLD << "[" << u->_fd << "]["<< u->nick_name<< "]\t", "", "\n");
+}
+
+bool	User::read_message(Message** msg)
+{
+	return (is_alive() && new_message(getReadCache(), msg));
+}
+
+void	User::send_message(std::string msg)
+{
+	static size_t	number_send = 0;
+	if (this != _debug)
+		number_send += 1;
+	if (this == _debug)
+	{
+		PRINT_MESSAGE(GREEN, "\t", msg, "\b\b");
+		if (number_send != 0)
+		{
+			PRINT_MESSAGE(WHITE, "\t" << number_send << " message was sent to other users", "", "\n");
+			number_send = 0;
+		}
+	}
+	setSendCache(msg);
 }
 
 bool	User::operator () (User* to_compare)
@@ -110,7 +142,7 @@ predicate<User*>&	nickName(std::string nick_name)
 		public:
 			bool	operator () (User *input)
 			{
-				return (input && input->nick_name.get() == _nick_name);
+				return (input && input->nick_name == _nick_name);
 			}
 	}	predicate;
 	return (predicate);

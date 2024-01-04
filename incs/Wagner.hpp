@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 13:32:34 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 09:55:37 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,13 @@
 # include "IOrchestrator.hpp"
 # include "responses.hpp"
 
-# define DEBUG_CALL_WAGNER PRINT_DEBUG_CALL(YELLOW, Wagner)
+# define DEBUG_CALL_WAGNER \
+	PRINT_DEBUG_CALL(YELLOW, Wagner)
+
+# define DEBUG_CALL_WAGNER_COMMAND \
+	PRINT_DEBUG_CALL(YELLOW, Wagner) \
+	User::debug(user); \
+	PRINT_DEBUG_MESSAGE(BLUE, "\t" << request) \
 
 class Wagner: public IOrchestrator
 {
@@ -59,7 +65,7 @@ class Wagner: public IOrchestrator
 		void	cmd_kick		(void);
 		void	cmd_invite		(void);
 		void	cmd_topic		(void);
-		void	cmd_notFound	(std::string cmd);
+		void	cmd_unknown		(void);
 
 		User*		findClient(std::string name);
 		Channel*	find_or_create_channel(std::string name);

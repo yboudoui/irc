@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:58:34 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/26 17:58:49 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:21:49 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,5 @@ std::string	ERR_CANNOTSENDTOCHAN(std::string channel, std::string reason)
 	output << " " << channel;
 	output << " :" << reason;
 	output << "\r\n";
-	PRINT_DEBUG_MESSAGE(GREEN, output.str());
 	return (output.str());
 }

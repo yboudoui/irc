@@ -1,15 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Wagner_ping.cpp                                    :+:      :+:    :+:   */
+/*   ping.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2023/12/27 17:39:00 by sethomas         ###   ########.fr       */
+/*   Created: 2024/01/04 06:36:38 by yboudoui          #+#    #+#             */
+/*   Updated: 2024/01/04 08:18:01 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 # include "Wagner.hpp"
 
@@ -62,17 +61,17 @@ forwarded there.
 
 void	Wagner::cmd_ping(void)
 {
-	DEBUG_CALL_WAGNER
+	DEBUG_CALL_WAGNER_COMMAND
 	if (!request->params.size())
-		user->setSendCache(ERR_NOORIGIN());
+		user->send_message(ERR_NOORIGIN());
 	std::string server;
 	while (request->params.size())
 	{
 		server = *request->params.begin();
 		request->params.pop_front();
 		if (server != HOSTNAME)
-			user->setSendCache(ERR_NOSUCHSERVER(server));
+			user->send_message(ERR_NOSUCHSERVER(server));
 		else
-			user->setSendCache(PONG(server));
+			user->send_message(PONG(server));
 	}
 }

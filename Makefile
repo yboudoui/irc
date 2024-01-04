@@ -6,13 +6,29 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2024/01/03 17:27:45 by yboudoui         ###   ########.fr        #
+#    Updated: 2024/01/04 07:08:23 by yboudoui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME				=	ircserv
 
 #-----------------------------------------------------------------------------#
+
+SRCS_WAGNER_COMMAND	= \
+					cap.cpp \
+					pass.cpp \
+					nick.cpp \
+					user.cpp \
+					mode.cpp \
+					kick.cpp \
+					invite.cpp \
+					topic.cpp \
+					whois.cpp \
+					quit.cpp \
+					privmsg.cpp \
+					join.cpp \
+					ping.cpp \
+					unknown.cpp
 
 SRCS_RESPONSES		= \
 					ERR_ALREADYREGISTERED.cpp \
@@ -55,20 +71,10 @@ SRCS_RESPONSES		= \
 SRCS				= \
 					signal_handler.cpp \
 					Message.cpp \
-					MessageQueue.cpp \
 					responses.cpp \
 					User.cpp \
 					Wagner.cpp \
-					Wagner_connection.cpp \
-					Wagner_mode.cpp \
-					Wagner_kick.cpp \
-					Wagner_invite.cpp \
-					Wagner_topic.cpp \
-					Wagner_whois.cpp \
-					Wagner_quit.cpp \
-					Wagner_privmsg.cpp \
-					Wagner_join.cpp \
-					Wagner_ping.cpp \
+					$(addprefix wagner_command/, ${SRCS_WAGNER_COMMAND} ) \
 					Channel.cpp \
 					Queue.cpp \
 					IQueueEventListener.cpp \

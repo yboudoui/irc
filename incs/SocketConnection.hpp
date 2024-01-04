@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 16:16:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/02 16:24:22 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:53:13 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,25 +31,24 @@
 class SocketConnection : public IQueue::IEventListener
 {
 	private:
-		int						_fd;
+		IQueue					&_queue;
 		struct sockaddr			_addr;
 		socklen_t				_addr_len;
 		char					_buffer[BUFFER_LEN];
-
-		IQueue					&_queue;
 
 		std::string				_read_cache, _write_cache;
 
 	protected:
 		~SocketConnection();
+		const int		_fd;
+		std::string&	getReadCache(void);
+		void			setSendCache(std::string message);
 
 	public:
 		SocketConnection(IQueue &queue, int fd_socketBind);
 
 		void			read(void);
 		void			write(void);
-		void			setSendCache(std::string message);
-		std::string&	getReadCache(void);
 };
 
 #endif
