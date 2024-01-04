@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:04:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 18:24:59 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:26:33 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	server(t_input_params params)
 	SocketBind		sock(wagner, queue, params.port);
 	SignalHandler	sig;
 
-	std::cout << "localhost:" << params.port << std::endl;
+	std::cout << HOSTNAME << ":" << params.port << std::endl;
 
 	while (1
 		&& queue.event_loop(wagner)

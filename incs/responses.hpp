@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 11:21:11 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:19:22 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include "User.hpp"
 # include "Channel.hpp"
 
-# define HOSTNAME "localhost"
+//# define HOSTNAME "localhost"
 # define SERVERNAME "SuperServeur"
 # define VERSION "1.0"
 # define CREATION_DATE "2023/12/10"

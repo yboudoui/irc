@@ -6,7 +6,7 @@
 #    By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:46:16 by yboudoui          #+#    #+#              #
-#    Updated: 2024/01/04 11:09:27 by sethomas         ###   ########.fr        #
+#    Updated: 2024/01/04 12:25:49 by sethomas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -136,7 +136,9 @@ VALGRIND_PARAMS	+=	--track-fds=yes
 VALGRIND_PARAMS	+=	--leak-check=full
 VALGRIND_PARAMS	+=	--show-leak-kinds=all
 
-test: CXXFLAGS += -g3 -DDEBUG
+IP_ADDRESS := $(shell hostname -I | awk '{print $$1}')
+
+test: CXXFLAGS += -g3 -DDEBUG -DHOSTNAME='"${IP_ADDRESS}"' 
 test: re
 	valgrind -q \
 		${VALGRIND_PARAMS} \
