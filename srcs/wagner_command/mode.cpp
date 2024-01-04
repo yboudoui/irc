@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 10:08:23 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:33:52 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,6 @@ void	Wagner::cmd_mode(void)
         //channel->sendToAllUsers(reply);
     }
 
-    // PUSH_TODO bool ProcessModeCmd
 	//user->setSendCache(RPL_CHANNELMODEIS(user->nick_name, channel));
 	//user->setSendCache(RPL_NAMREPLY(user->nick_name, channel));
 	//user->setSendCache(RPL_ENDOFNAMES(user->nick_name, channel));

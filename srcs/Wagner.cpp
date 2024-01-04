@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 09:54:42 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:32:27 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,26 +36,10 @@ Wagner::Wagner(std::string pass)
 Wagner::~Wagner()
 {
 	for (t_clients::iterator it = _clients.begin() ; it != _clients.end() ; it++)
-	{
 		delete *it;
-		// FIXSEGFAULT removeEventListener(*it);
-	}
 
 	for (t_channel_map::iterator it = _channel_map.begin(); it != _channel_map.end() ; it++)
-	{
 		delete it->second;
-	}
-
-	/*
-	TODO // send error_message 
-	Command: ERROR
-	Parameters: <reason>
-
-	This message is sent from a server to a client to report a fatal error,
-	before terminating the client’s connection.
-	This MUST only be used to report fatal errors.
-	Regular errors should use the appropriate numerics or the IRCv3 standard replies framework.
-	*/
 	DEBUG_CALL_WAGNER
 }
 

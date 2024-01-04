@@ -6,20 +6,11 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 07:20:33 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:31:55 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Message.hpp"
-
-char	*Message::_color = (char *)WHITE;
-
-void	Message::color(const char *c)
-{
-	_color = (char *)c;
-	if (_color == NULL)
-		_color = (char *)WHITE;
-}
 
 bool	new_message(std::string& raw_message, Message** output)
 {
@@ -54,7 +45,6 @@ t_prefixe	Message::parse_prefixe(Extractor &str)
 
 	if (str.size() < 2 || str[0] != ':')
 		return (output);
-// TODO : on le garde?
 	if (str[1] == ' ')
 		throw std::runtime_error("Bad prefix format");
 	str.erase(0, 1);

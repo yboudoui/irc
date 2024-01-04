@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 06:37:02 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 09:14:18 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:33:24 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,5 @@ void	Wagner::cmd_privmsg(void)
 	}
 	else if (target_user)
 		return(target_user->send_message(response));
-	// TODO ajoute channel_name si necessaire.
 	return(user->send_message(ERR_NOSUCHNICK(user->nick_name, "", s_target)));
 }

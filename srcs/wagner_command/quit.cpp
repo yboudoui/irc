@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 06:36:51 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 07:18:38 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:33:41 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ Numeric Replies: None.
 void	Wagner::cmd_quit(void)
 {
 	DEBUG_CALL_WAGNER_COMMAND
-	// TODO : supprimer le user de toutes les channels
+
 	std::string	message = "leaving";
 	if (request->params.empty() == false)
 	{

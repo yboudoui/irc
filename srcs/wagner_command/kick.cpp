@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 06:36:01 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 09:12:20 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:32:48 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ void	Wagner::cmd_kick(void)
 		reason = request->params[2];
 	}
 	std::string	reply = KICK(user_nick_name, channelName, userToKick->nick_name, reason);
-	//userToKick->send_message(ERR_NOSUCHCHANNEL(userToKick->nick_name.get(), channel->name, "you have been kicked from the channel"));
-
 	channel->sendToAllUsers(reply);
 	channel->remove(userToKick);
 }
