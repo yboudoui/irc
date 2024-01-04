@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 18:09:35 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 10:06:22 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:08:23 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                     break;
                 case 'i':
 					modes = (op == '+') ? modes | INVITE_ONLY : modes & ~INVITE_ONLY;
-                    reply = ":" + user->nick_name.get() + " MODE #" + this->name + " " + op + "i\r\n";
+                    reply = ":" + user->nick_name + " MODE #" + this->name + " " + op + "i\r\n";
                     this->sendToAllUsers(reply);
                     break;
                 case 't':
 					modes = (op == '+') ? modes | TOPIC_ONLY_OP : modes & ~TOPIC_ONLY_OP;
-                    reply = ":" + user->nick_name.get() + " MODE #" + this->name + " " + op + "t\r\n";
+                    reply = ":" + user->nick_name + " MODE #" + this->name + " " + op + "t\r\n";
                     this->sendToAllUsers(reply);
                     break;
                 case 'k':
@@ -58,7 +58,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                         {
 							modes = (op == '+') ? modes | KEY_PROTECTED : modes & ~KEY_PROTECTED;
 							password(pass);
-                            reply = ":" + user->nick_name.get() + " MODE #" + this->name + " +k " + pass + "\r\n";
+                            reply = ":" + user->nick_name + " MODE #" + this->name + " +k " + pass + "\r\n";
                             this->sendToAllUsers(reply);
                         }
                         else
@@ -67,7 +67,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                     else
                     {	
                         modes = (op == '+') ? modes | KEY_PROTECTED : modes & ~KEY_PROTECTED;
-                        reply = ":" + user->nick_name.get() + " MODE #" + this->name + " -k\r\n";
+                        reply = ":" + user->nick_name + " MODE #" + this->name + " -k\r\n";
                         this->sendToAllUsers(reply);
                     }
                     break;
@@ -89,7 +89,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                             ss >> _limit;
 							modes = (op == '+') ? modes | USER_LIMIT : modes & ~USER_LIMIT;
                             limit = _limit;
-                            reply = ":" + user->nick_name.get() + " MODE #" + this->name + " +l " + s_limit + "\r\n";
+                            reply = ":" + user->nick_name + " MODE #" + this->name + " +l " + s_limit + "\r\n";
                             this->sendToAllUsers(reply);
                         }
                         else 
@@ -98,7 +98,7 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                     else
                     {
 						modes = (op == '+') ? modes | USER_LIMIT : modes & ~USER_LIMIT;
-                        reply = ":" + user->nick_name.get() + " MODE #" + this->name + " -l\r\n";
+                        reply = ":" + user->nick_name + " MODE #" + this->name + " -l\r\n";
                         this->sendToAllUsers(reply);
                     }
                     break;
@@ -126,14 +126,14 @@ bool	Channel::ProcessModeCmd(User* user, const std::string& cmd, t_params& param
                             else 
                                 _users_map.find(s_User)->second = NONE;
                             
-                            reply = ":" + user->nick_name.get() + " MODE #" + this->name + " " + op + "o " + s_ChannelUser + "\r\n";
+                            reply = ":" + user->nick_name + " MODE #" + this->name + " " + op + "o " + s_ChannelUser + "\r\n";
                             this->sendToAllUsers(reply);
                         }
 					}
                     break;
                 
                 default:
-                    user->setSendCache(ERR_UNKNOWNMODE(user->nick_name, name, c));
+                    user->send_message(ERR_UNKNOWNMODE(user->nick_name, name, c));
                     break;
             }
         
@@ -168,7 +168,7 @@ void	Wagner::cmd_mode(void)
         if (!findClient(s_channel))
             user->send_message(ERR_NOSUCHCHANNEL(user->nick_name, s_channel));
 //        else
- //           user->send_message(ERR_UMODEUNKNOWNFLAG(user->nick_name.get()));
+ //           user->send_message(ERR_UMODEUNKNOWNFLAG(user->nick_name));
         return ;
     }
     if (!channel->isInChannel(user))
@@ -190,9 +190,9 @@ void	Wagner::cmd_mode(void)
     }
 
     // PUSH_TODO bool ProcessModeCmd
-	//user->setSendCache(RPL_CHANNELMODEIS(user->nick_name.get(), channel));
-	//user->setSendCache(RPL_NAMREPLY(user->nick_name.get(), channel));
-	//user->setSendCache(RPL_ENDOFNAMES(user->nick_name.get(), channel));
+	//user->setSendCache(RPL_CHANNELMODEIS(user->nick_name, channel));
+	//user->setSendCache(RPL_NAMREPLY(user->nick_name, channel));
+	//user->setSendCache(RPL_ENDOFNAMES(user->nick_name, channel));
 }
 
 
