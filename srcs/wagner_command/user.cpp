@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 06:32:41 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 09:09:46 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:07:25 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,4 @@ void	Wagner::cmd_user(void)
 		user->is_alive(false);
 		return ;
 	}
-	if (user->isConnected())
-	{
-		user->send_message(RPL_WELCOME(user)); //001
-		user->send_message(RPL_YOURHOST()); //002
-		user->send_message(RPL_CREATED()); //003
-		user->send_message(RPL_MYINFO()); //004
-		return ;
-	}
-	user->send_message(ERR_PASSWDMISMATCH(user->nick_name));
-	user->is_alive(false);
 }

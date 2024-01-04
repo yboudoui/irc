@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 09:57:22 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:06:26 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,14 @@ void	User::connectionStep()
 {
 	if (_connection_complete)
 		_connection_complete--;
-}
 
+	if (_connection_complete != 0)
+		return ;
+	send_message(RPL_WELCOME(this)); //001
+	send_message(RPL_YOURHOST()); //002
+	send_message(RPL_CREATED()); //003
+	send_message(RPL_MYINFO()); //004
+}
 
 void	User::join(Channel* channel)
 {
@@ -45,7 +51,6 @@ void	User::join(Channel* channel)
 		return ;
 	_channels.insert(std::make_pair(channel->name, channel));
 }
-
 
 void	User::quitAllChannels(void)
 {

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 17:51:24 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 10:13:14 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:27:36 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ std::string	ERR_NICKNAMEINUSE(std::string nick, std::string reason)
 	(void)nick;
 	output << ":" << HOSTNAME;
 	output << " 433";
-	output << " " << nick;
+	output << " * " << nick;
 	output << " :" << reason;
 	output << "\r\n";
 	return (output.str());

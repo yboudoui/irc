@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   whois.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 06:37:27 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 08:17:19 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:24:25 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,17 @@ RPL_ENDOFWHOIS
 void	Wagner::cmd_whois(void)
 {
 	DEBUG_CALL_WAGNER_COMMAND
-	user->send_message(RPL_WHOISUSER(user));
+	/*
+	std::string nickName = request->params[0];
+	for (t_clients::iterator it = _clients.begin(); it != _clients.end(); it++)
+	{
+		if ((*it)->is_alive() && *it != user)
+		{
+			if ((*it)->nick_name == nickName)
+				return (user->send_message(RPL_WHOISUSER(user)));
+
+		}
+	}
+	user->send_message(ERR_NOSUCHNICK(nickName));
+	*/
 }

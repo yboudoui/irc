@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 10:02:48 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:21:11 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ std::string	ERR_UMODEUNKNOWNFLAG(std::string nickname, std::string reason = "U M
 std::string	ERR_CHANOPRIVSNEEDED(std::string nickname, std::string channel, std::string reason = "Channel operator privilege needed");
 std::string	ERR_NOTONCHANNEL(std::string nickname, std::string channel, std::string reason = "You are not a member");
 std::string	ERR_KEYSET(std::string nickname, std::string channel, std::string reason = "the channel key has already been set ");
-std::string	ERR_NOSUCHNICK(std::string userNickName, std::string channel, std::string nickname, std::string reason = "the nickname parameter supplied is unused");
+std::string	ERR_NOSUCHNICK(std::string userNickName, std::string channel ="", std::string nickname="", std::string reason = "the nickname parameter supplied is unused");
 std::string	ERR_UNKNOWNMODE(std::string user, std::string channel, char c, std::string reason = "the given mode in unknown");
 
 std::string	RPL_CHANNELMODEIS(std::string nickname, Channel* channel);
