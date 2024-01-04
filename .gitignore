@@ -2,3 +2,5 @@
 *.d
 *.swp
 callgrind*
+ircserv
+.vscode/
