@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 12:04:49 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:17:03 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,16 +120,19 @@ bool	User::read_message(Message** msg)
 
 void	User::send_message(std::string msg)
 {
-	static size_t	number_send = 0;
+	static std::deque<std::string>	send_to;
 	if (this != _debug)
-		number_send += 1;
+		send_to.push_back(nick_name);
 	if (this == _debug)
 	{
 		PRINT_MESSAGE(GREEN, "\t", msg, "\b\b");
-		if (number_send != 0)
+		if (!send_to.empty())
 		{
-			PRINT_MESSAGE(WHITE, "\t" << number_send << " message was sent to other users", "", "\n");
-			number_send = 0;
+			PRINT_MESSAGE(WHITE, "\t" << send_to.size() << " message was sent to other users", "", "[");
+			for (size_t i = 0; i < send_to.size(); i++)
+				std::cout << send_to[i] << " ";
+			std::cout << "\b]\n";
+			send_to.clear();
 		}
 	}
 	setSendCache(msg);
