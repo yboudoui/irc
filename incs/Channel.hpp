@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 17:43:11 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 18:29:02 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ class Channel
 		User *	findInvitedUser(std::string nickname);
 		void	invite(User* user);
 
-		void	ProcessModeCmd(User* user, const std::string& command,t_params& params);
+		bool	ProcessModeCmd(User* user, const std::string& command,t_params& params);
 		void	sendToAllUsers(std::string msg, User* user = NULL);
 		void	sendNameReplyToAllUsers(User* user = NULL);
 };

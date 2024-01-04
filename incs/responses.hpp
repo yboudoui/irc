@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 14:39:48 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 16:39:43 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 08:20:57 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ std::string	ERR_CHANOPRIVSNEEDED(std::string nickname, std::string channel, std:
 std::string	ERR_NOTONCHANNEL(std::string nickname, std::string channel, std::string reason = "You are not a member");
 std::string	ERR_KEYSET(std::string nickname, std::string channel, std::string reason = "the channel key has already been set ");
 std::string	ERR_NOSUCHNICK(std::string userNickName, std::string channel, std::string nickname, std::string reason = "the nickname parameter supplied is unused");
-std::string	ERR_UNKNOWNMODE(std::string channel, char c, std::string reason = "the given mode in unknown");
+std::string	ERR_UNKNOWNMODE(std::string user, std::string channel, char c, std::string reason = "the given mode in unknown");
 
 std::string	RPL_CHANNELMODEIS(std::string nickname, Channel* channel);
 
@@ -79,8 +79,8 @@ std::string	ERR_TOOMANYTARGETS(std::string target, std::string reason = "the giv
 
 // JOIN
 std::string	ERR_INVITEONLYCHAN(std::string nickname, std::string channel, std::string reason = "invite only channel");
-std::string	ERR_BADCHANNELKEY(std::string channel, std::string reason = "bad channel key");
-std::string	ERR_CHANNELISFULL(std::string channel, std::string reason = "channel is full");
+std::string	ERR_BADCHANNELKEY(std::string user, std::string channel, std::string reason = "bad channel key");
+std::string	ERR_CHANNELISFULL(std::string user, std::string channel, std::string reason = "channel is full");
 std::string	ERR_BANNEDFROMCHAN(std::string channel, std::string reason = "banned ... #sorry");
 
 std::string	RPL_NAMREPLY(std::string nickname, Channel *channel);

@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/03 18:10:41 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/03 18:24:52 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ bool	Channel::canJoin(User* user, std::string usr_password)
 	{
 		if (password && usr_password != password())
 		{
-			user->setSendCache(ERR_BADCHANNELKEY(name));
+			user->setSendCache(ERR_BADCHANNELKEY(user->nick_name.get(), name));
 			return (false);
 		}
 	}
@@ -159,7 +159,7 @@ bool	Channel::canJoin(User* user, std::string usr_password)
 		size_t nb_user = countUser();
 		if (nb_user >= limit)
 		{
-			user->setSendCache(ERR_CHANNELISFULL(name));
+			user->setSendCache(ERR_CHANNELISFULL(user->nick_name.get(), name));
 			return false;
 		}
 	}
