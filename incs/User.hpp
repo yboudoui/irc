@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 22:55:26 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 09:25:25 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:52:55 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ class User
 		get_set<std::string>	connection_password;
 		
 		bool	isConnected() const;
-		void	connectionStep();
+		void	connectionStep(std::string _pass, int nb);
 		void	sendToAllChannels(std::string message);
 
 		void	join(Channel* channel);

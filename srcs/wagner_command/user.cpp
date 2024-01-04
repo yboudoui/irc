@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 06:32:41 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 11:07:25 by sethomas         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:56:03 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,6 @@ void	Wagner::cmd_user(void)
 				default: break;
 			}
 		}
-		user->connectionStep();
-	}
-	if (user->connection_password.get() != _pass)
-	{
-		user->send_message(ERR_PASSWDMISMATCH(user->nick_name));
-		user->is_alive(false);
-		return ;
+		user->connectionStep(_pass, 1);
 	}
 }

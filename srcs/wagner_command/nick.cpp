@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 06:32:03 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 11:52:09 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:04:41 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,6 @@ void	Wagner::cmd_nick(void)
 	//	oldnick = nickname+"99";
 	user->nick_name = nickname;
 	user->send_message(NICK(oldnick, nickname));
-	user->connectionStep();
+	user->connectionStep(_pass, 1);
 	
 }

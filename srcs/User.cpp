@@ -6,7 +6,7 @@
 /*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:05:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 11:56:16 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:04:49 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ User*	User::_debug = NULL;
 
 User::User(IQueue &queue, int fd)
 	: SocketConnection(queue, fd)
-	, _connection_complete(2)
+	, _connection_complete(3)
 {
 	DEBUG_CALL_USER
 }
@@ -32,12 +32,12 @@ bool	User::isConnected() const
 	return (_connection_complete == 0);
 }
 
-void	User::connectionStep()
+void	User::connectionStep(std::string _pass, int nb)
 {
-	if (_connection_complete)
-		_connection_complete--;
+	if (_connection_complete && nb)
+		_connection_complete -= nb;
 
-	if (_connection_complete != 0)
+	if (_connection_complete != 0 || connection_password.get() != _pass)
 		return ;
 	send_message(RPL_WELCOME(this)); //001
 	send_message(RPL_YOURHOST()); //002

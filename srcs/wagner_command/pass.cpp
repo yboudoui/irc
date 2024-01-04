@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sethomas <sethomas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 06:31:15 by yboudoui          #+#    #+#             */
-/*   Updated: 2024/01/04 09:07:23 by yboudoui         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:58:12 by sethomas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,16 @@ void	Wagner::cmd_pass(void)
 	std::string password = request->params.front();
 	request->params.pop_front();
 	user->connection_password.set(password);
+
+	if (user->connection_password.get() != _pass)
+	{
+		user->send_message(ERR_PASSWDMISMATCH(user->nick_name, "Password mismatch"));
+		//user->is_alive(false);
+		return ;
+	}
+	else
+	{
+		user->connectionStep(_pass, 1);
+	}
+	
 }
