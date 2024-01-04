@@ -8,30 +8,30 @@ writeSpeed=5
 #ctrl+V ctrl+M  retrun (\r\n)
 # Commande pour ouvrir un terminal et lancer ircserv
 gnome-terminal --geometry=140x100+0+0 --title="FT_IRC" -- bash -c "./ircserv $random_port $random_pass; exec bash"
-sleep 0.5
 
-gnome-terminal --geometry=140x34+1280+0  --title="IRSSI_TRISTAN" -- bash -c "nc 127.0.0.1 $random_port "
+gnome-terminal --geometry=140x34+1280+0  --title="IRSSI_TRISTAN" -- bash -c "nc -C 127.0.0.1 $random_port "
+gnome-terminal --geometry=140x34+1280+720  --title="IRSSI_ISOLDE" -- bash -c "nc -C 127.0.0.1 $random_port "
+
+sleep 1
 WID_TRISTAN=`xdotool search --name "IRSSI_TRISTAN" `
-
-gnome-terminal --geometry=140x34+1280+720  --title="IRSSI_ISOLDE" -- bash -c "nc 127.0.0.1 $random_port "
 WID_ISOLDE=`xdotool search --name "IRSSI_ISOLDE" `
 
 xdotool windowfocus $WID_TRISTAN 
 xdotool type --delay $writeSpeed "PASS $random_pass"
-xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool key "Return" 
 xdotool type --delay $writeSpeed "NICK tristan"
-xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool key "Return" 
 xdotool type --delay $writeSpeed "USER tristan tristan localhost :Tristan Wagner"
-xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool key "Return" 
 
 
 xdotool windowfocus $WID_ISOLDE
 xdotool type --delay $writeSpeed "PASS $random_pass"
-xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool key "Return" 
 xdotool type --delay $writeSpeed "NICK isolde"
-xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool key "Return" 
 xdotool type --delay $writeSpeed "USER isolde isolde localhost :Isolde Wagner"
-xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+xdotool key "Return" 
 
 
 # Assurez-vous que le script est exécutable avec la commande suivante si nécessaire :
@@ -73,7 +73,7 @@ while IFS= read -r ligne || [ -n "$ligne" ]; do
     else
         msg=":"$nick" PRIVMSG #DerRing :"$cmd
     fi
-    xdotool windowfocus $WID type --delay $writeSpeed  "$msg" && xdotool key "Return" 
-    xdotool key --delay 10 ctrl+v && sleep 0.1 && xdotool key ctrl+m && xdotool key "Return" 
+    xdotool windowfocus $WID type --delay $writeSpeed  "$msg"
+    xdotool key "Return" 
 
 done < "$fichier"
